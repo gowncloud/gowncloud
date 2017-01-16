@@ -1,0 +1,19 @@
+{
+	"ImportPath": "github.com/gowncloud/gowncloud",
+	"GoVersion": "go1.7",
+	"GodepVersion": "v77",
+	"Deps": [
+		{
+			"ImportPath": "golang.org/x/net/context",
+			"Rev": "69d4b8aa71caaaa75c3dfc11211d1be495abec7c"
+		},
+		{
+			"ImportPath": "golang.org/x/net/webdav",
+			"Rev": "69d4b8aa71caaaa75c3dfc11211d1be495abec7c"
+		},
+		{
+			"ImportPath": "golang.org/x/net/webdav/internal/xml",
+			"Rev": "69d4b8aa71caaaa75c3dfc11211d1be495abec7c"
+		}
+	]
+}
