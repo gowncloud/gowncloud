@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>File Firewall (Enterprise only) &mdash; ownCloud 9.1 Server Administration Manual 9.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/main.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/styles.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '9.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="ownCloud 9.1 Server Administration Manual 9.1 documentation" href="../contents.html" />
+    <link rel="up" title="Enterprise Firewall (Enterprise only)" href="index.html" />
+    <link rel="next" title="Enterprise Troubleshooting" href="../enterprise_troubleshooting.html" />
+    <link rel="prev" title="Enterprise Firewall (Enterprise only)" href="index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1d2d44">
+
+  </head>
+  <body role="document">
+
+
+<div class="wrap container not-front">
+  <div class="content row">
+  <main class="main">
+    <div class="row page-content-header">
+      <div class="col-md-5 col-md-offset-7">
+      
+        <form class="headersearch" style="margin-bottom:-3px;" action="../search.html" method="get">
+        <input type="text" value="" name="q" id="q" class="form-control" /> 
+        <button  class="btn btn-default" type="submit" id="searchsubmit">Search</button>
+        </form>
+      
+      </div>
+    </div>
+    
+			<div class="row">
+				<div class="col-md-3">
+					<div class="sidebar">
+							<div class="menu-support-container">
+								<ul id="menu-support" class="menu">
+									<ul>
+										
+<li><a href="../contents.html">Table of Contents</a></li>
+									</ul>
+                  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">ownCloud 9.1 Server Administration Manual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">ownCloud 9.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new_admin.html">What&#8217;s New for Admins in ownCloud 9.1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_server/index.html">ownCloud Server Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_user/index.html">User Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_files/index.html">File Sharing and Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_database/index.html">Database Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_mimetypes/index.html">Mimetypes Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../maintenance/index.html">Maintenance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../issues/index.html">Issues and Troubleshooting</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_installation/index.html">Enterprise Edition Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_clients/index.html">Creating Branded ownCloud Clients (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_server_branding/index.html">Enterprise Server Branding (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_external_storage/index.html">External Storage (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_user_management/index.html">User Management (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_file_management/index.html">Enterprise File Management (Enterprise Only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_logging/index.html">Enterprise Logging Apps (Enterprise only)</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Enterprise Firewall (Enterprise only)</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="">File Firewall (Enterprise only)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#available-conditions">Available Conditions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#no-manual-editing">No Manual Editing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#controlling-access-to-folders">Controlling Access to Folders</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#custom-configuration-for-branded-clients">Custom Configuration for Branded Clients</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_troubleshooting.html">Enterprise Troubleshooting</a></li>
+</ul>
+
+								</ul>
+							</div>
+					</div>
+				</div>
+        
+
+				<div class="col-md-9">
+					<div class="page-content">
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="index.html" title="Previous Chapter: Enterprise Firewall (Enterprise only)"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Enterprise Fi...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="../enterprise_troubleshooting.html" title="Next Chapter: Enterprise Troubleshooting"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Enterprise Tr... &raquo;</span>
+    </a>
+  </li>
+</ul>
+						
+  <div class="section" id="file-firewall-enterprise-only">
+<h1>File Firewall (Enterprise only)<a class="headerlink" href="#file-firewall-enterprise-only" title="Permalink to this headline">¶</a></h1>
+<p>The File Firewall GUI enables you to create and manage firewall rule sets from
+your ownCloud admin page. The File Firewall gives you finer-grained control of
+access and sharing, with rules for allowing or denying access, and restrictions
+per group, upload size, client devices, IP address, time of day, and many more
+criteria. For additional flexibility the File Firewall also supports regular
+expressions.</p>
+<p>Each rule consists of one or more conditions. A request matches a rule if
+all conditions evaluate to true. If a request matches at least one of the
+defined rules, the request is blocked and the file content can not be read or
+written.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">As of ownCloud 9.0, the File Firewall app cannot lock out administrators from the Web interface when      rules are misconfigured.</p>
+</div>
+<p>Figure 1 shows an empty firewall configuration panel. Set your logging level to
+<strong>Failures Only</strong> for debugging, and create a new ruleset by clicking the <strong>Add
+Group</strong> button. After setting up your rules you must click the <strong>Save Rules</strong>
+button.</p>
+<div class="figure" id="id1">
+<img alt="Empty File Firewall configuration panel." src="../_images/firewall-1.png" />
+<p class="caption"><span class="caption-text"><em>Figure 1: Empty File Firewall configuration panel</em></span></p>
+</div>
+<p>Figure 2 shows two rules. The first rule, <strong>No Support outside
+office hours</strong>, prevents members of the support group from logging into the
+ownCloud Web interface from 5pm-9am, and also blocks client syncing.</p>
+<p>The second rule prevents members of the qa-team group from accessing the Web UI
+from IP addresses that are outside of the local network.</p>
+<div class="figure" id="id2">
+<img alt="Two example rules that restrict logins per user group." src="../_images/firewall-2.png" />
+<p class="caption"><span class="caption-text"><em>Figure 2: Two example rules that restrict logins per user group</em></span></p>
+</div>
+<p>All other users are not affected, and can log in anytime from anywhere.</p>
+<div class="section" id="available-conditions">
+<h2>Available Conditions<a class="headerlink" href="#available-conditions" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>User Group</dt>
+<dd>The user (is|is not) a member of the selected group.</dd>
+<dt>User Agent</dt>
+<dd>The User-Agent of the request (matches|does not match) the given string.</dd>
+<dt>User Device</dt>
+<dd>A shortcut for matching all known (<code class="docutils literal"><span class="pre">android</span></code> | <code class="docutils literal"><span class="pre">ios</span></code> | <code class="docutils literal"><span class="pre">desktop</span></code>) sync clients by
+their User Agent string.</dd>
+<dt>Request Time</dt>
+<dd>The time of the request (has to|must not) be in a single range from beginning
+time to end time.</dd>
+<dt>Request URL</dt>
+<dd>The <strong>full page URL</strong> (has to|must not) (match|contain|begin with|end) with a
+given string.</dd>
+<dt>Request Type</dt>
+<dd>The request (is|is not) a (WebDAV|public share link|other) request.</dd>
+<dt>Request IP Range (IPv4) and IP Range (IPv6)</dt>
+<dd>The request&#8217;s <code class="docutils literal"><span class="pre">REMOTE_ADDR</span></code> header (is|is not) matching the given IP range.</dd>
+<dt>Subnet (IPv4) and Subnet (IPv6)</dt>
+<dd>The request&#8217;s <code class="docutils literal"><span class="pre">SERVER_ADDR</span></code> header (is|is not) matching the given IP range.</dd>
+<dt>File Size Upload</dt>
+<dd>When a file is uploaded the size has to be (less|less or equal|greater|greater
+or equal) to the given size.</dd>
+<dt>File Mimetype Upload</dt>
+<dd>When a file is uploaded the mimetype (is|is not|begins with|does not begin
+with|ends with|does not end with) the given string.</dd>
+<dt>System File Tag</dt>
+<dd>One of the parent folders or the file itself (is|is not) tagged with a System
+tag.</dd>
+<dt>Regular Expression</dt>
+<dd>The File Firewall supports regular expressions, allowing you to create custom
+rules using the following conditions:</dd>
+</dl>
+<ul class="simple">
+<li>IP Range (IPv4)</li>
+<li>IP Range (IPv6)</li>
+<li>Subnet (IPv4)</li>
+<li>Subnet (IPv6)</li>
+<li>User agent</li>
+<li>User group</li>
+<li>Request URL</li>
+</ul>
+<p>You can combine multiple rules into one rule. E.g., if a rule applies to both
+the support and the qa-team you could write your rule like this:</p>
+<div class="highlight-python"><div class="highlight"><pre>Regular Expression &gt; ^(support|qa-team)$ &gt; is &gt; User group
+</pre></div>
+</div>
+</div>
+<div class="section" id="no-manual-editing">
+<h2>No Manual Editing<a class="headerlink" href="#no-manual-editing" title="Permalink to this headline">¶</a></h2>
+<p>We do not recommend modifying the configuration values directly in your
+<code class="docutils literal"><span class="pre">config.php</span></code>. These use JSON encoding, so the values are difficult to read
+and a single typo will break all of your rules.</p>
+</div>
+<div class="section" id="controlling-access-to-folders">
+<h2>Controlling Access to Folders<a class="headerlink" href="#controlling-access-to-folders" title="Permalink to this headline">¶</a></h2>
+<p>The easiest way to block access to a folder, starting with ownCloud 9.0, is to use a
+system tag. A new rule type was added which allows you to block access to
+files and folders, where at least one of the parents has a given tag. Now you
+just need to add the tag to the folder or file, and then block the tag with the
+File Firewall.</p>
+<p>This example blocks access to any folder with the tag &#8220;Confidential&#8221;.</p>
+<p>Block by System Tag:</p>
+<div class="highlight-python"><div class="highlight"><pre>System file tag:   is       &quot;Confidential&quot;
+Subnet IPv4:       is not   &quot;255.255.255.0/24&quot;
+</pre></div>
+</div>
+<div class="figure">
+<img alt="Protecting files tagged with &quot;Confidential&quot; from outside access" src="../_images/firewall-3.png" />
+</div>
+</div>
+<div class="section" id="custom-configuration-for-branded-clients">
+<h2>Custom Configuration for Branded Clients<a class="headerlink" href="#custom-configuration-for-branded-clients" title="Permalink to this headline">¶</a></h2>
+<p>If you are using <a class="reference internal" href="../enterprise_clients/index.html"><em>branded ownCloud clients</em></a>,
+you may define <code class="docutils literal"><span class="pre">firewall.branded_clients</span></code> in your <code class="docutils literal"><span class="pre">config.php</span></code> to identify
+your branded clients in the firewall <strong>&#8220;User Device&#8221;</strong> rule.</p>
+<p>The configuration is a <code class="docutils literal"><span class="pre">User-Agent</span></code> =&gt; <code class="docutils literal"><span class="pre">Device</span></code> map. <code class="docutils literal"><span class="pre">Device</span></code> must be one
+of the following:</p>
+<ul class="simple">
+<li>android</li>
+<li>android_branded</li>
+<li>ios</li>
+<li>ios_branded</li>
+<li>desktop</li>
+<li>desktop_branded</li>
+</ul>
+<p>The <code class="docutils literal"><span class="pre">User-Agent</span></code> is always compared all lowercase. By default the agent is
+compared with <code class="docutils literal"><span class="pre">equals</span></code>. When a trailing or leading asterisk, <code class="docutils literal"><span class="pre">*</span></code>, is found,
+the agent is compared with <code class="docutils literal"><span class="pre">starts</span> <span class="pre">with</span></code> or <code class="docutils literal"><span class="pre">ends</span> <span class="pre">with</span></code>. If the agent has
+both a leading and a trailing <code class="docutils literal"><span class="pre">*</span></code>, the string must appear anywhere. For
+technical reasons the <code class="docutils literal"><span class="pre">User-Agent</span></code> string must be at least 4 characters
+(including wildcards). (When you build your branded client you have the option
+to create a custom User Agent.)</p>
+<p>In this example configuration you need to replace the example User Agent
+strings, for example <code class="docutils literal"><span class="pre">'android_branded'</span></code>, with your own User Agent strings:</p>
+<div class="highlight-python"><div class="highlight"><pre>// config.php
+
+ &#39;firewall.branded_clients&#39; =&gt; array(
+   &#39;my ownbrander android user agent string&#39; =&gt; &#39;android_branded&#39;,
+   &#39;my ownbrander second android user agent string&#39; =&gt; &#39;android_branded&#39;,
+   &#39;my ownbrander ios user agent string&#39; =&gt; &#39;ios_branded&#39;,
+   &#39;my ownbrander second ios user agent string&#39; =&gt; &#39;ios_branded&#39;,
+   &#39;my ownbrander desktop user agent string&#39; =&gt; &#39;desktop_branded&#39;,
+   &#39;my ownbrander second desktop user agent string&#39; =&gt; &#39;desktop_branded&#39;,
+ ),
+</pre></div>
+</div>
+<p>The Web UI dropdown then expands to the following options:</p>
+<ul class="simple">
+<li>Android Client - always visible</li>
+<li>iOS Client - always visible</li>
+<li>Desktop Client - always visible</li>
+<li>Android Client (Branded) - visible when at least one <code class="docutils literal"><span class="pre">android_branded</span></code> is defined</li>
+<li>iOS Client (Branded) - visible when at least one <code class="docutils literal"><span class="pre">ios_branded</span></code> is defined</li>
+<li>Desktop Client (Branded) - visible when at least one <code class="docutils literal"><span class="pre">desktop_branded</span></code> is defined</li>
+<li>All branded clients - visible when at least one of <code class="docutils literal"><span class="pre">android_branded</span></code>,
+<code class="docutils literal"><span class="pre">ios_branded</span></code> or <code class="docutils literal"><span class="pre">desktop_branded</span></code> is defined</li>
+<li>All non-branded clients - visible when at least one of <code class="docutils literal"><span class="pre">android_branded</span></code>,
+<code class="docutils literal"><span class="pre">ios_branded</span></code> or <code class="docutils literal"><span class="pre">desktop_branded</span></code> is defined</li>
+<li>Others (Browsers, etc.) - always visible</li>
+</ul>
+<p>Then these options operate this way:</p>
+<ul class="simple">
+<li>The <code class="docutils literal"><span class="pre">*</span> <span class="pre">Client</span></code> options only match <code class="docutils literal"><span class="pre">android</span></code>, <code class="docutils literal"><span class="pre">ios</span></code> and <code class="docutils literal"><span class="pre">desktop</span></code> respectively.</li>
+<li>The <code class="docutils literal"><span class="pre">*</span> <span class="pre">Client</span> <span class="pre">(Branded)</span></code> options match the <code class="docutils literal"><span class="pre">*_branded</span></code> agents equivalent.</li>
+<li><code class="docutils literal"><span class="pre">All</span> <span class="pre">branded</span> <span class="pre">clients</span></code> matches: <code class="docutils literal"><span class="pre">android_branded</span></code>, <code class="docutils literal"><span class="pre">ios_branded</span></code> and
+<code class="docutils literal"><span class="pre">desktop_branded</span></code></li>
+<li><code class="docutils literal"><span class="pre">All</span> <span class="pre">non-branded</span> <span class="pre">clients</span></code> matches: <code class="docutils literal"><span class="pre">android</span></code>, <code class="docutils literal"><span class="pre">ios</span></code> and <code class="docutils literal"><span class="pre">desktop</span></code></li>
+</ul>
+</div>
+</div>
+
+
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="index.html" title="Previous Chapter: Enterprise Firewall (Enterprise only)"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Enterprise Fi...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="../enterprise_troubleshooting.html" title="Next Chapter: Enterprise Troubleshooting"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Enterprise Tr... &raquo;</span>
+    </a>
+  </li>
+</ul>
+					</div>
+				</div>
+			</div>
+  </main>  
+  </div>
+</div>
+  </body>
+</html>

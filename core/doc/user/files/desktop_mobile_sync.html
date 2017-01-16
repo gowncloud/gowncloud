@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Desktop and Mobile Synchronization &mdash; ownCloud 9.1 User Manual 9.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/main.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/styles.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '9.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="ownCloud 9.1 User Manual 9.1 documentation" href="../contents.html" />
+    <link rel="up" title="Files &amp; Synchronization" href="index.html" />
+    <link rel="next" title="Encrypting Your ownCloud Files" href="encrypting_files.html" />
+    <link rel="prev" title="Managing Deleted Files" href="deleted_file_management.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1d2d44">
+
+  </head>
+  <body role="document">
+
+
+<div class="wrap container not-front">
+  <div class="content row">
+  <main class="main">
+    <div class="row page-content-header">
+      <div class="col-md-5 col-md-offset-7">
+      
+        <form class="headersearch" style="margin-bottom:-3px;" action="../search.html" method="get">
+        <input type="text" value="" name="q" id="q" class="form-control" /> 
+        <button  class="btn btn-default" type="submit" id="searchsubmit">Search</button>
+        </form>
+      
+      </div>
+    </div>
+    
+			<div class="row">
+				<div class="col-md-3">
+					<div class="sidebar">
+							<div class="menu-support-container">
+								<ul id="menu-support" class="menu">
+									<ul>
+										
+<li><a href="../contents.html">Table of Contents</a></li>
+									</ul>
+                  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">ownCloud 9.1 User Manual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new.html">What&#8217;s New for Users in ownCloud 9.1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../webinterface.html">The ownCloud Web Interface</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Files &amp; Synchronization</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="access_webgui.html">Accessing your Files Using the ownCloud Web Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="access_webdav.html">Accessing ownCloud Files Using WebDAV</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gallery_app.html">Gallery App</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deleted_file_management.html">Managing Deleted Files</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Desktop and Mobile Synchronization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#mobile-clients">Mobile Clients</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="encrypting_files.html">Encrypting Your ownCloud Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="federated_cloud_sharing.html">Using Federation Shares</a></li>
+<li class="toctree-l2"><a class="reference internal" href="file_drop.html">Making Anonymous Uploads (Enterprise Only)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="large_file_upload.html">Large File Uploads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quota.html">Storage Quota</a></li>
+<li class="toctree-l2"><a class="reference internal" href="version_control.html">Version Control</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../pim/index.html">Contacts &amp; Calendar</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../documents.html">Collaborative Document Editing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../userpreferences.html">Setting Your Preferences</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../session_management.html">Manage Connected Browsers and Devices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../external_storage/index.html">External Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bookmarks.html">Using the Bookmarks App</a></li>
+</ul>
+
+								</ul>
+							</div>
+					</div>
+				</div>
+        
+
+				<div class="col-md-9">
+					<div class="page-content">
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="deleted_file_management.html" title="Previous Chapter: Managing Deleted Files"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Managing Dele...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="encrypting_files.html" title="Next Chapter: Encrypting Your ownCloud Files"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Encrypting Yo... &raquo;</span>
+    </a>
+  </li>
+</ul>
+						
+  <div class="section" id="desktop-and-mobile-synchronization">
+<h1>Desktop and Mobile Synchronization<a class="headerlink" href="#desktop-and-mobile-synchronization" title="Permalink to this headline">¶</a></h1>
+<p>For synchronizing files with your desktop computer, we recommend using the
+<a class="reference external" href="https://owncloud.org/sync-client/">ownCloud Sync Client</a> for Windows, Mac OS X and Linux.</p>
+<p>The ownCloud Desktop Sync Client enables you to connect to your private
+ownCloud Server.
+You can create folders in your home directory, and keep the contents of those
+folders synced with your ownCloud server. Simply copy a file into the directory
+and the ownCloud desktop client does the rest. Make a change to the files on one
+computer, it will flow across the others using these desktop sync clients.
+You will always
+have your latest files with you wherever you are.</p>
+<p>Its usage is documented separately in the <a class="reference external" href="https://doc.owncloud.org/">ownCloud Desktop Client Manual</a>.</p>
+<div class="section" id="mobile-clients">
+<h2>Mobile Clients<a class="headerlink" href="#mobile-clients" title="Permalink to this headline">¶</a></h2>
+<p>Visit your Personal page in your ownCloud Web interface to find download links
+for Android and iOS mobile sync clients. Or, visit the <a class="reference external" href="https://owncloud.org/install/">ownCloud download page</a>.</p>
+<p>Visit the <a class="reference external" href="https://doc.owncloud.org/">ownCloud documentation page</a> to read
+the mobile apps user manuals.</p>
+</div>
+</div>
+
+
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="deleted_file_management.html" title="Previous Chapter: Managing Deleted Files"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Managing Dele...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="encrypting_files.html" title="Next Chapter: Encrypting Your ownCloud Files"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Encrypting Yo... &raquo;</span>
+    </a>
+  </li>
+</ul>
+					</div>
+				</div>
+			</div>
+  </main>  
+  </div>
+</div>
+  </body>
+</html>

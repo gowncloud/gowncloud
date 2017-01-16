@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Upgrade ownCloud From Packages &mdash; ownCloud 9.1 Server Administration Manual 9.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/main.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/styles.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '9.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="ownCloud 9.1 Server Administration Manual 9.1 documentation" href="../contents.html" />
+    <link rel="up" title="Maintenance" href="index.html" />
+    <link rel="next" title="Upgrading ownCloud with the Updater App" href="update.html" />
+    <link rel="prev" title="How to Upgrade Your ownCloud Server" href="upgrade.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1d2d44">
+
+  </head>
+  <body role="document">
+
+
+<div class="wrap container not-front">
+  <div class="content row">
+  <main class="main">
+    <div class="row page-content-header">
+      <div class="col-md-5 col-md-offset-7">
+      
+        <form class="headersearch" style="margin-bottom:-3px;" action="../search.html" method="get">
+        <input type="text" value="" name="q" id="q" class="form-control" /> 
+        <button  class="btn btn-default" type="submit" id="searchsubmit">Search</button>
+        </form>
+      
+      </div>
+    </div>
+    
+			<div class="row">
+				<div class="col-md-3">
+					<div class="sidebar">
+							<div class="menu-support-container">
+								<ul id="menu-support" class="menu">
+									<ul>
+										
+<li><a href="../contents.html">Table of Contents</a></li>
+									</ul>
+                  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">ownCloud 9.1 Server Administration Manual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">ownCloud 9.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new_admin.html">What&#8217;s New for Admins in ownCloud 9.1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_server/index.html">ownCloud Server Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_user/index.html">User Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_files/index.html">File Sharing and Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_database/index.html">Database Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_mimetypes/index.html">Mimetypes Management</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Maintenance</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="enable_maintenance.html">Maintenance Mode Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backup.html">Backing up ownCloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="upgrade.html">How to Upgrade Your ownCloud Server</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Upgrade ownCloud From Packages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#upgrade-quickstart">Upgrade Quickstart</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#upgrade-tips">Upgrade Tips</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#setting-strong-directory-permissions">Setting Strong Directory Permissions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#upgrading-across-skipped-releases">Upgrading Across Skipped Releases</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="update.html">Upgrading ownCloud with the Updater App</a></li>
+<li class="toctree-l2"><a class="reference internal" href="manual_upgrade.html">Manual ownCloud Upgrade</a></li>
+<li class="toctree-l2"><a class="reference internal" href="restore.html">Restoring ownCloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="migrating.html">Migrating to a Different Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../issues/index.html">Issues and Troubleshooting</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_installation/index.html">Enterprise Edition Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_clients/index.html">Creating Branded ownCloud Clients (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_server_branding/index.html">Enterprise Server Branding (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_external_storage/index.html">External Storage (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_user_management/index.html">User Management (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_file_management/index.html">Enterprise File Management (Enterprise Only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_logging/index.html">Enterprise Logging Apps (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_firewall/index.html">Enterprise Firewall (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_troubleshooting.html">Enterprise Troubleshooting</a></li>
+</ul>
+
+								</ul>
+							</div>
+					</div>
+				</div>
+        
+
+				<div class="col-md-9">
+					<div class="page-content">
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="upgrade.html" title="Previous Chapter: How to Upgrade Your ownCloud Server"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; How to Upgrad...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="update.html" title="Next Chapter: Upgrading ownCloud with the Updater App"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Upgrading own... &raquo;</span>
+    </a>
+  </li>
+</ul>
+						
+  <div class="section" id="upgrade-owncloud-from-packages">
+<h1>Upgrade ownCloud From Packages<a class="headerlink" href="#upgrade-owncloud-from-packages" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="upgrade-quickstart">
+<h2>Upgrade Quickstart<a class="headerlink" href="#upgrade-quickstart" title="Permalink to this headline">¶</a></h2>
+<p>The best method for keeping ownCloud current on Linux servers is by configuring
+your system to use ownCloud&#8217;s <a class="reference external" href="https://download.owncloud.org/download/repositories/stable/owncloud/">Open Build Service</a> repository. Then stay
+current by using your Linux package manager to install fresh ownCloud packages.
+After installing upgraded packages you must run a few more steps to complete
+the upgrade. These are the basic steps to upgrading ownCloud:</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Make sure that you don&#8217;t skip a major release when upgrading via repositories.
+For example you can&#8217;t upgrade from 8.1.x to 9.0.x directly as you would skip the 8.2.x
+major release. See <a class="reference internal" href="#skipped-release-upgrade-label"><span>Upgrading Across Skipped Releases</span></a> for more information.</p>
+</div>
+<ul class="simple">
+<li><a class="reference internal" href="../installation/apps_management_installation.html"><em>Disable</em></a> all third-party apps.</li>
+<li>Make a <a class="reference internal" href="backup.html"><em>fresh backup</em></a>.</li>
+<li>Upgrade your ownCloud packages.</li>
+<li>Run <a class="reference internal" href="../configuration_server/occ_command.html#command-line-upgrade-label"><span>occ upgrade</span></a> (Optionally disable the
+<a class="reference internal" href="upgrade.html#migration-test-label"><span>Migration Test</span></a> which might take a long time on large installations).</li>
+<li><a class="reference internal" href="../installation/installation_wizard.html#strong-perms-label"><span>Apply strong permissions</span></a> to your ownCloud directories.</li>
+<li>Take your ownCloud server out of <a class="reference internal" href="../configuration_server/occ_command.html#maintenance-commands-label"><span>maintenance mode</span></a>.</li>
+<li>Re-enable third-party apps.</li>
+</ul>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">When upgrading from oC 9.0 to 9.1 with existing Calendars or Addressbooks
+please have a look at the <a class="reference internal" href="../release_notes.html#release-notes-label"><span>9.0 release notes</span></a> for
+important information about the needed migration steps during that upgrade.</p>
+</div>
+</div>
+<div class="section" id="upgrade-tips">
+<h2>Upgrade Tips<a class="headerlink" href="#upgrade-tips" title="Permalink to this headline">¶</a></h2>
+<p>Upgrading ownCloud from our <a class="reference external" href="https://download.owncloud.org/download/repositories/stable/owncloud/">Open Build Service</a> repository is just like any
+normal Linux upgrade. For example, on Debian or Ubuntu Linux this is the
+standard system upgrade command:</p>
+<div class="highlight-python"><div class="highlight"><pre>apt-get update &amp;&amp; apt-get upgrade
+</pre></div>
+</div>
+<p>Or you can upgrade just ownCloud with this command:</p>
+<div class="highlight-python"><div class="highlight"><pre>apt-get update &amp;&amp; apt-get install owncloud
+</pre></div>
+</div>
+<p>On Fedora, CentOS, and Red Hat Linux use <code class="docutils literal"><span class="pre">yum</span></code> to see all available updates:</p>
+<div class="highlight-python"><div class="highlight"><pre>yum check-update
+</pre></div>
+</div>
+<p>You can apply all available updates with this command:</p>
+<div class="highlight-python"><div class="highlight"><pre>yum update
+</pre></div>
+</div>
+<p>Or update only ownCloud:</p>
+<div class="highlight-python"><div class="highlight"><pre>yum update owncloud
+</pre></div>
+</div>
+<p>Your Linux package manager only downloads the current ownCloud packages. Then
+your ownCloud server is immediately put into maintenance mode. You may not see
+this until you refresh your ownCloud page.</p>
+<div class="figure">
+<a class="reference internal image-reference" href="../_images/upgrade-1.png"><img alt="ownCloud status screen informing users that it is in maintenance mode." src="../_images/upgrade-1.png" style="width: 308.25px; height: 346.5px;" /></a>
+</div>
+<p>Then use <code class="docutils literal"><span class="pre">occ</span></code> to complete the upgrade. You must run <code class="docutils literal"><span class="pre">occ</span></code> as your HTTP
+user. This example is for Debian/Ubuntu:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ upgrade
+</pre></div>
+</div>
+<p>This example is for CentOS/RHEL/Fedora:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u apache php occ upgrade
+</pre></div>
+</div>
+<p>Optionally disable the <a class="reference internal" href="upgrade.html#migration-test-label"><span>Migration Test</span></a> which might take a
+long time on large installations.</p>
+<p>See <a class="reference internal" href="../configuration_server/occ_command.html"><em>Using the occ Command</em></a> to learn more.</p>
+</div>
+<div class="section" id="setting-strong-directory-permissions">
+<h2>Setting Strong Directory Permissions<a class="headerlink" href="#setting-strong-directory-permissions" title="Permalink to this headline">¶</a></h2>
+<p>After upgrading, verify that your ownCloud directory permissions are set
+according to <a class="reference internal" href="../installation/installation_wizard.html#strong-perms-label"><span>Setting Strong Directory Permissions</span></a>.</p>
+</div>
+<div class="section" id="upgrading-across-skipped-releases">
+<span id="skipped-release-upgrade-label"></span><h2>Upgrading Across Skipped Releases<a class="headerlink" href="#upgrading-across-skipped-releases" title="Permalink to this headline">¶</a></h2>
+<p>It is best to update your ownCloud installation with every new point release (e.g. 8.1.10),
+and to never skip any major release (e.g. don&#8217;t skip 8.2.x between 8.1.x and 9.0.x). If you
+have skipped any major release you can bring your ownCloud current with these steps:</p>
+<ol class="arabic simple">
+<li>Add the repository of your current version (e.g. 8.1.x)</li>
+<li>Upgrade your current version to the latest point release (e.g. 8.1.10) via your package manager</li>
+<li>Run the <code class="docutils literal"><span class="pre">occ</span> <span class="pre">upgrade</span></code> routine (see Upgrade Quickstart above)</li>
+<li>Add the repository of the next major release (e.g. 8.2.x)</li>
+<li>Upgrade your current version to the next major release (e.g. 8.2.8) via your package manager</li>
+<li>Run the <code class="docutils literal"><span class="pre">occ</span> <span class="pre">upgrade</span></code> routine (see Upgrade Quickstart above)</li>
+<li>Repeat from step 4 until you reach the last available major release (e.g. 9.1.x)</li>
+</ol>
+<p>You&#8217;ll find repositories of previous ownCloud major releases in the <a class="reference external" href="https://owncloud.org/changelog/">ownCloud Server Changelog</a>.</p>
+</div>
+</div>
+
+
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="upgrade.html" title="Previous Chapter: How to Upgrade Your ownCloud Server"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; How to Upgrad...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="update.html" title="Next Chapter: Upgrading ownCloud with the Updater App"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Upgrading own... &raquo;</span>
+    </a>
+  </li>
+</ul>
+					</div>
+				</div>
+			</div>
+  </main>  
+  </div>
+</div>
+  </body>
+</html>

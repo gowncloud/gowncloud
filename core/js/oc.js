@@ -1,0 +1,15 @@
+var oc_debug=false;
+var oc_isadmin=true;
+var oc_dataURL="data";
+var oc_webroot="";
+var oc_appswebroots={"files":"/apps/files","activity":"/apps/activity","comments":"/apps/comments","dav":"/apps/dav","federatedfilesharing":"/apps/federatedfilesharing","federation":"/apps/federation","files_pdfviewer":"/apps/files_pdfviewer","files_sharing":"/apps/files_sharing","files_texteditor":"/apps/files_texteditor","files_trashbin":"/apps/files_trashbin","files_versions":"/apps/files_versions","files_videoplayer":"/apps/files_videoplayer","firstrunwizard":"/apps/firstrunwizard","gallery":"/apps/gallery","notifications":"/apps/notifications","provisioning_api":"/apps/provisioning_api","systemtags":"/apps/systemtags","templateeditor":"/apps/templateeditor","updatenotification":"/apps/updatenotification"};
+var datepickerFormatDate="M\/d\/yy";
+var dayNames=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+var dayNamesShort=["Sun.","Mon.","Tue.","Wed.","Thu.","Fri.","Sat."];
+var dayNamesMin=["Su","Mo","Tu","We","Th","Fr","Sa"];
+var monthNames=["January","February","March","April","May","June","July","August","September","October","November","December"];
+var monthNamesShort=["Jan.","Feb.","Mar.","Apr.","May.","Jun.","Jul.","Aug.","Sep.","Oct.","Nov.","Dec."];
+var firstDay=0;
+var oc_config={"session_lifetime":1440,"session_keepalive":true,"version":"9.1.3.1","versionstring":"9.1.3","enable_avatars":true,"lost_password_link":null,"modRewriteWorking":false};
+var oc_appconfig={"core":{"defaultExpireDateEnabled":false,"defaultExpireDate":null,"defaultExpireDateEnforced":null,"enforcePasswordForPublicLink":false,"sharingDisabledForUser":false,"resharingAllowed":true,"remoteShareAllowed":true,"federatedCloudShareDoc":"https:\/\/doc.owncloud.org\/server\/9.1\/go.php?to=user-sharing-federated","allowGroupSharing":true,"previewsEnabled":true}};
+var oc_defaults={"entity":"ownCloud","name":"ownCloud","title":"ownCloud","baseUrl":"https:\/\/owncloud.org","syncClientUrl":"https:\/\/owncloud.org\/install\/#install-clients","docBaseUrl":"https:\/\/doc.owncloud.org","docPlaceholderUrl":"https:\/\/doc.owncloud.org\/server\/9.1\/go.php?to=PLACEHOLDER","slogan":"web services under your control","logoClaim":"","shortFooter":"<a href=\"https:\/\/owncloud.org\" target=\"_blank\" rel=\"noreferrer\">ownCloud<\/a> \u2013 web services under your control","longFooter":"<a href=\"https:\/\/owncloud.org\" target=\"_blank\" rel=\"noreferrer\">ownCloud<\/a> \u2013 web services under your control","folder":""};

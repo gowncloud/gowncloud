@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Installing PHP 5.4 on RHEL 6 and CentOS 6 &mdash; ownCloud 9.1 Server Administration Manual 9.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/main.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/styles.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '9.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="ownCloud 9.1 Server Administration Manual 9.1 documentation" href="../contents.html" />
+    <link rel="up" title="Installation" href="index.html" />
+    <link rel="next" title="Installing PHP 5.5 on RHEL 7 and CentOS 7" href="php_55_installation.html" />
+    <link rel="prev" title="ownCloud Community Appliance" href="appliance_installation.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1d2d44">
+
+  </head>
+  <body role="document">
+
+
+<div class="wrap container not-front">
+  <div class="content row">
+  <main class="main">
+    <div class="row page-content-header">
+      <div class="col-md-5 col-md-offset-7">
+      
+        <form class="headersearch" style="margin-bottom:-3px;" action="../search.html" method="get">
+        <input type="text" value="" name="q" id="q" class="form-control" /> 
+        <button  class="btn btn-default" type="submit" id="searchsubmit">Search</button>
+        </form>
+      
+      </div>
+    </div>
+    
+			<div class="row">
+				<div class="col-md-3">
+					<div class="sidebar">
+							<div class="menu-support-container">
+								<ul id="menu-support" class="menu">
+									<ul>
+										
+<li><a href="../contents.html">Table of Contents</a></li>
+									</ul>
+                  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">ownCloud 9.1 Server Administration Manual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">ownCloud 9.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new_admin.html">What&#8217;s New for Admins in ownCloud 9.1</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Installation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="system_requirements.html">System Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deployment_recommendations.html">ownCloud Deployment Recommendations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux_installation.html">Preferred Linux Installation Method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation_wizard.html">Installation Wizard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command_line_installation.html">Installing ownCloud From the Command Line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changing_the_web_route.html">Changing the Web Route</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apps_management_installation.html">Installing and Managing Apps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apps_supported.html">Supported Apps in ownCloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source_installation.html">Manual Installation on Linux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="appliance_installation.html">ownCloud Community Appliance</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Installing PHP 5.4 on RHEL 6 and CentOS 6</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#rhel-6">RHEL 6</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#centos-6">CentOS 6</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="php_55_installation.html">Installing PHP 5.5 on RHEL 7 and CentOS 7</a></li>
+<li class="toctree-l2"><a class="reference internal" href="selinux_configuration.html">SELinux Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nginx_examples.html">nginx Example Configurations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_server/index.html">ownCloud Server Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_user/index.html">User Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_files/index.html">File Sharing and Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_database/index.html">Database Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_mimetypes/index.html">Mimetypes Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../maintenance/index.html">Maintenance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../issues/index.html">Issues and Troubleshooting</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_installation/index.html">Enterprise Edition Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_clients/index.html">Creating Branded ownCloud Clients (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_server_branding/index.html">Enterprise Server Branding (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_external_storage/index.html">External Storage (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_user_management/index.html">User Management (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_file_management/index.html">Enterprise File Management (Enterprise Only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_logging/index.html">Enterprise Logging Apps (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_firewall/index.html">Enterprise Firewall (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_troubleshooting.html">Enterprise Troubleshooting</a></li>
+</ul>
+
+								</ul>
+							</div>
+					</div>
+				</div>
+        
+
+				<div class="col-md-9">
+					<div class="page-content">
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="appliance_installation.html" title="Previous Chapter: ownCloud Community Appliance"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; ownCloud Comm...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="php_55_installation.html" title="Next Chapter: Installing PHP 5.5 on RHEL 7 and CentOS 7"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Installing PH... &raquo;</span>
+    </a>
+  </li>
+</ul>
+						
+  <div class="section" id="installing-php-5-4-on-rhel-6-and-centos-6">
+<h1>Installing PHP 5.4 on RHEL 6 and CentOS 6<a class="headerlink" href="#installing-php-5-4-on-rhel-6-and-centos-6" title="Permalink to this headline">¶</a></h1>
+<p>Red Hat Enterprise Linux and CentOS 6 still ship with PHP 5.3. ownCloud
+requires PHP 5.4 or better. There are several third-party repositories that
+supply PHP 5.4, but you must use the Software Collections (SCL) repository to
+be in compliance with your RHEL support contract, and not any other third-party
+repository.</p>
+<div class="section" id="rhel-6">
+<h2>RHEL 6<a class="headerlink" href="#rhel-6" title="Permalink to this headline">¶</a></h2>
+<p>Follow these steps to install PHP 5.4 from SCL. First you must use
+your Subscription Manager to enable SCL:</p>
+<div class="highlight-python"><div class="highlight"><pre>subscription-manager repos --enable rhel-server-rhscl-6-eus-rpms
+</pre></div>
+</div>
+<p>Then install PHP 5.4 and these modules:</p>
+<div class="highlight-python"><div class="highlight"><pre>yum install php54 php54-php php54-php-gd php54-php-mbstring
+</pre></div>
+</div>
+<p>You must also install the updated database module for your database. This
+example installs the new PHP 5.4 module for MySQL/MariaDB:</p>
+<div class="highlight-python"><div class="highlight"><pre>yum install php54-php-mysqlnd
+</pre></div>
+</div>
+<p>Disable loading the old PHP 5.3 Apache module:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">mv</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">httpd</span><span class="o">/</span><span class="n">conf</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">php</span><span class="o">.</span><span class="n">conf</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">httpd</span><span class="o">/</span><span class="n">conf</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">php53</span><span class="o">.</span><span class="n">off</span>
+</pre></div>
+</div>
+<p>You should now have a /etc/httpd/conf.d/php54-php.conf file, which loads the
+correct PHP 5.4 module for Apache.</p>
+<p>Then restart Apache:</p>
+<div class="highlight-python"><div class="highlight"><pre>service httpd restart
+</pre></div>
+</div>
+<p>Verify with <a class="reference internal" href="../issues/general_troubleshooting.html#label-phpinfo"><span>PHP Version and Information</span></a> that your Apache server is using PHP 5.4 and loading
+the correct modules.</p>
+</div>
+<div class="section" id="centos-6">
+<h2>CentOS 6<a class="headerlink" href="#centos-6" title="Permalink to this headline">¶</a></h2>
+<p>First install the SCL repo:</p>
+<div class="highlight-python"><div class="highlight"><pre>yum install centos-release-SCL
+</pre></div>
+</div>
+<p>Then install PHP 5.4 and these modules:</p>
+<div class="highlight-python"><div class="highlight"><pre>yum install php54 php54-php php54-php-gd php54-php-mbstring
+</pre></div>
+</div>
+<p>You must also install the updated database module. This installs the new PHP 5.4
+module for MySQL/MariaDB:</p>
+<div class="highlight-python"><div class="highlight"><pre>yum install php54-php-mysqlnd
+</pre></div>
+</div>
+<p>Disable loading the old PHP 5.3 Apache module:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">mv</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">httpd</span><span class="o">/</span><span class="n">conf</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">php</span><span class="o">.</span><span class="n">conf</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">httpd</span><span class="o">/</span><span class="n">conf</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">php53</span><span class="o">.</span><span class="n">off</span>
+</pre></div>
+</div>
+<p>You should now have a /etc/httpd/conf.d/php54-php.conf file, which loads the
+correct PHP 5.4 module for Apache.</p>
+<p>Finally, restart Apache:</p>
+<div class="highlight-python"><div class="highlight"><pre>service httpd restart
+</pre></div>
+</div>
+<p>Verify with <a class="reference internal" href="../issues/general_troubleshooting.html#label-phpinfo"><span>PHP Version and Information</span></a> that your Apache server is using PHP 5.4 and loading
+the correct modules.</p>
+</div>
+</div>
+
+
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="appliance_installation.html" title="Previous Chapter: ownCloud Community Appliance"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; ownCloud Comm...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="php_55_installation.html" title="Next Chapter: Installing PHP 5.5 on RHEL 7 and CentOS 7"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Installing PH... &raquo;</span>
+    </a>
+  </li>
+</ul>
+					</div>
+				</div>
+			</div>
+  </main>  
+  </div>
+</div>
+  </body>
+</html>

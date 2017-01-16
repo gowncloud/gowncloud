@@ -1,0 +1,9 @@
+{ "translations": {
+    "Contact birthdays" : "Az ismerősök születésnapjai",
+    "Personal" : "Személyes",
+    "Contacts" : "Névjegyek",
+    "Technical details" : "Technikai adatok",
+    "Remote Address: %s" : "Távoli cím: %s",
+    "Request ID: %s" : "Kérelem azonosító: %s"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>iOS - Synchronize iPhone/iPad &mdash; ownCloud 9.1 User Manual 9.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/main.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/styles.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '9.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="ownCloud 9.1 User Manual 9.1 documentation" href="../contents.html" />
+    <link rel="up" title="Contacts &amp; Calendar" href="index.html" />
+    <link rel="next" title="Synchronizing with OS X" href="sync_osx.html" />
+    <link rel="prev" title="Using the Calendar App" href="calendar.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1d2d44">
+
+  </head>
+  <body role="document">
+
+
+<div class="wrap container not-front">
+  <div class="content row">
+  <main class="main">
+    <div class="row page-content-header">
+      <div class="col-md-5 col-md-offset-7">
+      
+        <form class="headersearch" style="margin-bottom:-3px;" action="../search.html" method="get">
+        <input type="text" value="" name="q" id="q" class="form-control" /> 
+        <button  class="btn btn-default" type="submit" id="searchsubmit">Search</button>
+        </form>
+      
+      </div>
+    </div>
+    
+			<div class="row">
+				<div class="col-md-3">
+					<div class="sidebar">
+							<div class="menu-support-container">
+								<ul id="menu-support" class="menu">
+									<ul>
+										
+<li><a href="../contents.html">Table of Contents</a></li>
+									</ul>
+                  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">ownCloud 9.1 User Manual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new.html">What&#8217;s New for Users in ownCloud 9.1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../webinterface.html">The ownCloud Web Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../files/index.html">Files &amp; Synchronization</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Contacts &amp; Calendar</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="contacts.html">Using the Contacts App</a></li>
+<li class="toctree-l2"><a class="reference internal" href="calendar.html">Using the Calendar App</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">iOS - Synchronize iPhone/iPad</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#calendar">Calendar</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#address-book">Address book</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sync_osx.html">Synchronizing with OS X</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sync_kde.html">Synchronizing with KDE SC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sync_thunderbird.html">Thunderbird - Synchronize Addressbook</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../documents.html">Collaborative Document Editing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../userpreferences.html">Setting Your Preferences</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../session_management.html">Manage Connected Browsers and Devices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../external_storage/index.html">External Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bookmarks.html">Using the Bookmarks App</a></li>
+</ul>
+
+								</ul>
+							</div>
+					</div>
+				</div>
+        
+
+				<div class="col-md-9">
+					<div class="page-content">
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="calendar.html" title="Previous Chapter: Using the Calendar App"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Using the Cal...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="sync_osx.html" title="Next Chapter: Synchronizing with OS X"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Synchronizing... &raquo;</span>
+    </a>
+  </li>
+</ul>
+						
+  <div class="section" id="ios-synchronize-iphone-ipad">
+<h1>iOS - Synchronize iPhone/iPad<a class="headerlink" href="#ios-synchronize-iphone-ipad" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="calendar">
+<h2>Calendar<a class="headerlink" href="#calendar" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>Open the settings application.</li>
+<li>Select Mail, Contacts, Calendars.</li>
+<li>Select Add Account.</li>
+<li>Select Other as account type.</li>
+<li>Select Add CalDAV account.</li>
+<li>For server, type <code class="docutils literal"><span class="pre">example.com/remote.php/dav/principals/users/USERNAME/</span></code></li>
+<li>Enter your user name and password.</li>
+<li>Select Next.</li>
+<li>If your server does not support SSL, a warning will be displayed.
+Select Continue.</li>
+<li>If the iPhone is unable to verify the account information perform the
+following steps:<ul>
+<li>Select OK.</li>
+<li>Select advanced settings.</li>
+<li>If your server does not support SSL, make sure Use SSL is set to OFF.</li>
+<li>Change port to 80.</li>
+<li>Go back to account information and hit Save.</li>
+</ul>
+</li>
+</ol>
+<p>Your calendar will now be visible in the Calendar application</p>
+</div>
+<div class="section" id="address-book">
+<h2>Address book<a class="headerlink" href="#address-book" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>Open the settings application.</li>
+<li>Select Mail, Contacts, Calendars.</li>
+<li>Select Add Account.</li>
+<li>Select Other as account type.</li>
+<li>Select Add CardDAV account.</li>
+<li>For server, type <code class="docutils literal"><span class="pre">example.com/remote.php/dav/principals/users/USERNAME/</span></code></li>
+<li>Enter your user name and password.</li>
+<li>Select Next.</li>
+<li>If your server does not support SSL, a warning will be displayed.
+Select Continue.</li>
+<li>If the iPhone is unable to verify the account information perform the
+following:<ul>
+<li>Select OK.</li>
+<li>Select advanced settings.</li>
+<li>If your server does not support SSL, make sure Use SSL is set to OFF.</li>
+<li>Change port to 80.</li>
+<li>Go back to account information and hit Save.</li>
+</ul>
+</li>
+</ol>
+<p>Now should now find your contacts in the address book of your iPhone.
+If it&#8217;s still not working, have a look at the <a class="reference internal" href="troubleshooting.html"><em>Troubleshooting</em></a>
+and <a class="reference external" href="https://doc.owncloud.org/server/9.0/admin_manual/issues/index.html#troubleshooting-contacts-calendar">Troubleshooting Contacts &amp; Calendar</a> guides.</p>
+</div>
+</div>
+
+
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="calendar.html" title="Previous Chapter: Using the Calendar App"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Using the Cal...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="sync_osx.html" title="Next Chapter: Synchronizing with OS X"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Synchronizing... &raquo;</span>
+    </a>
+  </li>
+</ul>
+					</div>
+				</div>
+			</div>
+  </main>  
+  </div>
+</div>
+  </body>
+</html>

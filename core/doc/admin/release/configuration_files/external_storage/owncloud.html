@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ownCloud &mdash; ownCloud 9.1 Server Administration Manual 9.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/main.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/styles.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '9.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="ownCloud 9.1 Server Administration Manual 9.1 documentation" href="../../contents.html" />
+    <link rel="up" title="Configuring External Storage (GUI)" href="../external_storage_configuration_gui.html" />
+    <link rel="next" title="SFTP" href="sftp.html" />
+    <link rel="prev" title="OpenStack Object Storage" href="openstack.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1d2d44">
+
+  </head>
+  <body role="document">
+
+
+<div class="wrap container not-front">
+  <div class="content row">
+  <main class="main">
+    <div class="row page-content-header">
+      <div class="col-md-5 col-md-offset-7">
+      
+        <form class="headersearch" style="margin-bottom:-3px;" action="../../search.html" method="get">
+        <input type="text" value="" name="q" id="q" class="form-control" /> 
+        <button  class="btn btn-default" type="submit" id="searchsubmit">Search</button>
+        </form>
+      
+      </div>
+    </div>
+    
+			<div class="row">
+				<div class="col-md-3">
+					<div class="sidebar">
+							<div class="menu-support-container">
+								<ul id="menu-support" class="menu">
+									<ul>
+										
+<li><a href="../../contents.html">Table of Contents</a></li>
+									</ul>
+                  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">ownCloud 9.1 Server Administration Manual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../release_notes.html">ownCloud 9.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../whats_new_admin.html">What&#8217;s New for Admins in ownCloud 9.1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation/index.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../configuration_server/index.html">ownCloud Server Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../configuration_user/index.html">User Management</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">File Sharing and Management</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../file_sharing_configuration.html">File Sharing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../federated_cloud_sharing_configuration.html">Configuring Federation Sharing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../big_file_upload_configuration.html">Uploading big files &gt; 512MB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../collaborative_documents_configuration.html">Configuring the Collaborative Documents App</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../default_files_configuration.html">Providing Default Files</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../external_storage_configuration_gui.html">Configuring External Storage (GUI)</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../external_storage_configuration_gui.html#enabling-external-storage-support">Enabling External Storage Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../external_storage_configuration_gui.html#storage-configuration">Storage Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../external_storage_configuration_gui.html#user-and-group-permissions">User and Group Permissions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../external_storage_configuration_gui.html#mount-options">Mount Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../external_storage_configuration_gui.html#using-self-signed-certificates">Using Self-Signed Certificates</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../external_storage_configuration_gui.html#available-storage-backends">Available storage backends</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../external_storage_configuration_gui.html#allow-users-to-mount-external-storage">Allow Users to Mount External Storage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../external_storage_configuration_gui.html#detecting-files-added-to-external-storages">Detecting Files Added to External Storages</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../external_storage_configuration.html">Configuring External Storage (Configuration File)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="auth_mechanisms.html">External Storage Authentication mechanisms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../encryption_configuration.html">Encryption Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../files_locking_transactional.html">Transactional File Locking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../previews_configuration.html">Previews Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../file_versioning.html">Controlling File Versions and Aging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../trashbin_options.html">Managing the Trashbin</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../configuration_database/index.html">Database Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../configuration_mimetypes/index.html">Mimetypes Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../maintenance/index.html">Maintenance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../issues/index.html">Issues and Troubleshooting</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../enterprise_installation/index.html">Enterprise Edition Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../enterprise_clients/index.html">Creating Branded ownCloud Clients (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../enterprise_server_branding/index.html">Enterprise Server Branding (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../enterprise_external_storage/index.html">External Storage (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../enterprise_user_management/index.html">User Management (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../enterprise_file_management/index.html">Enterprise File Management (Enterprise Only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../enterprise_logging/index.html">Enterprise Logging Apps (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../enterprise_firewall/index.html">Enterprise Firewall (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../enterprise_troubleshooting.html">Enterprise Troubleshooting</a></li>
+</ul>
+
+								</ul>
+							</div>
+					</div>
+				</div>
+        
+
+				<div class="col-md-9">
+					<div class="page-content">
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="openstack.html" title="Previous Chapter: OpenStack Object Storage"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; OpenStack Obj...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="sftp.html" title="Next Chapter: SFTP"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">SFTP &raquo;</span>
+    </a>
+  </li>
+</ul>
+						
+  <div class="section" id="owncloud">
+<h1>ownCloud<a class="headerlink" href="#owncloud" title="Permalink to this headline">¶</a></h1>
+<p>An ownCloud storage is a specialized <a class="reference internal" href="webdav.html"><em>WebDAV</em></a> storage, with optimizations
+for ownCloud-ownCloud communication. See the <a class="reference internal" href="webdav.html"><em>WebDAV</em></a> documentation to
+learn how to configure an ownCloud external storage.</p>
+<p>When filling in the <strong>URL</strong> field, use the path to the root of the ownCloud
+installation, rather than the path to the WebDAV endpoint. So, for a server at
+<code class="docutils literal"><span class="pre">https://example.com/owncloud</span></code>, use <code class="docutils literal"><span class="pre">https://example.com/owncloud</span></code> and not
+<code class="docutils literal"><span class="pre">https://example.com/owncloud/remote.php/dav</span></code>.</p>
+<p>See <a class="reference internal" href="../external_storage_configuration_gui.html"><em>Configuring External Storage (GUI)</em></a> for additional mount
+options and information.</p>
+<p>See <a class="reference internal" href="auth_mechanisms.html"><em>External Storage Authentication mechanisms</em></a> for more information on authentication schemes.</p>
+</div>
+
+
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="openstack.html" title="Previous Chapter: OpenStack Object Storage"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; OpenStack Obj...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="sftp.html" title="Next Chapter: SFTP"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">SFTP &raquo;</span>
+    </a>
+  </li>
+</ul>
+					</div>
+				</div>
+			</div>
+  </main>  
+  </div>
+</div>
+  </body>
+</html>

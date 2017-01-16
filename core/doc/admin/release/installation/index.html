@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Installation &mdash; ownCloud 9.1 Server Administration Manual 9.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/main.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/styles.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '9.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="ownCloud 9.1 Server Administration Manual 9.1 documentation" href="../contents.html" />
+    <link rel="next" title="System Requirements" href="system_requirements.html" />
+    <link rel="prev" title="What’s New for Admins in ownCloud 9.1" href="../whats_new_admin.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1d2d44">
+
+  </head>
+  <body role="document">
+
+
+<div class="wrap container not-front">
+  <div class="content row">
+  <main class="main">
+    <div class="row page-content-header">
+      <div class="col-md-5 col-md-offset-7">
+      
+        <form class="headersearch" style="margin-bottom:-3px;" action="../search.html" method="get">
+        <input type="text" value="" name="q" id="q" class="form-control" /> 
+        <button  class="btn btn-default" type="submit" id="searchsubmit">Search</button>
+        </form>
+      
+      </div>
+    </div>
+    
+			<div class="row">
+				<div class="col-md-3">
+					<div class="sidebar">
+							<div class="menu-support-container">
+								<ul id="menu-support" class="menu">
+									<ul>
+										
+<li><a href="../contents.html">Table of Contents</a></li>
+									</ul>
+                  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">ownCloud 9.1 Server Administration Manual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">ownCloud 9.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new_admin.html">What&#8217;s New for Admins in ownCloud 9.1</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="system_requirements.html">System Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deployment_recommendations.html">ownCloud Deployment Recommendations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux_installation.html">Preferred Linux Installation Method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation_wizard.html">Installation Wizard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command_line_installation.html">Installing ownCloud From the Command Line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changing_the_web_route.html">Changing the Web Route</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apps_management_installation.html">Installing and Managing Apps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apps_supported.html">Supported Apps in ownCloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source_installation.html">Manual Installation on Linux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="appliance_installation.html">ownCloud Community Appliance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="php_54_installation.html">Installing PHP 5.4 on RHEL 6 and CentOS 6</a></li>
+<li class="toctree-l2"><a class="reference internal" href="php_55_installation.html">Installing PHP 5.5 on RHEL 7 and CentOS 7</a></li>
+<li class="toctree-l2"><a class="reference internal" href="selinux_configuration.html">SELinux Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nginx_examples.html">nginx Example Configurations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_server/index.html">ownCloud Server Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_user/index.html">User Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_files/index.html">File Sharing and Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_database/index.html">Database Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_mimetypes/index.html">Mimetypes Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../maintenance/index.html">Maintenance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../issues/index.html">Issues and Troubleshooting</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_installation/index.html">Enterprise Edition Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_clients/index.html">Creating Branded ownCloud Clients (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_server_branding/index.html">Enterprise Server Branding (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_external_storage/index.html">External Storage (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_user_management/index.html">User Management (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_file_management/index.html">Enterprise File Management (Enterprise Only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_logging/index.html">Enterprise Logging Apps (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_firewall/index.html">Enterprise Firewall (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_troubleshooting.html">Enterprise Troubleshooting</a></li>
+</ul>
+
+								</ul>
+							</div>
+					</div>
+				</div>
+        
+
+				<div class="col-md-9">
+					<div class="page-content">
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="../whats_new_admin.html" title="Previous Chapter: What’s New for Admins in ownCloud 9.1"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; What’s New fo...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="system_requirements.html" title="Next Chapter: System Requirements"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">System Requir... &raquo;</span>
+    </a>
+  </li>
+</ul>
+						
+  <div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="system_requirements.html">System Requirements</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="system_requirements.html#memory">Memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system_requirements.html#recommended-setup-for-running-owncloud">Recommended Setup for Running ownCloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system_requirements.html#supported-platforms">Supported Platforms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system_requirements.html#database-requirements-for-mysql-mariadb">Database Requirements for MySQL / MariaDB</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="deployment_recommendations.html">ownCloud Deployment Recommendations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="deployment_recommendations.html#general-recommendations">General Recommendations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deployment_recommendations.html#small-workgroups-or-departments">Small Workgroups or Departments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deployment_recommendations.html#mid-sized-enterprises">Mid-sized Enterprises</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deployment_recommendations.html#large-enterprises-and-service-providers">Large Enterprises and Service Providers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deployment_recommendations.html#hardware-considerations">Hardware Considerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deployment_recommendations.html#software-considerations">Software Considerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deployment_recommendations.html#file-storage">File Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deployment_recommendations.html#session-storage">Session Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deployment_recommendations.html#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="linux_installation.html">Preferred Linux Installation Method</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="linux_installation.html#changes-in-owncloud-9">Changes in ownCloud 9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux_installation.html#repos-stable-or-major-release">Repos: Stable or Major Release?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux_installation.html#installing-owncloud-enterprise-edition">Installing ownCloud Enterprise Edition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux_installation.html#downgrading-not-supported">Downgrading Not Supported</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux_installation.html#binlog-format-statement">BINLOG_FORMAT = STATEMENT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux_installation.html#additional-installation-guides-and-notes">Additional Installation Guides and Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="installation_wizard.html">Installation Wizard</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation_wizard.html#quick-start">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation_wizard.html#data-directory-location">Data Directory Location</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation_wizard.html#database-choice">Database Choice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation_wizard.html#trusted-domains">Trusted Domains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation_wizard.html#setting-strong-directory-permissions">Setting Strong Directory Permissions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="command_line_installation.html">Installing ownCloud From the Command Line</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="command_line_installation.html#binlog-format-statement">BINLOG_FORMAT = STATEMENT</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changing_the_web_route.html">Changing the Web Route</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changing_the_web_route.html#example-moving-from-owncloud-to">Example: Moving from /owncloud to /</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="apps_management_installation.html">Installing and Managing Apps</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="apps_management_installation.html#supported-apps">Supported Apps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apps_management_installation.html#viewing-enabled-apps">Viewing Enabled Apps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apps_management_installation.html#managing-apps">Managing Apps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apps_management_installation.html#adding-third-party-apps">Adding Third Party Apps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apps_management_installation.html#using-custom-app-directories">Using Custom App Directories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apps_management_installation.html#using-your-own-appstore">Using Your Own Appstore</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="apps_supported.html">Supported Apps in ownCloud</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="apps_supported.html#agpl-apps">AGPL Apps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apps_supported.html#enterprise-only-apps">Enterprise-Only Apps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="source_installation.html">Manual Installation on Linux</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="source_installation.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source_installation.html#mysql-mariadb-require-innodb">MySQL/MariaDB Require InnoDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source_installation.html#example-installation-on-ubuntu-14-04-lts-server">Example Installation on Ubuntu 14.04 LTS Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source_installation.html#binlog-format-statement">BINLOG_FORMAT = STATEMENT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source_installation.html#apache-web-server-configuration">Apache Web Server Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source_installation.html#enabling-ssl">Enabling SSL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source_installation.html#installation-wizard">Installation Wizard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source_installation.html#setting-strong-directory-permissions">Setting Strong Directory Permissions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source_installation.html#selinux-configuration-tips">SELinux Configuration Tips</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source_installation.html#php-ini-configuration-notes">php.ini Configuration Notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source_installation.html#php-fpm-configuration-notes">php-fpm Configuration Notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source_installation.html#other-web-servers">Other Web Servers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="appliance_installation.html">ownCloud Community Appliance</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="appliance_installation.html#instructions-for-virtualbox-and-ova">Instructions for VirtualBox and OVA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="appliance_installation.html#software-appliances">Software Appliances</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="php_54_installation.html">Installing PHP 5.4 on RHEL 6 and CentOS 6</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="php_54_installation.html#rhel-6">RHEL 6</a></li>
+<li class="toctree-l2"><a class="reference internal" href="php_54_installation.html#centos-6">CentOS 6</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="php_55_installation.html">Installing PHP 5.5 on RHEL 7 and CentOS 7</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="php_55_installation.html#rhel-7-upgrade-to-php-5-5">RHEL 7 Upgrade to PHP 5.5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="php_55_installation.html#centos-7-upgrade-to-php-5-5">CentOS 7 Upgrade to PHP 5.5</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="selinux_configuration.html">SELinux Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="selinux_configuration.html#enable-updates-via-the-web-interface">Enable updates via the web interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="selinux_configuration.html#disallow-write-access-to-the-whole-web-directory">Disallow write access to the whole web directory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="selinux_configuration.html#allow-access-to-a-remote-database">Allow access to a remote database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="selinux_configuration.html#allow-access-to-ldap-server">Allow access to LDAP server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="selinux_configuration.html#allow-access-to-remote-network">Allow access to remote network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="selinux_configuration.html#allow-access-to-network-memcache">Allow access to network memcache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="selinux_configuration.html#allow-access-to-smtp-sendmail">Allow access to SMTP/sendmail</a></li>
+<li class="toctree-l2"><a class="reference internal" href="selinux_configuration.html#allow-access-to-cifs-smb">Allow access to CIFS/SMB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="selinux_configuration.html#allow-access-to-fusefs">Allow access to FuseFS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="selinux_configuration.html#allow-access-to-gpg-for-rainloop">Allow access to GPG for Rainloop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="selinux_configuration.html#troubleshooting">Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="nginx_examples.html">nginx Example Configurations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="nginx_examples.html#example-configurations">Example Configurations</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="../whats_new_admin.html" title="Previous Chapter: What’s New for Admins in ownCloud 9.1"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; What’s New fo...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="system_requirements.html" title="Next Chapter: System Requirements"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">System Requir... &raquo;</span>
+    </a>
+  </li>
+</ul>
+					</div>
+				</div>
+			</div>
+  </main>  
+  </div>
+</div>
+  </body>
+</html>

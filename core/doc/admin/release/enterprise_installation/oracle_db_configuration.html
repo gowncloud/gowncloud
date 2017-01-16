@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Oracle Database Setup &mdash; ownCloud 9.1 Server Administration Manual 9.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/main.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/styles.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '9.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="ownCloud 9.1 Server Administration Manual 9.1 documentation" href="../contents.html" />
+    <link rel="up" title="Enterprise Edition Installation" href="index.html" />
+    <link rel="next" title="Creating Branded ownCloud Clients (Enterprise only)" href="../enterprise_clients/index.html" />
+    <link rel="prev" title="License Keys" href="license_keys_installation.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1d2d44">
+
+  </head>
+  <body role="document">
+
+
+<div class="wrap container not-front">
+  <div class="content row">
+  <main class="main">
+    <div class="row page-content-header">
+      <div class="col-md-5 col-md-offset-7">
+      
+        <form class="headersearch" style="margin-bottom:-3px;" action="../search.html" method="get">
+        <input type="text" value="" name="q" id="q" class="form-control" /> 
+        <button  class="btn btn-default" type="submit" id="searchsubmit">Search</button>
+        </form>
+      
+      </div>
+    </div>
+    
+			<div class="row">
+				<div class="col-md-3">
+					<div class="sidebar">
+							<div class="menu-support-container">
+								<ul id="menu-support" class="menu">
+									<ul>
+										
+<li><a href="../contents.html">Table of Contents</a></li>
+									</ul>
+                  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">ownCloud 9.1 Server Administration Manual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">ownCloud 9.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new_admin.html">What&#8217;s New for Admins in ownCloud 9.1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_server/index.html">ownCloud Server Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_user/index.html">User Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_files/index.html">File Sharing and Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_database/index.html">Database Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_mimetypes/index.html">Mimetypes Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../maintenance/index.html">Maintenance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../issues/index.html">Issues and Troubleshooting</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Enterprise Edition Installation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="linux_installation.html">Installing &amp; Upgrading ownCloud Enterprise Edition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supported_apps_installation.html">Supported ownCloud Enterprise Edition Apps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="license_keys_installation.html">License Keys</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Oracle Database Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#outline-of-steps">Outline of Steps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configuring-oracle">Configuring Oracle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configure-owncloud">Configure ownCloud</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_clients/index.html">Creating Branded ownCloud Clients (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_server_branding/index.html">Enterprise Server Branding (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_external_storage/index.html">External Storage (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_user_management/index.html">User Management (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_file_management/index.html">Enterprise File Management (Enterprise Only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_logging/index.html">Enterprise Logging Apps (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_firewall/index.html">Enterprise Firewall (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_troubleshooting.html">Enterprise Troubleshooting</a></li>
+</ul>
+
+								</ul>
+							</div>
+					</div>
+				</div>
+        
+
+				<div class="col-md-9">
+					<div class="page-content">
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="license_keys_installation.html" title="Previous Chapter: License Keys"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; License Keys</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="../enterprise_clients/index.html" title="Next Chapter: Creating Branded ownCloud Clients (Enterprise only)"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Creating Bran... &raquo;</span>
+    </a>
+  </li>
+</ul>
+						
+  <div class="section" id="oracle-database-setup">
+<h1>Oracle Database Setup<a class="headerlink" href="#oracle-database-setup" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<p>This document will cover the setup and preparation of the ownCloud server to
+support the use of Oracle as a backend database.  For the purposes of testing,
+we are using Oracle Enterprise Linux as both the Web server that
+will host ownCloud, and as a host for the Oracle Database.</p>
+<div class="section" id="outline-of-steps">
+<h2>Outline of Steps<a class="headerlink" href="#outline-of-steps" title="Permalink to this headline">¶</a></h2>
+<p>This document will cover the following steps:</p>
+<ul class="simple">
+<li>Setup of the ownCloud user in Oracle: This involves setting up a user space
+in Oracle for setting up the ownCloud database.</li>
+<li>Installing the Oracle Instant Client on the Web server (facilitating the
+connection to the Oracle Database).</li>
+<li>Compiling and installing the Oracle PHP Plugin oci8 module</li>
+<li>Pointing ownCloud at the Oracle database in the initial setup process</li>
+</ul>
+<p>The document assumes that you already have your Oracle instance running, and
+have provisioned the needed resources. It also assumes that you have installed
+ownCloud with all of the prerequisites.</p>
+</div>
+<div class="section" id="configuring-oracle">
+<h2>Configuring Oracle<a class="headerlink" href="#configuring-oracle" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="setting-up-the-user-space-for-owncloud">
+<h3>Setting up the User Space for ownCloud<a class="headerlink" href="#setting-up-the-user-space-for-owncloud" title="Permalink to this headline">¶</a></h3>
+<p>Step one, if it has not already been completed by your <abbr title="DataBase Administrator">DBA</abbr>, provision a user
+space on the Oracle instance for ownCloud.  This can be done by logging in as a
+DBA and running the script below:</p>
+<div class="highlight-python"><div class="highlight"><pre>CREATE USER owncloud IDENTIFIED BY password;
+ALTER USER owncloud DEFAULT TABLESPACE users TEMPORARY TABLESPACE temp QUOTA unlimited ON users;
+GRANT create session, create table, create procedure, create sequence, create trigger, create view, create synonym, alter session TO owncloud;
+</pre></div>
+</div>
+<p>Substitute an actual password for <code class="docutils literal"><span class="pre">password</span></code>.  Items like TableSpace, Quota etc. will be determined by your DBA.</p>
+</div>
+<div class="section" id="downloading-and-installing-the-oracle-instant-client">
+<h3>Downloading and Installing the Oracle Instant Client<a class="headerlink" href="#downloading-and-installing-the-oracle-instant-client" title="Permalink to this headline">¶</a></h3>
+<p>As our example system is Oracle Enterprise Linux, it is
+necessary to go to the Oracle site and download the <a class="reference external" href="http://www.oracle.com/technetwork/database/features/instant-client/index-097480.html">Oracle Instant Client</a> for
+your OS Distribution.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Download the instant client and the instant client SDK and place them
+in a directory on the server, in this example they are RPM packages.</p>
+</div>
+<ul class="simple">
+<li>Install the basic client from the RPM.  Use the <code class="docutils literal"><span class="pre">rpm</span> <span class="pre">–ivh</span></code> command</li>
+<li>Install the SDK RPM package.  Use the <code class="docutils literal"><span class="pre">rpm</span> <span class="pre">–ivh</span></code> command</li>
+</ul>
+<p>At this point, the Oracle Instant client is installed on the ownCloud Host (in
+the home directory).</p>
+</div>
+<div class="section" id="install-the-oci8-php-extension">
+<h3>Install the OCI8 PHP Extension:<a class="headerlink" href="#install-the-oci8-php-extension" title="Permalink to this headline">¶</a></h3>
+<p>The next step is to compile and install the OCI8 PHP extension for connectivity to the Oracle Database.</p>
+<ul>
+<li><p class="first">Create a folder for these bits on your server.</p>
+</li>
+<li><p class="first">Download the latest version of the extension from <a class="reference external" href="http://pecl.php.net/package/oci8">http://pecl.php.net/package/oci8</a>.</p>
+</li>
+<li><p class="first">Unpack the OCI8 PHP extension and copy it over to the server.</p>
+</li>
+<li><dl class="first docutils">
+<dt>There should be two things in the folder:</dt>
+<dd><ul class="first last simple">
+<li><code class="docutils literal"><span class="pre">package.xml</span></code> file</li>
+<li><code class="docutils literal"><span class="pre">oci8-*.*.*</span></code> folder (folder will change based on version of the extension you downloaded).</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Build the OCI8 module.</dt>
+<dd><ul class="first last">
+<li><p class="first">Change (<code class="docutils literal"><span class="pre">cd</span></code>) to the folder where you have copied the downloaded and uncompressed OCI8 bits.</p>
+</li>
+<li><p class="first">Run the following command (there will be a significant amount of output):</p>
+<div class="highlight-python"><div class="highlight"><pre>pecl build
+</pre></div>
+</div>
+</li>
+</ul>
+</dd>
+</dl>
+<ul class="simple">
+<li>Eventually the output will stop and ask for the <em>Oracle Home Directory</em>, just press enter.</li>
+</ul>
+</li>
+<li><p class="first">Change directory:</p>
+<div class="highlight-python"><div class="highlight"><pre>cd oci8-&lt;version number&gt;
+</pre></div>
+</div>
+</li>
+<li><p class="first">Type the following command:</p>
+<div class="highlight-python"><div class="highlight"><pre>./configure –with-oci8=instantcleint,/usr/lib/oracle/&lt;version number&gt;/client64/lib
+</pre></div>
+</div>
+</li>
+<li><p class="first">Again, there will be significant output</p>
+</li>
+<li><p class="first">Enter the following command to compile: <code class="docutils literal"><span class="pre">make</span></code></p>
+</li>
+<li><p class="first">At this time there should be a folder called modules in the <code class="docutils literal"><span class="pre">oci8-&lt;version_&gt;</span></code> folder.
+Within this folder exists the <code class="docutils literal"><span class="pre">oci8.so</span></code> file.</p>
+</li>
+<li><p class="first">Copy this to the directory where the modules are stored in the PHP install. It depends on
+your distribution. This is the path for RHEL 6 and OEL 6:</p>
+<div class="highlight-python"><div class="highlight"><pre>cp oci8.so /usr/lib64/php/modules
+</pre></div>
+</div>
+</li>
+<li><dl class="first docutils">
+<dt>Create an <code class="docutils literal"><span class="pre">.ini</span></code> file</dt>
+<dd><ul class="first last">
+<li><p class="first">Navigate to the <code class="docutils literal"><span class="pre">php.d</span></code> directory: <code class="docutils literal"><span class="pre">cd</span> <span class="pre">/etc/php.d</span></code></p>
+</li>
+<li><p class="first">Edit a file called oci8.ini: <code class="docutils literal"><span class="pre">vi</span> <span class="pre">oci8.ini</span></code></p>
+</li>
+<li><p class="first">Make the file look as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre>; Oracle Instant Client Shared Object
+extension=oci8.so
+</pre></div>
+</div>
+</li>
+<li><p class="first">Save the document</p>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="configure-owncloud">
+<h2>Configure ownCloud<a class="headerlink" href="#configure-owncloud" title="Permalink to this headline">¶</a></h2>
+<p>The next step is to configure the ownCloud instance to point to the Oracle Database, again this document assumes
+that ownCloud has previously been installed.</p>
+<div class="section" id="configuration-wizard">
+<h3>Configuration Wizard<a class="headerlink" href="#configuration-wizard" title="Permalink to this headline">¶</a></h3>
+<a class="reference internal image-reference" href="../_images/oracle-1.png"><img alt="../_images/oracle-1.png" src="../_images/oracle-1.png" style="width: 5.778in; height: 7.4165in;" /></a>
+<div class="section" id="database-user">
+<h4>Database user<a class="headerlink" href="#database-user" title="Permalink to this headline">¶</a></h4>
+<p>This is the user space created in step 2.1.
+In our Example this would be owncloud.</p>
+</div>
+<div class="section" id="database-password">
+<h4>Database password<a class="headerlink" href="#database-password" title="Permalink to this headline">¶</a></h4>
+<p>Again this is defined in the script from section 2.1 above, or pre-configured and provided to you by your DBA.</p>
+</div>
+<div class="section" id="database-name">
+<h4>Database Name<a class="headerlink" href="#database-name" title="Permalink to this headline">¶</a></h4>
+<p>Represents the database or the service that has been pre-configured on the TSN Listener on the Database Server.
+This should also be provided by the DBA.
+In this example, the default setup in the Oracle install was orcl (there is a TSN Listener entry for orcl on our database server).</p>
+<p>This is not like setting up with MySQL or SQL Server, where a database based on the name you give is created.
+The oci8 code will call this specific service and it must be active on the TSN Listener on your Oracle Database server.</p>
+</div>
+<div class="section" id="database-table-space">
+<h4>Database Table Space<a class="headerlink" href="#database-table-space" title="Permalink to this headline">¶</a></h4>
+<p>Provided by the DBA.
+In this example the users table space (as is seen in the user creation script above), was used.</p>
+</div>
+</div>
+<div class="section" id="configuration-file">
+<h3>Configuration File<a class="headerlink" href="#configuration-file" title="Permalink to this headline">¶</a></h3>
+<p>Assuming all of the steps have been followed to completion, the first run wizard should complete successfully, and an operating instance of ownCloud should appear.</p>
+<p>The configuration file should look something like this:</p>
+<div class="highlight-python"><div class="highlight"><pre>&lt;?php
+$CONFIG = array (
+&#39;instanceid&#39; =&gt; &#39;abcdefgh&#39;,
+&#39;passwordsalt&#39; =&gt; &#39;01234567890123456789&#39;,
+&#39;datadirectory&#39; =&gt; &#39;/var/data&#39;,
+&#39;dbtype&#39; =&gt; &#39;oci&#39;,
+&#39;version&#39; =&gt; &#39;8.2.x.y&#39;,
+&#39;dbname&#39; =&gt; &#39;orcl&#39;,
+&#39;dbhost&#39; =&gt; &#39;192.168.1.57&#39;,
+&#39;dbtableprefix&#39; =&gt; &#39;oc_&#39;,
+&#39;dbuser&#39; =&gt; &#39;owncloud1&#39;,
+&#39;dbpassword&#39; =&gt; &#39;********&#39;,
+&#39;installed&#39; =&gt; true,
+);
+</pre></div>
+</div>
+</div>
+<div class="section" id="useful-sql-commands">
+<h3>Useful SQL Commands<a class="headerlink" href="#useful-sql-commands" title="Permalink to this headline">¶</a></h3>
+<p><strong>Is my Database Reachable?</strong></p>
+<p>On the machine where your Oracle database is installed, type:</p>
+<div class="highlight-python"><div class="highlight"><pre>sqlplus username
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>SQL&gt; select * from v$version;
+
+BANNER
+--------------------------------------------------------------------------------
+Oracle Database 11g Express Edition Release 11.2.0.2.0 - 64bit Production
+PL/SQL Release 11.2.0.2.0 - Production
+CORE  11.2.0.2.0      Production
+TNS for Linux: Version 11.2.0.2.0 - Production
+NLSRTL Version 11.2.0.2.0 - Production
+
+SQL&gt; exit
+</pre></div>
+</div>
+<p><strong>Show Database Users</strong>:</p>
+<div class="highlight-python"><div class="highlight"><pre>Oracle    : SELECT * FROM all_users;
+</pre></div>
+</div>
+<p><strong>Show available Databases</strong>:</p>
+<div class="highlight-python"><div class="highlight"><pre>Oracle    : SELECT name FROM v$database; (requires DBA privileges)
+</pre></div>
+</div>
+<p><strong>Show ownCloud Tables in Database</strong>:</p>
+<div class="highlight-python"><div class="highlight"><pre>Oracle    : SELECT table_name FROM user_tables;
+</pre></div>
+</div>
+<p><strong>Quit Database</strong>:</p>
+<div class="highlight-python"><div class="highlight"><pre>Oracle    : quit
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="license_keys_installation.html" title="Previous Chapter: License Keys"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; License Keys</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="../enterprise_clients/index.html" title="Next Chapter: Creating Branded ownCloud Clients (Enterprise only)"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Creating Bran... &raquo;</span>
+    </a>
+  </li>
+</ul>
+					</div>
+				</div>
+			</div>
+  </main>  
+  </div>
+</div>
+  </body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Enabling Anonymous Uploads with Files Drop (Enterprise Only) &mdash; ownCloud 9.1 Server Administration Manual 9.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/main.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/styles.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '9.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="ownCloud 9.1 Server Administration Manual 9.1 documentation" href="../contents.html" />
+    <link rel="up" title="Enterprise File Management (Enterprise Only)" href="index.html" />
+    <link rel="next" title="Advanced File Tagging With the Workflow App (Enterprise only)" href="files_tagging.html" />
+    <link rel="prev" title="Enterprise File Management (Enterprise Only)" href="index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1d2d44">
+
+  </head>
+  <body role="document">
+
+
+<div class="wrap container not-front">
+  <div class="content row">
+  <main class="main">
+    <div class="row page-content-header">
+      <div class="col-md-5 col-md-offset-7">
+      
+        <form class="headersearch" style="margin-bottom:-3px;" action="../search.html" method="get">
+        <input type="text" value="" name="q" id="q" class="form-control" /> 
+        <button  class="btn btn-default" type="submit" id="searchsubmit">Search</button>
+        </form>
+      
+      </div>
+    </div>
+    
+			<div class="row">
+				<div class="col-md-3">
+					<div class="sidebar">
+							<div class="menu-support-container">
+								<ul id="menu-support" class="menu">
+									<ul>
+										
+<li><a href="../contents.html">Table of Contents</a></li>
+									</ul>
+                  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">ownCloud 9.1 Server Administration Manual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">ownCloud 9.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new_admin.html">What&#8217;s New for Admins in ownCloud 9.1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_server/index.html">ownCloud Server Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_user/index.html">User Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_files/index.html">File Sharing and Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_database/index.html">Database Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_mimetypes/index.html">Mimetypes Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../maintenance/index.html">Maintenance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../issues/index.html">Issues and Troubleshooting</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_installation/index.html">Enterprise Edition Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_clients/index.html">Creating Branded ownCloud Clients (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_server_branding/index.html">Enterprise Server Branding (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_external_storage/index.html">External Storage (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_user_management/index.html">User Management (Enterprise only)</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Enterprise File Management (Enterprise Only)</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="">Enabling Anonymous Uploads with Files Drop (Enterprise Only)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#setting-up-the-files-drop-app">Setting Up the Files Drop App</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#using-the-files-drop-app">Using the Files Drop App</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="files_tagging.html">Advanced File Tagging With the Workflow App (Enterprise only)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_logging/index.html">Enterprise Logging Apps (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_firewall/index.html">Enterprise Firewall (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_troubleshooting.html">Enterprise Troubleshooting</a></li>
+</ul>
+
+								</ul>
+							</div>
+					</div>
+				</div>
+        
+
+				<div class="col-md-9">
+					<div class="page-content">
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="index.html" title="Previous Chapter: Enterprise File Management (Enterprise Only)"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Enterprise Fi...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="files_tagging.html" title="Next Chapter: Advanced File Tagging With the Workflow App (Enterprise only)"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Advanced File... &raquo;</span>
+    </a>
+  </li>
+</ul>
+						
+  <div class="section" id="enabling-anonymous-uploads-with-files-drop-enterprise-only">
+<h1>Enabling Anonymous Uploads with Files Drop (Enterprise Only)<a class="headerlink" href="#enabling-anonymous-uploads-with-files-drop-enterprise-only" title="Permalink to this headline">¶</a></h1>
+<p>The Files Drop application, introduced in ownCloud 8.0.3 Enterprise
+Subscription, allows anyone to upload files with the click of a button to the
+directory of your choosing, without needing a login, and they cannot see or
+change the contents of the directory. It is the perfect replacement for
+attaching large files to email, maintaining an FTP server, and commercial
+file-sharing services.</p>
+<p>When files are uploaded to your Files Drop directory, you can manage them just
+like any other ownCloud share: you may share them, restrict access, edit, and
+delete them.</p>
+<div class="section" id="setting-up-the-files-drop-app">
+<h2>Setting Up the Files Drop App<a class="headerlink" href="#setting-up-the-files-drop-app" title="Permalink to this headline">¶</a></h2>
+<p>Setting up Files Drop is a matter of a few clicks. First go to your Apps page
+and enable it.</p>
+<img alt="Enabled Files Drop app." src="../_images/files-drop-1.png" />
+<p>Now your users will see a configuration section on their Personal pages.</p>
+<img alt="Files Drop button." src="../_images/files-drop-2.png" />
+<p>Click the <strong>Choose</strong> button to open a dialog to select your upload directory.
+You may wish to first create a special upload directory (on your Files page),
+which in the following example is name <strong>upload</strong>.</p>
+<div class="figure">
+<img alt="Folder chooser." src="../_images/files-drop-3.png" />
+</div>
+<p>On your Personal page you should now see a URL for your upload directory. Share
+this URL with anyone you want to allow uploads to your File Drop folder. Note
+that the maximum upload size in this example is 512MB. (The default
+ownCloud upload file size limit is 512MB. See
+<a class="reference internal" href="../configuration_files/big_file_upload_configuration.html"><em>Uploading big files &gt; 512MB</em></a> to learn how to
+customize this.)</p>
+<img alt="Files Drop URL." src="../_images/files-drop-4.png" />
+</div>
+<div class="section" id="using-the-files-drop-app">
+<h2>Using the Files Drop App<a class="headerlink" href="#using-the-files-drop-app" title="Permalink to this headline">¶</a></h2>
+<p>Uploading files via the Files Drop app is simple. Open your Web browser to the
+share URL created by ownCloud:</p>
+<div class="figure">
+<img alt="Click to Upload File button." src="../_images/files-drop-5.png" />
+</div>
+<p>Click the <strong>Click to upload file</strong> button. This opens a file picker, and you
+select the file or directory you want to upload.</p>
+<div class="figure">
+<img alt="Upload file picker." src="../_images/files-drop-6.png" />
+</div>
+<p>When your upload is completed, you&#8217;ll see a confirmation message with the
+filenames.</p>
+<div class="figure">
+<img alt="Upload confirmation." src="../_images/files-drop-7.png" />
+</div>
+</div>
+</div>
+
+
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="index.html" title="Previous Chapter: Enterprise File Management (Enterprise Only)"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Enterprise Fi...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="files_tagging.html" title="Next Chapter: Advanced File Tagging With the Workflow App (Enterprise only)"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Advanced File... &raquo;</span>
+    </a>
+  </li>
+</ul>
+					</div>
+				</div>
+			</div>
+  </main>  
+  </div>
+</div>
+  </body>
+</html>

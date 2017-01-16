@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Changing the Web Route &mdash; ownCloud 9.1 Server Administration Manual 9.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/main.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/styles.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '9.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="ownCloud 9.1 Server Administration Manual 9.1 documentation" href="../contents.html" />
+    <link rel="up" title="Installation" href="index.html" />
+    <link rel="next" title="Installing and Managing Apps" href="apps_management_installation.html" />
+    <link rel="prev" title="Installing ownCloud From the Command Line" href="command_line_installation.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1d2d44">
+
+  </head>
+  <body role="document">
+
+
+<div class="wrap container not-front">
+  <div class="content row">
+  <main class="main">
+    <div class="row page-content-header">
+      <div class="col-md-5 col-md-offset-7">
+      
+        <form class="headersearch" style="margin-bottom:-3px;" action="../search.html" method="get">
+        <input type="text" value="" name="q" id="q" class="form-control" /> 
+        <button  class="btn btn-default" type="submit" id="searchsubmit">Search</button>
+        </form>
+      
+      </div>
+    </div>
+    
+			<div class="row">
+				<div class="col-md-3">
+					<div class="sidebar">
+							<div class="menu-support-container">
+								<ul id="menu-support" class="menu">
+									<ul>
+										
+<li><a href="../contents.html">Table of Contents</a></li>
+									</ul>
+                  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">ownCloud 9.1 Server Administration Manual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">ownCloud 9.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new_admin.html">What&#8217;s New for Admins in ownCloud 9.1</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Installation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="system_requirements.html">System Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deployment_recommendations.html">ownCloud Deployment Recommendations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux_installation.html">Preferred Linux Installation Method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation_wizard.html">Installation Wizard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command_line_installation.html">Installing ownCloud From the Command Line</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Changing the Web Route</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#example-moving-from-owncloud-to">Example: Moving from /owncloud to /</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="apps_management_installation.html">Installing and Managing Apps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apps_supported.html">Supported Apps in ownCloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source_installation.html">Manual Installation on Linux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="appliance_installation.html">ownCloud Community Appliance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="php_54_installation.html">Installing PHP 5.4 on RHEL 6 and CentOS 6</a></li>
+<li class="toctree-l2"><a class="reference internal" href="php_55_installation.html">Installing PHP 5.5 on RHEL 7 and CentOS 7</a></li>
+<li class="toctree-l2"><a class="reference internal" href="selinux_configuration.html">SELinux Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nginx_examples.html">nginx Example Configurations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_server/index.html">ownCloud Server Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_user/index.html">User Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_files/index.html">File Sharing and Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_database/index.html">Database Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_mimetypes/index.html">Mimetypes Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../maintenance/index.html">Maintenance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../issues/index.html">Issues and Troubleshooting</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_installation/index.html">Enterprise Edition Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_clients/index.html">Creating Branded ownCloud Clients (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_server_branding/index.html">Enterprise Server Branding (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_external_storage/index.html">External Storage (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_user_management/index.html">User Management (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_file_management/index.html">Enterprise File Management (Enterprise Only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_logging/index.html">Enterprise Logging Apps (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_firewall/index.html">Enterprise Firewall (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_troubleshooting.html">Enterprise Troubleshooting</a></li>
+</ul>
+
+								</ul>
+							</div>
+					</div>
+				</div>
+        
+
+				<div class="col-md-9">
+					<div class="page-content">
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="command_line_installation.html" title="Previous Chapter: Installing ownCloud From the Command Line"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Installing ow...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="apps_management_installation.html" title="Next Chapter: Installing and Managing Apps"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Installing an... &raquo;</span>
+    </a>
+  </li>
+</ul>
+						
+  <div class="section" id="changing-the-web-route">
+<h1>Changing the Web Route<a class="headerlink" href="#changing-the-web-route" title="Permalink to this headline">¶</a></h1>
+<p>This admin manual assumes that the owncloud server shall be accessible under the web route
+<code class="docutils literal"><span class="pre">/owncloud</span></code> &#8211; this is also where the Linux packages make the server appear. You can change this in your Web server configuration, for example from <code class="docutils literal"><span class="pre">https://example.com/owncloud/</span></code> to <code class="docutils literal"><span class="pre">https://example.com/</span></code>.</p>
+<p>Basic system administrator and Apache configuration knowledge is prerequisite.
+Several configuration files need to be kept in sync when changing the Web route location.</p>
+<p>On an Ubuntu-14.04 system the following files are typically involved:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">/etc/apache2/conf-enabled/owncloud.conf</span></code></li>
+<li><code class="docutils literal"><span class="pre">/var/www/owncloud/config/config.php</span></code></li>
+<li><code class="docutils literal"><span class="pre">/var/www/owncloud/.htaccess</span></code></li>
+</ul>
+<div class="section" id="example-moving-from-owncloud-to">
+<h2>Example: Moving from /owncloud to /<a class="headerlink" href="#example-moving-from-owncloud-to" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>Edit the file /etc/apache2/conf-enabled/owncloud.conf to say:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Alias</span> <span class="o">/</span> <span class="s2">&quot;/var/www/owncloud/&quot;</span>
+</pre></div>
+</div>
+<p>Edit /var/www/owncloud/config/config.php to say:</p>
+<div class="highlight-python"><div class="highlight"><pre>&#39;overwrite.cli.url&#39; =&gt; &#39;http://localhost/&#39;,
+</pre></div>
+</div>
+<p>Edit the file /var/www/owncloud/.htaccess to say:</p>
+<div class="highlight-python"><div class="highlight"><pre>...
+#### DO NOT CHANGE ANYTHING ABOVE THIS LINE ####
+...
+&lt;IfModule mod_rewrite.c&gt;
+  RewriteBase /
+...
+</pre></div>
+</div>
+<p>Optionally also set your document root, though this is generally not needed or recommended.
+Edit the file <code class="docutils literal"><span class="pre">/etc/apache2/sites-enabled/000-default.conf</span> <span class="pre">to</span> <span class="pre">say</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">DocumentRoot</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">owncloud</span>
+</pre></div>
+</div>
+</div></blockquote>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Since owncloud version 9.0.2 we support short URLs without <code class="docutils literal"><span class="pre">index.php</span></code>. The rewrite mechanisms
+involved a RewriteBase rule in <code class="docutils literal"><span class="pre">.htaccess</span></code> which is auto-generated when
+owncloud is first started. Depending on the exact way owncloud was installed (upgrade or fresh,
+plain tar archive, or packages) you may or may not find a RewriteBase in your <code class="docutils literal"><span class="pre">.htaccess</span></code> files.
+If it is not yet there, make sure to double check once the ownCloud server is up and running.</p>
+</div>
+</div>
+</div>
+
+
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="command_line_installation.html" title="Previous Chapter: Installing ownCloud From the Command Line"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Installing ow...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="apps_management_installation.html" title="Next Chapter: Installing and Managing Apps"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Installing an... &raquo;</span>
+    </a>
+  </li>
+</ul>
+					</div>
+				</div>
+			</div>
+  </main>  
+  </div>
+</div>
+  </body>
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Logging Configuration &mdash; ownCloud 9.1 Server Administration Manual 9.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/main.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/styles.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '9.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="ownCloud 9.1 Server Administration Manual 9.1 documentation" href="../contents.html" />
+    <link rel="up" title="ownCloud Server Configuration" href="index.html" />
+    <link rel="next" title="Hardening and Security Guidance" href="harden_server.html" />
+    <link rel="prev" title="Language Configuration" href="language_configuration.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1d2d44">
+
+  </head>
+  <body role="document">
+
+
+<div class="wrap container not-front">
+  <div class="content row">
+  <main class="main">
+    <div class="row page-content-header">
+      <div class="col-md-5 col-md-offset-7">
+      
+        <form class="headersearch" style="margin-bottom:-3px;" action="../search.html" method="get">
+        <input type="text" value="" name="q" id="q" class="form-control" /> 
+        <button  class="btn btn-default" type="submit" id="searchsubmit">Search</button>
+        </form>
+      
+      </div>
+    </div>
+    
+			<div class="row">
+				<div class="col-md-3">
+					<div class="sidebar">
+							<div class="menu-support-container">
+								<ul id="menu-support" class="menu">
+									<ul>
+										
+<li><a href="../contents.html">Table of Contents</a></li>
+									</ul>
+                  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">ownCloud 9.1 Server Administration Manual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">ownCloud 9.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new_admin.html">What&#8217;s New for Admins in ownCloud 9.1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">ownCloud Server Configuration</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="security_setup_warnings.html">Warnings on Admin Page</a></li>
+<li class="toctree-l2"><a class="reference internal" href="import_ssl_cert.html">Importing System-wide and Personal SSL Certificates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="occ_command.html">Using the occ Command</a></li>
+<li class="toctree-l2"><a class="reference internal" href="activity_configuration.html">Configuring the Activity App</a></li>
+<li class="toctree-l2"><a class="reference internal" href="antivirus_configuration.html">Configuring the ClamAV Antivirus Scanner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="caching_configuration.html">Configuring Memory Caching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background_jobs_configuration.html">Defining Background Jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config_sample_php_parameters.html">Config.php Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="email_configuration.html">Email Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="external_sites.html">Linking External Sites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom_client_repos.html">Custom Client Download Repositories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="knowledgebase_configuration.html">Knowledge Base Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language_configuration.html">Language Configuration</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Logging Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#parameters">Parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="harden_server.html">Hardening and Security Guidance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reverse_proxy_configuration.html">Reverse Proxy Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thirdparty_php_configuration.html">Using Third Party PHP Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="js_css_asset_management_configuration.html">JavaScript and CSS Asset Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="automatic_configuration.html">Automatic Configuration Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="oc_server_tuning.html">ownCloud Server Tuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index_php_less_urls.html">Enable index.php-less URLs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_user/index.html">User Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_files/index.html">File Sharing and Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_database/index.html">Database Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_mimetypes/index.html">Mimetypes Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../maintenance/index.html">Maintenance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../issues/index.html">Issues and Troubleshooting</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_installation/index.html">Enterprise Edition Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_clients/index.html">Creating Branded ownCloud Clients (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_server_branding/index.html">Enterprise Server Branding (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_external_storage/index.html">External Storage (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_user_management/index.html">User Management (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_file_management/index.html">Enterprise File Management (Enterprise Only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_logging/index.html">Enterprise Logging Apps (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_firewall/index.html">Enterprise Firewall (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_troubleshooting.html">Enterprise Troubleshooting</a></li>
+</ul>
+
+								</ul>
+							</div>
+					</div>
+				</div>
+        
+
+				<div class="col-md-9">
+					<div class="page-content">
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="language_configuration.html" title="Previous Chapter: Language Configuration"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Language Conf...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="harden_server.html" title="Next Chapter: Hardening and Security Guidance"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Hardening and... &raquo;</span>
+    </a>
+  </li>
+</ul>
+						
+  <div class="section" id="logging-configuration">
+<h1>Logging Configuration<a class="headerlink" href="#logging-configuration" title="Permalink to this headline">¶</a></h1>
+<p>Use your ownCloud log to review system status, or to help debug problems. You may adjust logging levels, and choose between using the ownCloud log or your syslog.</p>
+<div class="section" id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
+<p>Logging levels range from <strong>DEBUG</strong>, which logs all activity, to <strong>FATAL</strong>, which logs only fatal errors.</p>
+<ul class="simple">
+<li><strong>0</strong>: DEBUG: All activity; the most detailed logging.</li>
+<li><strong>1</strong>: INFO:  Activity such as user logins and file activities, plus warnings, errors, and fatal errors.</li>
+<li><strong>2</strong>: WARN:  Operations succeed, but with warnings of potential problems, plus errors and fatal errors.</li>
+<li><strong>3</strong>: ERROR: An operation fails, but other services and operations continue, plus fatal errors.</li>
+<li><strong>4</strong>: FATAL: The server stops.</li>
+</ul>
+<p>By default the log level is set to <strong>2</strong> (WARN). Use <strong>DEBUG</strong> when you have a problem to diagnose, and then reset your log level to a less-verbose level as <strong>DEBUG</strong> outputs a lot of information, and can affect your server performance.</p>
+<p>Logging level parameters are set in the <code class="file docutils literal"><span class="pre">config/config.php</span></code> file, or on the Admin page of your ownCloud Web GUI.</p>
+<div class="section" id="owncloud">
+<h3>ownCloud<a class="headerlink" href="#owncloud" title="Permalink to this headline">¶</a></h3>
+<p>All log information will be written to a separate log file which can be
+viewed using the log viewer on your Admin page. By default, a log
+file named <strong>owncloud.log</strong> will be created in the directory which has
+been configured by the <strong>datadirectory</strong> parameter in <code class="file docutils literal"><span class="pre">config/config.php</span></code>.</p>
+<p>The desired date format can optionally be defined using the <strong>logdateformat</strong> parameter in <code class="file docutils literal"><span class="pre">config/config.php</span></code>.
+By default the <a class="reference external" href="http://www.php.net/manual/en/function.date.php">PHP date function</a> parameter &#8220;<em>c</em>&#8221; is used, and therefore the
+date/time is written in the format &#8220;<em>2013-01-10T15:20:25+02:00</em>&#8221;. By using the
+date format in the example below, the date/time format will be written in the format
+&#8220;<em>January 10, 2013 15:20:25</em>&#8221;.</p>
+<div class="highlight-python"><div class="highlight"><pre>&quot;log_type&quot; =&gt; &quot;owncloud&quot;,
+&quot;logfile&quot; =&gt; &quot;owncloud.log&quot;,
+&quot;loglevel&quot; =&gt; &quot;3&quot;,
+&quot;logdateformat&quot; =&gt; &quot;F d, Y H:i:s&quot;,
+</pre></div>
+</div>
+</div>
+<div class="section" id="syslog">
+<h3>syslog<a class="headerlink" href="#syslog" title="Permalink to this headline">¶</a></h3>
+<p>All log information will be sent to your default syslog daemon.</p>
+<div class="highlight-python"><div class="highlight"><pre>&quot;log_type&quot; =&gt; &quot;syslog&quot;,
+&quot;logfile&quot; =&gt; &quot;&quot;,
+&quot;loglevel&quot; =&gt; &quot;3&quot;,
+</pre></div>
+</div>
+</div>
+<div class="section" id="conditional-logging-level-increase">
+<h3>Conditional Logging Level Increase<a class="headerlink" href="#conditional-logging-level-increase" title="Permalink to this headline">¶</a></h3>
+<p>You can configure the logging level to automatically increase to <code class="docutils literal"><span class="pre">debug</span></code> when one of three conditions are met:</p>
+<p># <code class="docutils literal"><span class="pre">shared_secret</span></code>: If a request parameter with the name <code class="docutils literal"><span class="pre">log_secret</span></code> is set to this value the condition is met.</p>
+<p># <code class="docutils literal"><span class="pre">users</span></code>: If the current request is done by one of the specified users, this condition is met.</p>
+<p># <code class="docutils literal"><span class="pre">apps</span></code>: If the log message is invoked by one of the specified apps, this condition is met.</p>
+<p>The following example demonstrates what all three conditions look like:</p>
+<div class="highlight-python"><div class="highlight"><pre>&#39;log.condition&#39; =&gt; [
+       &#39;shared_secret&#39; =&gt; &#39;57b58edb6637fe3059b3595cf9c41b9&#39;,
+       &#39;users&#39; =&gt; [&#39;sample-user&#39;],
+       &#39;apps&#39; =&gt; [&#39;files&#39;],
+],
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="language_configuration.html" title="Previous Chapter: Language Configuration"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Language Conf...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="harden_server.html" title="Next Chapter: Hardening and Security Guidance"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Hardening and... &raquo;</span>
+    </a>
+  </li>
+</ul>
+					</div>
+				</div>
+			</div>
+  </main>  
+  </div>
+</div>
+  </body>
+</html>

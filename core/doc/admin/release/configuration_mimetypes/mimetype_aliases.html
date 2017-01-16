@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Mimetype Aliases &mdash; ownCloud 9.1 Server Administration Manual 9.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/main.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/styles.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '9.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="ownCloud 9.1 Server Administration Manual 9.1 documentation" href="../contents.html" />
+    <link rel="up" title="Mimetypes Management" href="index.html" />
+    <link rel="next" title="Mimetype mapping" href="mimetype_mapping.html" />
+    <link rel="prev" title="Mimetypes Management" href="index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1d2d44">
+
+  </head>
+  <body role="document">
+
+
+<div class="wrap container not-front">
+  <div class="content row">
+  <main class="main">
+    <div class="row page-content-header">
+      <div class="col-md-5 col-md-offset-7">
+      
+        <form class="headersearch" style="margin-bottom:-3px;" action="../search.html" method="get">
+        <input type="text" value="" name="q" id="q" class="form-control" /> 
+        <button  class="btn btn-default" type="submit" id="searchsubmit">Search</button>
+        </form>
+      
+      </div>
+    </div>
+    
+			<div class="row">
+				<div class="col-md-3">
+					<div class="sidebar">
+							<div class="menu-support-container">
+								<ul id="menu-support" class="menu">
+									<ul>
+										
+<li><a href="../contents.html">Table of Contents</a></li>
+									</ul>
+                  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">ownCloud 9.1 Server Administration Manual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">ownCloud 9.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new_admin.html">What&#8217;s New for Admins in ownCloud 9.1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_server/index.html">ownCloud Server Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_user/index.html">User Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_files/index.html">File Sharing and Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_database/index.html">Database Configuration</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Mimetypes Management</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="">Mimetype Aliases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mimetype_mapping.html">Mimetype mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#icon-retrieval">Icon retrieval</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../maintenance/index.html">Maintenance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../issues/index.html">Issues and Troubleshooting</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_installation/index.html">Enterprise Edition Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_clients/index.html">Creating Branded ownCloud Clients (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_server_branding/index.html">Enterprise Server Branding (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_external_storage/index.html">External Storage (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_user_management/index.html">User Management (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_file_management/index.html">Enterprise File Management (Enterprise Only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_logging/index.html">Enterprise Logging Apps (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_firewall/index.html">Enterprise Firewall (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_troubleshooting.html">Enterprise Troubleshooting</a></li>
+</ul>
+
+								</ul>
+							</div>
+					</div>
+				</div>
+        
+
+				<div class="col-md-9">
+					<div class="page-content">
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="index.html" title="Previous Chapter: Mimetypes Management"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Mimetypes Man...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="mimetype_mapping.html" title="Next Chapter: Mimetype mapping"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Mimetype mapping &raquo;</span>
+    </a>
+  </li>
+</ul>
+						
+  <div class="section" id="mimetype-aliases">
+<h1>Mimetype Aliases<a class="headerlink" href="#mimetype-aliases" title="Permalink to this headline">¶</a></h1>
+<p>ownCloud allows you to create aliases for mimetypes, so that you can display
+custom icons for files. For example, you might want a nice audio icon for audio
+files instead of the default file icon.</p>
+<p>By default ownCloud is distributed with
+<code class="docutils literal"><span class="pre">owncloud/resources/config/mimetypealiases.dist.json</span></code>.
+Do not modify this file, as it will be replaced when ownCloud is updated.
+Instead, create your own <code class="docutils literal"><span class="pre">owncloud/config/mimetypealiases.json</span></code>
+file with your custom aliases. Use the same syntax as in
+<code class="docutils literal"><span class="pre">owncloud/resources/config/mimetypealiases.dist.json</span></code>.</p>
+<p>Once you have made changes to your <code class="docutils literal"><span class="pre">mimetypealiases.json</span></code>, use the <code class="docutils literal"><span class="pre">occ</span></code>
+command to propagate the changes through the system. This example is for
+Ubuntu Linux:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ sudo -u www-data php occ maintenance:mimetype:update-js
+</pre></div>
+</div>
+<p>See <a class="reference internal" href="../configuration_server/occ_command.html"><em>Using the occ Command</em></a> to learn more about <code class="docutils literal"><span class="pre">occ</span></code>.</p>
+<p>Some common mimetypes that may be useful in creating aliases are:</p>
+<dl class="docutils">
+<dt>image</dt>
+<dd>Generic image</dd>
+<dt>image/vector</dt>
+<dd>Vector image</dd>
+<dt>audio</dt>
+<dd>Generic audio file</dd>
+<dt>x-office/document</dt>
+<dd>Word processed document</dd>
+<dt>x-office/spreadsheet</dt>
+<dd>Spreadsheet</dd>
+<dt>x-office/presentation</dt>
+<dd>Presentation</dd>
+<dt>text</dt>
+<dd>Generic text document</dd>
+<dt>text/code</dt>
+<dd>Source code</dd>
+</dl>
+</div>
+
+
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="index.html" title="Previous Chapter: Mimetypes Management"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Mimetypes Man...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="mimetype_mapping.html" title="Next Chapter: Mimetype mapping"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Mimetype mapping &raquo;</span>
+    </a>
+  </li>
+</ul>
+					</div>
+				</div>
+			</div>
+  </main>  
+  </div>
+</div>
+  </body>
+</html>

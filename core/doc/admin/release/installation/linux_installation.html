@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Preferred Linux Installation Method &mdash; ownCloud 9.1 Server Administration Manual 9.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/main.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/styles.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '9.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="ownCloud 9.1 Server Administration Manual 9.1 documentation" href="../contents.html" />
+    <link rel="up" title="Installation" href="index.html" />
+    <link rel="next" title="Installation Wizard" href="installation_wizard.html" />
+    <link rel="prev" title="ownCloud Deployment Recommendations" href="deployment_recommendations.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1d2d44">
+
+  </head>
+  <body role="document">
+
+
+<div class="wrap container not-front">
+  <div class="content row">
+  <main class="main">
+    <div class="row page-content-header">
+      <div class="col-md-5 col-md-offset-7">
+      
+        <form class="headersearch" style="margin-bottom:-3px;" action="../search.html" method="get">
+        <input type="text" value="" name="q" id="q" class="form-control" /> 
+        <button  class="btn btn-default" type="submit" id="searchsubmit">Search</button>
+        </form>
+      
+      </div>
+    </div>
+    
+			<div class="row">
+				<div class="col-md-3">
+					<div class="sidebar">
+							<div class="menu-support-container">
+								<ul id="menu-support" class="menu">
+									<ul>
+										
+<li><a href="../contents.html">Table of Contents</a></li>
+									</ul>
+                  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">ownCloud 9.1 Server Administration Manual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">ownCloud 9.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new_admin.html">What&#8217;s New for Admins in ownCloud 9.1</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Installation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="system_requirements.html">System Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deployment_recommendations.html">ownCloud Deployment Recommendations</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Preferred Linux Installation Method</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#changes-in-owncloud-9">Changes in ownCloud 9</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#repos-stable-or-major-release">Repos: Stable or Major Release?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#installing-owncloud-enterprise-edition">Installing ownCloud Enterprise Edition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#downgrading-not-supported">Downgrading Not Supported</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#binlog-format-statement">BINLOG_FORMAT = STATEMENT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#additional-installation-guides-and-notes">Additional Installation Guides and Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="installation_wizard.html">Installation Wizard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command_line_installation.html">Installing ownCloud From the Command Line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changing_the_web_route.html">Changing the Web Route</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apps_management_installation.html">Installing and Managing Apps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apps_supported.html">Supported Apps in ownCloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source_installation.html">Manual Installation on Linux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="appliance_installation.html">ownCloud Community Appliance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="php_54_installation.html">Installing PHP 5.4 on RHEL 6 and CentOS 6</a></li>
+<li class="toctree-l2"><a class="reference internal" href="php_55_installation.html">Installing PHP 5.5 on RHEL 7 and CentOS 7</a></li>
+<li class="toctree-l2"><a class="reference internal" href="selinux_configuration.html">SELinux Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nginx_examples.html">nginx Example Configurations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_server/index.html">ownCloud Server Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_user/index.html">User Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_files/index.html">File Sharing and Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_database/index.html">Database Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_mimetypes/index.html">Mimetypes Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../maintenance/index.html">Maintenance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../issues/index.html">Issues and Troubleshooting</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_installation/index.html">Enterprise Edition Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_clients/index.html">Creating Branded ownCloud Clients (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_server_branding/index.html">Enterprise Server Branding (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_external_storage/index.html">External Storage (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_user_management/index.html">User Management (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_file_management/index.html">Enterprise File Management (Enterprise Only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_logging/index.html">Enterprise Logging Apps (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_firewall/index.html">Enterprise Firewall (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_troubleshooting.html">Enterprise Troubleshooting</a></li>
+</ul>
+
+								</ul>
+							</div>
+					</div>
+				</div>
+        
+
+				<div class="col-md-9">
+					<div class="page-content">
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="deployment_recommendations.html" title="Previous Chapter: ownCloud Deployment Recommendations"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; ownCloud Depl...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="installation_wizard.html" title="Next Chapter: Installation Wizard"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Installation ... &raquo;</span>
+    </a>
+  </li>
+</ul>
+						
+  <div class="section" id="preferred-linux-installation-method">
+<h1>Preferred Linux Installation Method<a class="headerlink" href="#preferred-linux-installation-method" title="Permalink to this headline">¶</a></h1>
+<p>For production environments, we recommend the installation from the tar archive.
+This applies in particular to scenarios, where the Web server, storage and database are on separate machines.
+In this constellation, all dependencies and requirements are managed by the package management
+of your operating system, while the ownCloud code itself is maintained in a sequence of simple steps
+as documented in our instructions for the <a class="reference internal" href="source_installation.html"><em>Manual Installation on Linux</em></a> and the <a class="reference internal" href="../maintenance/manual_upgrade.html"><em>Manual ownCloud Upgrade</em></a>.</p>
+<p>The package installation is for single-server setups only.</p>
+<div class="section" id="changes-in-owncloud-9">
+<h2>Changes in ownCloud 9<a class="headerlink" href="#changes-in-owncloud-9" title="Permalink to this headline">¶</a></h2>
+<p>Linux distribution packages (from <a class="reference external" href="https://download.owncloud.org/download/repositories/stable/owncloud/">Open Build Service</a>) have been divided into
+multiple packages for ownCloud 9: <code class="docutils literal"><span class="pre">owncloud</span></code>, <code class="docutils literal"><span class="pre">owncloud-deps</span></code> and <code class="docutils literal"><span class="pre">owncloud-files</span></code>.</p>
+<p>Install the metapackage <code class="docutils literal"><span class="pre">owncloud</span></code> to get a complete installation with all dependencies.</p>
+<p>The <code class="docutils literal"><span class="pre">owncloud-files</span></code> package installs only ownCloud, without Apache, database,
+or PHP dependencies.</p>
+<p>The <code class="docutils literal"><span class="pre">owncloud-deps</span></code> packages install all dependencies: Apache, PHP, and MySQL.
+<code class="docutils literal"><span class="pre">owncloud-deps</span></code> is not intended to be installed by itself, but rather is
+pulled in by the metapackage <code class="docutils literal"><span class="pre">owncloud</span></code>.</p>
+<p><code class="docutils literal"><span class="pre">owncloud-files</span></code> is available for the following distributions, but not
+<code class="docutils literal"><span class="pre">owncloud-deps</span></code>.</p>
+<p>You will have to install your own LAMP stack first. This
+allows you to create your own custom LAMP stack without dependency conflicts
+with the ownCloud package. Browse
+<a class="reference external" href="http://download.owncloud.org/download/repositories/9.1/owncloud/">http://download.owncloud.org/download/repositories/9.1/owncloud/</a> to find
+the <code class="docutils literal"><span class="pre">owncloud-files</span></code> package for your distro:</p>
+<ul class="simple">
+<li>Ubuntu 14.04, 16.04</li>
+<li>Debian 7, 8</li>
+<li>RHEL 6, 7</li>
+<li>CentOS 6 SCL, 7</li>
+<li>SLES 12, 12 SP1</li>
+<li>openSUSE 13.2, Leap 42.1</li>
+</ul>
+<p>ownCloud packages with dependencies are available for the following Linux distributions:</p>
+<ul class="simple">
+<li>Ubuntu 14.04, 16.04</li>
+<li>Debian 8</li>
+<li>RHEL 7</li>
+<li>CentOS 7</li>
+<li>SLES 12</li>
+<li>openSUSE 13.2, Leap 42.1</li>
+</ul>
+<p>Repositories for Fedora, openSUSE Tumbleweed and Ubuntu 15.04 were dropped. If
+you use Fedora, use the tar archive with your own LAMP stack. openSUSE
+users can rely on LEAP packages for Tumbleweed.</p>
+<p>Follow the instructions on the download page to install ownCloud. Then run the
+Installation Wizard to complete your installation. (see
+<a class="reference internal" href="installation_wizard.html"><em>Installation Wizard</em></a>).</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Do not move the folders provided by these packages after the
+installation, as this will break updates.</p>
+</div>
+<p>See the <a class="reference internal" href="system_requirements.html"><em>System Requirements</em></a> for the recommended ownCloud setup and
+supported platforms.</p>
+</div>
+<div class="section" id="repos-stable-or-major-release">
+<h2>Repos: Stable or Major Release?<a class="headerlink" href="#repos-stable-or-major-release" title="Permalink to this headline">¶</a></h2>
+<p>You may use either of the following repositories for ownCloud 9.1:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://download.owncloud.org/download/repositories/stable/owncloud/">https://download.owncloud.org/download/repositories/stable/owncloud/</a></li>
+<li><a class="reference external" href="https://download.owncloud.org/download/repositories/9.1/owncloud/">https://download.owncloud.org/download/repositories/9.1/owncloud/</a></li>
+</ul>
+<p>When you use the Stable repo, you never have to change it as it always tracks
+the current stable ownCloud version through all major releases: 8.2, 9.0,
+and so on. (Major releases are indicated by the second number, so 8.0, 8.1,
+8.2, and 9.0 were all major releases.)</p>
+<p>If you wish to track a specific major release, such as 9.0 or 9.1, then use
+that repo. That way you won&#8217;t accidentally find yourself looking at an upgrade
+to the next major release before you&#8217;re ready.</p>
+</div>
+<div class="section" id="installing-owncloud-enterprise-edition">
+<h2>Installing ownCloud Enterprise Edition<a class="headerlink" href="#installing-owncloud-enterprise-edition" title="Permalink to this headline">¶</a></h2>
+<p>See <a class="reference internal" href="../enterprise_installation/linux_installation.html"><em>Installing &amp; Upgrading ownCloud Enterprise Edition</em></a> for instructions on
+installing ownCloud Enterprise edition.</p>
+</div>
+<div class="section" id="downgrading-not-supported">
+<h2>Downgrading Not Supported<a class="headerlink" href="#downgrading-not-supported" title="Permalink to this headline">¶</a></h2>
+<p>Downgrading is not supported and risks corrupting your data! If you want to
+revert to an older ownCloud version, install it from scratch and then restore
+your data from backup. Before doing this, file a support ticket (if you have
+paid support) or ask for help in the ownCloud forums to see if your issue can be
+resolved without downgrading.</p>
+</div>
+<div class="section" id="binlog-format-statement">
+<h2>BINLOG_FORMAT = STATEMENT<a class="headerlink" href="#binlog-format-statement" title="Permalink to this headline">¶</a></h2>
+<p>If your ownCloud installation fails and you see this in your ownCloud log:</p>
+<div class="highlight-python"><div class="highlight"><pre>An unhandled exception has been thrown: exception ‘PDOException’ with message
+&#39;SQLSTATE[HY000]: General error: 1665 Cannot execute statement: impossible to
+write to binary log since BINLOG_FORMAT = STATEMENT and at least one table
+uses a storage engine limited to row-based logging. InnoDB is limited to
+row-logging when transaction isolation level is READ COMMITTED or READ
+UNCOMMITTED.&#39;
+</pre></div>
+</div>
+<p>See <a class="reference internal" href="../configuration_database/linux_database_configuration.html#db-binlog-label"><span>MySQL / MariaDB with Binary Logging Enabled</span></a>.</p>
+</div>
+<div class="section" id="additional-installation-guides-and-notes">
+<h2>Additional Installation Guides and Notes<a class="headerlink" href="#additional-installation-guides-and-notes" title="Permalink to this headline">¶</a></h2>
+<p>See <a class="reference internal" href="installation_wizard.html"><em>Installation Wizard</em></a> for important steps such as choosing the best
+database and setting correct directory permissions.</p>
+<p>See <a class="reference internal" href="selinux_configuration.html"><em>SELinux Configuration</em></a> for a suggested configuration for
+SELinux-enabled distributions such as Fedora and CentOS.</p>
+<p>If your distribution is not listed, your Linux distribution may maintain its
+own
+ownCloud packages, or you may prefer to install from source code (see
+<a class="reference internal" href="source_installation.html"><em>Manual Installation on Linux</em></a>).</p>
+<p><strong>Archlinux:</strong> The current <a class="reference external" href="https://www.archlinux.org/packages/community/any/owncloud">stable version</a> is in the
+official community repository, and more packages are in
+the <a class="reference external" href="https://aur.archlinux.org/packages/?O=0&amp;K=owncloud">Arch User Repository</a>.</p>
+<p><strong>Mageia:</strong> The <a class="reference external" href="https://wiki.mageia.org/en/OwnCloud">Mageia Wiki</a> has a good page on installing ownCloud from the
+Mageia software repository.</p>
+<p><strong>Running ownCloud in a subdirectory</strong>: If you&#8217;re running ownCloud in a
+subdirectory and want to use CalDAV or CardDAV clients make sure you have
+configured the correct <a class="reference internal" href="../issues/general_troubleshooting.html#service-discovery-label"><span>Service discovery</span></a> URLs.</p>
+<p><strong>Note for MySQL/MariaDB environments</strong>: Please refer to <a class="reference internal" href="../configuration_database/linux_database_configuration.html#db-binlog-label"><span>MySQL / MariaDB with Binary Logging Enabled</span></a>
+on how to correctly configure your environment if you have binary logging enabled.</p>
+</div>
+</div>
+
+
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="deployment_recommendations.html" title="Previous Chapter: ownCloud Deployment Recommendations"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; ownCloud Depl...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="installation_wizard.html" title="Next Chapter: Installation Wizard"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Installation ... &raquo;</span>
+    </a>
+  </li>
+</ul>
+					</div>
+				</div>
+			</div>
+  </main>  
+  </div>
+</div>
+  </body>
+</html>

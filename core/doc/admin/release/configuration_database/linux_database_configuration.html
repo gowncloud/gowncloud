@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Database Configuration &mdash; ownCloud 9.1 Server Administration Manual 9.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/main.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/styles.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '9.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="ownCloud 9.1 Server Administration Manual 9.1 documentation" href="../contents.html" />
+    <link rel="up" title="Database Configuration" href="index.html" />
+    <link rel="next" title="Mimetypes Management" href="../configuration_mimetypes/index.html" />
+    <link rel="prev" title="Converting Database Type" href="db_conversion.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1d2d44">
+
+  </head>
+  <body role="document">
+
+
+<div class="wrap container not-front">
+  <div class="content row">
+  <main class="main">
+    <div class="row page-content-header">
+      <div class="col-md-5 col-md-offset-7">
+      
+        <form class="headersearch" style="margin-bottom:-3px;" action="../search.html" method="get">
+        <input type="text" value="" name="q" id="q" class="form-control" /> 
+        <button  class="btn btn-default" type="submit" id="searchsubmit">Search</button>
+        </form>
+      
+      </div>
+    </div>
+    
+			<div class="row">
+				<div class="col-md-3">
+					<div class="sidebar">
+							<div class="menu-support-container">
+								<ul id="menu-support" class="menu">
+									<ul>
+										
+<li><a href="../contents.html">Table of Contents</a></li>
+									</ul>
+                  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">ownCloud 9.1 Server Administration Manual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">ownCloud 9.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new_admin.html">What&#8217;s New for Admins in ownCloud 9.1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_server/index.html">ownCloud Server Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_user/index.html">User Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_files/index.html">File Sharing and Management</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Database Configuration</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="db_conversion.html">Converting Database Type</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Database Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#requirements">Requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#parameters">Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_mimetypes/index.html">Mimetypes Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../maintenance/index.html">Maintenance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../issues/index.html">Issues and Troubleshooting</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_installation/index.html">Enterprise Edition Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_clients/index.html">Creating Branded ownCloud Clients (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_server_branding/index.html">Enterprise Server Branding (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_external_storage/index.html">External Storage (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_user_management/index.html">User Management (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_file_management/index.html">Enterprise File Management (Enterprise Only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_logging/index.html">Enterprise Logging Apps (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_firewall/index.html">Enterprise Firewall (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_troubleshooting.html">Enterprise Troubleshooting</a></li>
+</ul>
+
+								</ul>
+							</div>
+					</div>
+				</div>
+        
+
+				<div class="col-md-9">
+					<div class="page-content">
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="db_conversion.html" title="Previous Chapter: Converting Database Type"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Converting Da...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="../configuration_mimetypes/index.html" title="Next Chapter: Mimetypes Management"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Mimetypes Man... &raquo;</span>
+    </a>
+  </li>
+</ul>
+						
+  <div class="section" id="database-configuration">
+<h1>Database Configuration<a class="headerlink" href="#database-configuration" title="Permalink to this headline">¶</a></h1>
+<p>ownCloud requires a database in which administrative data is stored. The following databases are currently supported:</p>
+<ul class="simple">
+<li><a class="reference external" href="http://www.mysql.com/">MySQL</a> / <a class="reference external" href="https://mariadb.org/">MariaDB</a></li>
+<li><a class="reference external" href="http://www.postgresql.org/">PostgreSQL</a></li>
+<li><a class="reference external" href="http://www.oracle.com/">Oracle</a> (ownCloud Enterprise edition only)</li>
+</ul>
+<p>The MySQL or MariaDB databases are the recommended database engines.</p>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<p>Choosing to use MySQL / MariaDB, PostgreSQL, or Oracle (ownCloud Enterprise
+edition only) as your database requires that you install and set up the server
+software first.
+(Oracle users, see <a class="reference internal" href="../enterprise_installation/oracle_db_configuration.html"><em>Oracle Database Setup</em></a>.)</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The steps for configuring a third party database are beyond the scope of this document.  Please refer to the documentation for your specific database choice for instructions.</p>
+</div>
+<div class="section" id="mysql-mariadb-with-binary-logging-enabled">
+<span id="db-binlog-label"></span><h3>MySQL / MariaDB with Binary Logging Enabled<a class="headerlink" href="#mysql-mariadb-with-binary-logging-enabled" title="Permalink to this headline">¶</a></h3>
+<p>ownCloud is currently using a <code class="docutils literal"><span class="pre">TRANSACTION_READ_COMMITTED</span></code> transaction isolation
+to avoid data loss under high load scenarios (e.g. by using the sync client with
+many clients/users and many parallel operations). This requires a disabled or
+correctly configured binary logging when using MySQL or MariaDB. Your system is
+affected if you see the following in your log file during the installation or
+update of ownCloud:</p>
+<blockquote>
+<div>An unhandled exception has been thrown:
+exception &#8216;PDOException&#8217; with message &#8216;SQLSTATE[HY000]: General error: 1665
+Cannot execute statement: impossible to write to binary log since
+BINLOG_FORMAT = STATEMENT and at least one table uses a storage engine limited
+to row-based logging. InnoDB is limited to row-logging when transaction
+isolation level is READ COMMITTED or READ UNCOMMITTED.&#8217;</div></blockquote>
+<p>There are two solutions. One is to disable binary logging. Binary logging
+records all changes to your database, and how long each change took. The
+purpose of binary logging is to enable replication and to support backup
+operations.</p>
+<p>The other is to change the BINLOG_FORMAT = STATEMENT in your database
+configuration file, or possibly in your database startup script, to
+BINLOG_FORMAT = MIXED. See <a class="reference external" href="https://mariadb.com/kb/en/mariadb/overview-of-the-binary-log/">Overview of the Binary
+Log</a> and <a class="reference external" href="https://dev.mysql.com/doc/refman/5.6/en/binary-log.html">The
+Binary Log</a> for
+detailed information.</p>
+</div>
+<div class="section" id="mysql-mariadb-read-commited-transaction-isolation-level">
+<span id="db-transaction-label"></span><h3>MySQL / MariaDB &#8220;READ COMMITED&#8221; transaction isolation level<a class="headerlink" href="#mysql-mariadb-read-commited-transaction-isolation-level" title="Permalink to this headline">¶</a></h3>
+<p>As discussed above ownCloud is using the <code class="docutils literal"><span class="pre">TRANSACTION_READ_COMMITTED</span></code> transaction isolation
+level. Some database configurations are enforcing other transaction isolation levels. To avoid
+data loss under high load scenarios (e.g. by using the sync client with many clients/users and
+many parallel operations) you need to configure the transaction isolation level accordingly.
+Please refer to the <a class="reference external" href="https://dev.mysql.com/doc/refman/5.7/en/set-transaction.html">MySQL manual</a>
+for detailed information.</p>
+</div>
+<div class="section" id="mysql-mariadb-storage-engine">
+<span id="db-storage-engine-label"></span><h3>MySQL / MariaDB storage engine<a class="headerlink" href="#mysql-mariadb-storage-engine" title="Permalink to this headline">¶</a></h3>
+<p>Since ownCloud 7 only InnoDB is supported as a storage engine. There are some shared hosters that
+do not support InnoDB and only MyISAM. Running ownCloud on such an environment is not supported.</p>
+</div>
+</div>
+<div class="section" id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
+<p>For setting up ownCloud to use any database, use the instructions in <a class="reference internal" href="../installation/installation_wizard.html"><em>Installation Wizard</em></a>. You should not have to edit the respective values in the <code class="file docutils literal"><span class="pre">config/config.php</span></code>.  However, in special cases (for example, if you want to connect your ownCloud instance to a database created by a previous installation of ownCloud), some modification might be required.</p>
+<div class="section" id="configuring-a-mysql-or-mariadb-database">
+<h3>Configuring a MySQL or MariaDB Database<a class="headerlink" href="#configuring-a-mysql-or-mariadb-database" title="Permalink to this headline">¶</a></h3>
+<p>If you decide to use a MySQL or MariaDB database, ensure the following:</p>
+<ul class="simple">
+<li>That you have installed and enabled the pdo_mysql extension in PHP</li>
+<li>That the <strong>mysql.default_socket</strong> points to the correct socket (if the database runs on the same server as ownCloud).</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">MariaDB is backwards compatible with MySQL.  All instructions work for both. You will not need to replace mysql with anything.</p>
+</div>
+<p>The PHP configuration in <code class="file docutils literal"><span class="pre">/etc/php5/conf.d/mysql.ini</span></code> could look like this:</p>
+<div class="highlight-python"><div class="highlight"><pre># configuration for PHP MySQL module
+extension=pdo_mysql.so
+
+[mysql]
+mysql.allow_local_infile=On
+mysql.allow_persistent=On
+mysql.cache_size=2000
+mysql.max_persistent=-1
+mysql.max_links=-1
+mysql.default_port=
+mysql.default_socket=/var/lib/mysql/mysql.sock  # Debian squeeze: /var/run/mysqld/mysqld.sock
+mysql.default_host=
+mysql.default_user=
+mysql.default_password=
+mysql.connect_timeout=60
+mysql.trace_mode=Off
+</pre></div>
+</div>
+<p>Now you need to create a database user and the database itself by using the
+MySQL command line interface. The database tables will be created by ownCloud
+when you login for the first time.</p>
+<p>To start the MySQL command line mode use:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">mysql</span> <span class="o">-</span><span class="n">uroot</span> <span class="o">-</span><span class="n">p</span>
+</pre></div>
+</div>
+<p>Then a <strong>mysql&gt;</strong> or <strong>MariaDB [root]&gt;</strong> prompt will appear. Now enter the following lines and confirm them with the enter key:</p>
+<div class="highlight-python"><div class="highlight"><pre>CREATE DATABASE IF NOT EXISTS owncloud;
+GRANT ALL PRIVILEGES ON owncloud.* TO &#39;username&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;password&#39;;
+</pre></div>
+</div>
+<p>You can quit the prompt by entering:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">quit</span>
+</pre></div>
+</div>
+<p>An ownCloud instance configured with MySQL would contain the hostname on which
+the database is running, a valid username and password to access it, and the
+name of the database. The <code class="file docutils literal"><span class="pre">config/config.php</span></code> as created by the
+<a class="reference internal" href="../installation/installation_wizard.html"><em>Installation Wizard</em></a> would therefore contain entries like
+this:</p>
+<div class="highlight-python"><div class="highlight"><pre>&lt;?php
+
+  &quot;dbtype&quot;        =&gt; &quot;mysql&quot;,
+  &quot;dbname&quot;        =&gt; &quot;owncloud&quot;,
+  &quot;dbuser&quot;        =&gt; &quot;username&quot;,
+  &quot;dbpassword&quot;    =&gt; &quot;password&quot;,
+  &quot;dbhost&quot;        =&gt; &quot;localhost&quot;,
+  &quot;dbtableprefix&quot; =&gt; &quot;oc_&quot;,
+</pre></div>
+</div>
+</div>
+<div class="section" id="postgresql-database">
+<h3>PostgreSQL Database<a class="headerlink" href="#postgresql-database" title="Permalink to this headline">¶</a></h3>
+<p>If you decide to use a PostgreSQL database make sure that you have installed
+and enabled the PostgreSQL extension in PHP. The PHP configuration in <code class="file docutils literal"><span class="pre">/etc/php5/conf.d/pgsql.ini</span></code> could look
+like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c1"># configuration for PHP PostgreSQL module</span>
+<span class="n">extension</span><span class="o">=</span><span class="n">pdo_pgsql</span><span class="o">.</span><span class="n">so</span>
+<span class="n">extension</span><span class="o">=</span><span class="n">pgsql</span><span class="o">.</span><span class="n">so</span>
+
+<span class="p">[</span><span class="n">PostgresSQL</span><span class="p">]</span>
+<span class="n">pgsql</span><span class="o">.</span><span class="n">allow_persistent</span> <span class="o">=</span> <span class="n">On</span>
+<span class="n">pgsql</span><span class="o">.</span><span class="n">auto_reset_persistent</span> <span class="o">=</span> <span class="n">Off</span>
+<span class="n">pgsql</span><span class="o">.</span><span class="n">max_persistent</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+<span class="n">pgsql</span><span class="o">.</span><span class="n">max_links</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+<span class="n">pgsql</span><span class="o">.</span><span class="n">ignore_notice</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">pgsql</span><span class="o">.</span><span class="n">log_notice</span> <span class="o">=</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<p>The default configuration for PostgreSQL (at least in Ubuntu 14.04) is to use the peer authentication method. Check <code class="file docutils literal"><span class="pre">/etc/postgresql/9.3/main/pg_hba.conf</span></code> to find out which authentication method is used in your setup.
+To start the postgres command line mode use:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u postgres psql -d template1
+</pre></div>
+</div>
+<p>Then a <strong>template1=#</strong> prompt will appear. Now enter the following lines and confirm them with the enter key:</p>
+<div class="highlight-python"><div class="highlight"><pre>CREATE USER username CREATEDB;
+CREATE DATABASE owncloud OWNER username;
+</pre></div>
+</div>
+<p>You can quit the prompt by entering:</p>
+<div class="highlight-python"><div class="highlight"><pre>\q
+</pre></div>
+</div>
+<p>An ownCloud instance configured with PostgreSQL would contain the path to the socket on
+which the database is running as the hostname, the system username the php process is using,
+and an empty password to access it, and the name of the database. The <code class="file docutils literal"><span class="pre">config/config.php</span></code> as
+created by the <a class="reference internal" href="../installation/installation_wizard.html"><em>Installation Wizard</em></a> would therefore contain entries like
+this:</p>
+<div class="highlight-python"><div class="highlight"><pre>&lt;?php
+
+  &quot;dbtype&quot;        =&gt; &quot;pgsql&quot;,
+  &quot;dbname&quot;        =&gt; &quot;owncloud&quot;,
+  &quot;dbuser&quot;        =&gt; &quot;username&quot;,
+  &quot;dbpassword&quot;    =&gt; &quot;&quot;,
+  &quot;dbhost&quot;        =&gt; &quot;/var/run/postgresql&quot;,
+  &quot;dbtableprefix&quot; =&gt; &quot;oc_&quot;,
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The host actually points to the socket that is used to connect to the database. Using localhost here will not work if postgreSQL is configured to use peer authentication. Also note, that no password is specified, because this authentication method doesn&#8217;t use a password.</p>
+</div>
+<p>If you use another authentication method (not peer), you&#8217;ll need to use the following steps to get the database setup:
+Now you need to create a database user and the database itself by using the
+PostgreSQL command line interface. The database tables will be created by
+ownCloud when you login for the first time.</p>
+<p>To start the postgres command line mode use:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">psql</span> <span class="o">-</span><span class="n">hlocalhost</span> <span class="o">-</span><span class="n">Upostgres</span>
+</pre></div>
+</div>
+<p>Then a <strong>postgres=#</strong> prompt will appear. Now enter the following lines and confirm them with the enter key:</p>
+<div class="highlight-python"><div class="highlight"><pre>CREATE USER username WITH PASSWORD &#39;password&#39;;
+CREATE DATABASE owncloud TEMPLATE template0 ENCODING &#39;UNICODE&#39;;
+ALTER DATABASE owncloud OWNER TO username;
+GRANT ALL PRIVILEGES ON DATABASE owncloud TO username;
+</pre></div>
+</div>
+<p>You can quit the prompt by entering:</p>
+<div class="highlight-python"><div class="highlight"><pre>\q
+</pre></div>
+</div>
+<p>An ownCloud instance configured with PostgreSQL would contain the hostname on
+which the database is running, a valid username and password to access it, and
+the name of the database. The <code class="file docutils literal"><span class="pre">config/config.php</span></code> as created by the
+<a class="reference internal" href="../installation/installation_wizard.html"><em>Installation Wizard</em></a> would therefore contain entries like
+this:</p>
+<div class="highlight-python"><div class="highlight"><pre>&lt;?php
+
+  &quot;dbtype&quot;        =&gt; &quot;pgsql&quot;,
+  &quot;dbname&quot;        =&gt; &quot;owncloud&quot;,
+  &quot;dbuser&quot;        =&gt; &quot;username&quot;,
+  &quot;dbpassword&quot;    =&gt; &quot;password&quot;,
+  &quot;dbhost&quot;        =&gt; &quot;localhost&quot;,
+  &quot;dbtableprefix&quot; =&gt; &quot;oc_&quot;,
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="troubleshooting">
+<span id="db-troubleshooting-label"></span><h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="how-to-workaround-general-error-2006-mysql-server-has-gone-away">
+<h3>How to workaround General error: 2006 MySQL server has gone away<a class="headerlink" href="#how-to-workaround-general-error-2006-mysql-server-has-gone-away" title="Permalink to this headline">¶</a></h3>
+<p>The database request takes too long and therefore the MySQL server times out. Its
+also possible that the server is dropping a packet that is too large. Please
+refer to the manual of your database for how to raise the configuration options
+<code class="docutils literal"><span class="pre">wait_timeout</span></code> and/or <code class="docutils literal"><span class="pre">max_allowed_packet</span></code>.</p>
+<p>Some shared hosters are not allowing the access to these config options. For such
+systems ownCloud is providing a <code class="docutils literal"><span class="pre">dbdriveroptions</span></code> configuration option within your
+<code class="file docutils literal"><span class="pre">config/config.php</span></code> where you can pass such options to the database driver.
+Please refer to <a class="reference internal" href="../configuration_server/config_sample_php_parameters.html"><em>Config.php Parameters</em></a> for an example.</p>
+</div>
+<div class="section" id="how-can-i-find-out-if-my-mysql-postgresql-server-is-reachable">
+<h3>How can I find out if my MySQL/PostgreSQL server is reachable?<a class="headerlink" href="#how-can-i-find-out-if-my-mysql-postgresql-server-is-reachable" title="Permalink to this headline">¶</a></h3>
+<p>To check the server&#8217;s network availability, use the ping command on
+the server&#8217;s host name (db.server.com in this example):</p>
+<div class="highlight-python"><div class="highlight"><pre>ping db.server.dom
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>PING db.server.dom (ip-address) 56(84) bytes of data.
+64 bytes from your-server.local.lan (192.168.1.10): icmp_req=1 ttl=64 time=3.64 ms
+64 bytes from your-server.local.lan (192.168.1.10): icmp_req=2 ttl=64 time=0.055 ms
+64 bytes from your-server.local.lan (192.168.1.10): icmp_req=3 ttl=64 time=0.062 ms
+</pre></div>
+</div>
+<p>For a more detailed check whether the access to the database server software
+itself works correctly, see the next question.</p>
+</div>
+<div class="section" id="how-can-i-find-out-if-a-created-user-can-access-a-database">
+<h3>How can I find out if a created user can access a database?<a class="headerlink" href="#how-can-i-find-out-if-a-created-user-can-access-a-database" title="Permalink to this headline">¶</a></h3>
+<p>The easiest way to test if a database can be accessed is by starting the
+command line interface:</p>
+<p><strong>MySQL</strong>:</p>
+<p>Assuming the database server is installed on the same system you&#8217;re running
+the command from, use:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">mysql</span> <span class="o">-</span><span class="n">uUSERNAME</span> <span class="o">-</span><span class="n">p</span>
+</pre></div>
+</div>
+<p>To acess a MySQL installation on a different machine, add the -h option with
+the respective host name:</p>
+<div class="highlight-python"><div class="highlight"><pre>mysql -uUSERNAME -p -h HOSTNAME
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>mysql&gt; SHOW VARIABLES LIKE &quot;version&quot;;
++---------------+--------+
+| Variable_name | Value  |
++---------------+--------+
+| version       | 5.1.67 |
++---------------+--------+
+1 row in set (0.00 sec)
+mysql&gt; quit
+</pre></div>
+</div>
+<p><strong>PostgreSQL</strong>:</p>
+<p>Assuming the database server is installed on the same system you&#8217;re running
+the command from, use:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">psql</span> <span class="o">-</span><span class="n">Uusername</span> <span class="o">-</span><span class="n">downcloud</span>
+</pre></div>
+</div>
+<p>To acess a MySQL installation on a different machine, add the -h option with
+the respective host name:</p>
+<div class="highlight-python"><div class="highlight"><pre>psql -Uusername -downcloud -h HOSTNAME
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>postgres=# SELECT version();
+PostgreSQL 8.4.12 on i686-pc-linux-gnu, compiled by GCC gcc (GCC) 4.1.3 20080704 (prerelease), 32-bit
+(1 row)
+postgres=# \q
+</pre></div>
+</div>
+</div>
+<div class="section" id="useful-sql-commands">
+<h3>Useful SQL commands<a class="headerlink" href="#useful-sql-commands" title="Permalink to this headline">¶</a></h3>
+<p><strong>Show Database Users</strong>:</p>
+<div class="highlight-python"><div class="highlight"><pre>MySQL     : SELECT User,Host FROM mysql.user;
+PostgreSQL: SELECT * FROM pg_user;
+</pre></div>
+</div>
+<p><strong>Show available Databases</strong>:</p>
+<div class="highlight-python"><div class="highlight"><pre>MySQL     : SHOW DATABASES;
+PostgreSQL: \l
+</pre></div>
+</div>
+<p><strong>Show ownCloud Tables in Database</strong>:</p>
+<div class="highlight-python"><div class="highlight"><pre>MySQL     : USE owncloud; SHOW TABLES;
+PostgreSQL: \c owncloud; \d
+</pre></div>
+</div>
+<p><strong>Quit Database</strong>:</p>
+<div class="highlight-python"><div class="highlight"><pre>MySQL     : quit
+PostgreSQL: \q
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="db_conversion.html" title="Previous Chapter: Converting Database Type"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Converting Da...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="../configuration_mimetypes/index.html" title="Next Chapter: Mimetypes Management"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Mimetypes Man... &raquo;</span>
+    </a>
+  </li>
+</ul>
+					</div>
+				</div>
+			</div>
+  </main>  
+  </div>
+</div>
+  </body>
+</html>

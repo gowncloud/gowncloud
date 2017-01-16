@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>LDAP User Cleanup &mdash; ownCloud 9.1 Server Administration Manual 9.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/main.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/styles.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '9.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="ownCloud 9.1 Server Administration Manual 9.1 documentation" href="../contents.html" />
+    <link rel="up" title="User Management" href="index.html" />
+    <link rel="next" title="User Provisioning API" href="user_provisioning_api.html" />
+    <link rel="prev" title="User Authentication with LDAP" href="user_auth_ldap.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1d2d44">
+
+  </head>
+  <body role="document">
+
+
+<div class="wrap container not-front">
+  <div class="content row">
+  <main class="main">
+    <div class="row page-content-header">
+      <div class="col-md-5 col-md-offset-7">
+      
+        <form class="headersearch" style="margin-bottom:-3px;" action="../search.html" method="get">
+        <input type="text" value="" name="q" id="q" class="form-control" /> 
+        <button  class="btn btn-default" type="submit" id="searchsubmit">Search</button>
+        </form>
+      
+      </div>
+    </div>
+    
+			<div class="row">
+				<div class="col-md-3">
+					<div class="sidebar">
+							<div class="menu-support-container">
+								<ul id="menu-support" class="menu">
+									<ul>
+										
+<li><a href="../contents.html">Table of Contents</a></li>
+									</ul>
+                  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">ownCloud 9.1 Server Administration Manual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">ownCloud 9.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new_admin.html">What&#8217;s New for Admins in ownCloud 9.1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_server/index.html">ownCloud Server Configuration</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">User Management</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="user_configuration.html">User Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reset_admin_password.html">Resetting a Lost Admin Password</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reset_user_password.html">Resetting a User Password</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_auth_ftp_smb_imap.html">User Authentication with IMAP, SMB, and FTP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_auth_ldap.html">User Authentication with LDAP</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">LDAP User Cleanup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#deleting-local-owncloud-users">Deleting Local ownCloud Users</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="user_provisioning_api.html">User Provisioning API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_files/index.html">File Sharing and Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_database/index.html">Database Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_mimetypes/index.html">Mimetypes Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../maintenance/index.html">Maintenance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../issues/index.html">Issues and Troubleshooting</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_installation/index.html">Enterprise Edition Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_clients/index.html">Creating Branded ownCloud Clients (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_server_branding/index.html">Enterprise Server Branding (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_external_storage/index.html">External Storage (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_user_management/index.html">User Management (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_file_management/index.html">Enterprise File Management (Enterprise Only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_logging/index.html">Enterprise Logging Apps (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_firewall/index.html">Enterprise Firewall (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_troubleshooting.html">Enterprise Troubleshooting</a></li>
+</ul>
+
+								</ul>
+							</div>
+					</div>
+				</div>
+        
+
+				<div class="col-md-9">
+					<div class="page-content">
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="user_auth_ldap.html" title="Previous Chapter: User Authentication with LDAP"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; User Authenti...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="user_provisioning_api.html" title="Next Chapter: User Provisioning API"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">User Provisio... &raquo;</span>
+    </a>
+  </li>
+</ul>
+						
+  <div class="section" id="ldap-user-cleanup">
+<h1>LDAP User Cleanup<a class="headerlink" href="#ldap-user-cleanup" title="Permalink to this headline">¶</a></h1>
+<p>LDAP User Cleanup is a new feature in the <code class="docutils literal"><span class="pre">LDAP</span> <span class="pre">user</span> <span class="pre">and</span> <span class="pre">group</span> <span class="pre">backend</span></code>
+application. LDAP User Cleanup is a background process that automatically
+searches the ownCloud LDAP mappings table, and verifies if the LDAP users are
+still available. Any users that are not available are marked as <code class="docutils literal"><span class="pre">deleted</span></code> in
+the <code class="docutils literal"><span class="pre">oc_preferences</span></code> database table. Then you can run a command to display
+this table, displaying only the users marked as <code class="docutils literal"><span class="pre">deleted</span></code>, and then you have
+the option of removing their data from your ownCloud data directory.</p>
+<p>These items are removed upon cleanup:</p>
+<ul class="simple">
+<li>Local ownCloud group assignments</li>
+<li>User preferences (DB table <code class="docutils literal"><span class="pre">oc_preferences</span></code>)</li>
+<li>User&#8217;s ownCloud home folder</li>
+<li>User&#8217;s corresponding entry in <code class="docutils literal"><span class="pre">oc_storages</span></code></li>
+</ul>
+<p>There are two prerequisites for LDAP User Cleanup to operate:</p>
+<ol class="arabic simple">
+<li>Set <code class="docutils literal"><span class="pre">ldapUserCleanupInterval</span></code> in <code class="docutils literal"><span class="pre">config.php</span></code> to your desired check
+interval in minutes. The default is 51 minutes.</li>
+<li>All configured LDAP connections are enabled and operating correctly. As users
+can exist on multiple LDAP servers, you want to be sure that all of your
+LDAP servers are available so that a user on a temporarily disconnected LDAP
+server is not marked as <code class="docutils literal"><span class="pre">deleted</span></code>.</li>
+</ol>
+<p>The background process examines 50 users at a time, and runs at the interval you
+configured with <code class="docutils literal"><span class="pre">ldapUserCleanupInterval</span></code>. For example, if you have 200 LDAP
+users and your <code class="docutils literal"><span class="pre">ldapUserCleanupInterval</span></code> is 20 minutes, the process will
+examine the first 50 users, then 20 minutes later the next 50 users, and 20
+minutes later the next 50, and so on.</p>
+<p>There are two <code class="docutils literal"><span class="pre">occ</span></code> commands to use for examining a table of users marked as
+deleted, and then manually deleting them.  The <code class="docutils literal"><span class="pre">occ</span></code> command is in your
+ownCloud directory, for example <code class="docutils literal"><span class="pre">/var/www/owncloud/occ</span></code>, and it must be run as
+your HTTP user. To learn more about <code class="docutils literal"><span class="pre">occ</span></code>, see
+<a class="reference internal" href="../configuration_server/occ_command.html"><em>Using the occ Command</em></a>.</p>
+<p>These examples are for Ubuntu Linux:</p>
+<ol class="arabic simple">
+<li><code class="docutils literal"><span class="pre">sudo</span> <span class="pre">-u</span> <span class="pre">www-data</span> <span class="pre">php</span> <span class="pre">occ</span> <span class="pre">ldap:show-remnants</span></code> displays a table with all
+users that have been marked as deleted, and their LDAP data.</li>
+<li><code class="docutils literal"><span class="pre">sudo</span> <span class="pre">-u</span> <span class="pre">www-data</span> <span class="pre">php</span> <span class="pre">occ</span> <span class="pre">user:delete</span> <span class="pre">[user]</span></code> removes the user&#8217;s data from the
+ownCloud data directory.</li>
+</ol>
+<p>This example shows what the table of users marked as <code class="docutils literal"><span class="pre">deleted</span></code> looks like:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ sudo -u www-data php occ ldap:show-remnants
++-----------------+-----------------+------------------+--------------------------------------+
+| ownCloud name   | Display Name    | LDAP UID         | LDAP DN                              |
++-----------------+-----------------+------------------+--------------------------------------+
+| aaliyah_brown   | aaliyah brown   | aaliyah_brown    | uid=aaliyah_brown,ou=people,dc=com   |
+| aaliyah_hammes  | aaliyah hammes  | aaliyah_hammes   | uid=aaliyah_hammes,ou=people,dc=com  |
+| aaliyah_johnston| aaliyah johnston| aaliyah_johnston | uid=aaliyah_johnston,ou=people,dc=com|
+| aaliyah_kunze   | aaliyah kunze   | aaliyah_kunze    | uid=aaliyah_kunze,ou=people,dc=com   |
++-----------------+-----------------+------------------+--------------------------------------+
+</pre></div>
+</div>
+<p>Then you can run <code class="docutils literal"><span class="pre">sudo</span> <span class="pre">-u</span> <span class="pre">www-data</span> <span class="pre">php</span> <span class="pre">occ</span> <span class="pre">user:delete</span> <span class="pre">aaliyah_brown</span></code> to delete
+user aaliyah_brown. You must use the user&#8217;s ownCloud name.</p>
+<div class="section" id="deleting-local-owncloud-users">
+<h2>Deleting Local ownCloud Users<a class="headerlink" href="#deleting-local-owncloud-users" title="Permalink to this headline">¶</a></h2>
+<p>You may also use <code class="docutils literal"><span class="pre">occ</span> <span class="pre">user:delete</span> <span class="pre">[user]</span></code> to remove a local ownCloud user;
+this removes their user account and their data.</p>
+</div>
+</div>
+
+
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="user_auth_ldap.html" title="Previous Chapter: User Authentication with LDAP"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; User Authenti...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="user_provisioning_api.html" title="Next Chapter: User Provisioning API"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">User Provisio... &raquo;</span>
+    </a>
+  </li>
+</ul>
+					</div>
+				</div>
+			</div>
+  </main>  
+  </div>
+</div>
+  </body>
+</html>

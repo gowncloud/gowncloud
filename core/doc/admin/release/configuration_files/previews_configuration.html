@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Previews Configuration &mdash; ownCloud 9.1 Server Administration Manual 9.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/main.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/styles.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '9.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="ownCloud 9.1 Server Administration Manual 9.1 documentation" href="../contents.html" />
+    <link rel="up" title="File Sharing and Management" href="index.html" />
+    <link rel="next" title="Controlling File Versions and Aging" href="file_versioning.html" />
+    <link rel="prev" title="Transactional File Locking" href="files_locking_transactional.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1d2d44">
+
+  </head>
+  <body role="document">
+
+
+<div class="wrap container not-front">
+  <div class="content row">
+  <main class="main">
+    <div class="row page-content-header">
+      <div class="col-md-5 col-md-offset-7">
+      
+        <form class="headersearch" style="margin-bottom:-3px;" action="../search.html" method="get">
+        <input type="text" value="" name="q" id="q" class="form-control" /> 
+        <button  class="btn btn-default" type="submit" id="searchsubmit">Search</button>
+        </form>
+      
+      </div>
+    </div>
+    
+			<div class="row">
+				<div class="col-md-3">
+					<div class="sidebar">
+							<div class="menu-support-container">
+								<ul id="menu-support" class="menu">
+									<ul>
+										
+<li><a href="../contents.html">Table of Contents</a></li>
+									</ul>
+                  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">ownCloud 9.1 Server Administration Manual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">ownCloud 9.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new_admin.html">What&#8217;s New for Admins in ownCloud 9.1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_server/index.html">ownCloud Server Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_user/index.html">User Management</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">File Sharing and Management</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="file_sharing_configuration.html">File Sharing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="federated_cloud_sharing_configuration.html">Configuring Federation Sharing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="big_file_upload_configuration.html">Uploading big files &gt; 512MB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="collaborative_documents_configuration.html">Configuring the Collaborative Documents App</a></li>
+<li class="toctree-l2"><a class="reference internal" href="default_files_configuration.html">Providing Default Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="external_storage_configuration_gui.html">Configuring External Storage (GUI)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="external_storage_configuration.html">Configuring External Storage (Configuration File)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="external_storage/auth_mechanisms.html">External Storage Authentication mechanisms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="encryption_configuration.html">Encryption Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="files_locking_transactional.html">Transactional File Locking</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Previews Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#parameters">Parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="file_versioning.html">Controlling File Versions and Aging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trashbin_options.html">Managing the Trashbin</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_database/index.html">Database Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_mimetypes/index.html">Mimetypes Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../maintenance/index.html">Maintenance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../issues/index.html">Issues and Troubleshooting</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_installation/index.html">Enterprise Edition Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_clients/index.html">Creating Branded ownCloud Clients (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_server_branding/index.html">Enterprise Server Branding (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_external_storage/index.html">External Storage (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_user_management/index.html">User Management (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_file_management/index.html">Enterprise File Management (Enterprise Only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_logging/index.html">Enterprise Logging Apps (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_firewall/index.html">Enterprise Firewall (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_troubleshooting.html">Enterprise Troubleshooting</a></li>
+</ul>
+
+								</ul>
+							</div>
+					</div>
+				</div>
+        
+
+				<div class="col-md-9">
+					<div class="page-content">
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="files_locking_transactional.html" title="Previous Chapter: Transactional File Locking"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Transactional...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="file_versioning.html" title="Next Chapter: Controlling File Versions and Aging"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Controlling F... &raquo;</span>
+    </a>
+  </li>
+</ul>
+						
+  <div class="section" id="previews-configuration">
+<h1>Previews Configuration<a class="headerlink" href="#previews-configuration" title="Permalink to this headline">¶</a></h1>
+<p>The ownCloud thumbnail system generates previews of files for all
+ownCloud apps that display files, such as Files and Gallery.</p>
+<p>The following image shows some examples of previews of various file types.</p>
+<div class="figure">
+<img alt="Thumbnails of various image and audio/video files." src="../_images/preview_images.png" />
+</div>
+<p>By default, ownCloud can generate previews for the following filetypes:</p>
+<ul class="simple">
+<li>Images files</li>
+<li>Cover of MP3 files</li>
+<li>Text documents</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Older versions of ownCloud also supported the preview generation
+of other file types such as PDF, SVG or various office documents.
+Due to security concerns those providers have been disabled by
+default and are considered unsupported.
+While those providers are still available, we discourage enabling
+them, and they are not documented.</p>
+</div>
+<div class="section" id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
+<p>Please notice that the ownCloud preview system comes already with sensible
+defaults, and therefore it is usually unnecessary to adjust those configuration
+values.</p>
+<div class="section" id="disabling-previews">
+<h3>Disabling previews:<a class="headerlink" href="#disabling-previews" title="Permalink to this headline">¶</a></h3>
+<p>Under certain circumstances, for example if the server has limited
+resources, you might want to consider disabling the generation of previews.
+Note that if you do this all previews in all apps are disabled, including
+the Gallery app, and will display generic icons instead of
+thumbnails.</p>
+<p>Set the configuration option <code class="docutils literal"><span class="pre">enable_previews</span></code> in config.php to <code class="docutils literal"><span class="pre">false</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre>&lt;?php
+  &#39;enable_previews&#39; =&gt; false,
+</pre></div>
+</div>
+</div>
+<div class="section" id="maximum-preview-size">
+<h3>Maximum preview size:<a class="headerlink" href="#maximum-preview-size" title="Permalink to this headline">¶</a></h3>
+<p>There are two configuration options to set the maximum size of a preview.</p>
+<div class="highlight-python"><div class="highlight"><pre>&lt;?php
+  &#39;preview_max_x&#39; =&gt; null,
+  &#39;preview_max_y&#39; =&gt; null,
+</pre></div>
+</div>
+<p>By default, both options are set to null. &#8216;Null&#8217; is equal to no limit.
+Numeric values represent the size in pixels. The following code limits previews
+to a maximum size of 100×100px:</p>
+<div class="highlight-python"><div class="highlight"><pre>&lt;?php
+  &#39;preview_max_x&#39; =&gt; 100,
+  &#39;preview_max_y&#39; =&gt; 100,
+</pre></div>
+</div>
+<p>&#8216;preview_max_x&#8217; represents the x-axis and &#8216;preview_max_y&#8217; represents the y-axis.</p>
+</div>
+<div class="section" id="maximum-scale-factor">
+<h3>Maximum scale factor:<a class="headerlink" href="#maximum-scale-factor" title="Permalink to this headline">¶</a></h3>
+<p>If a lot of small pictures are stored on the ownCloud instance and the preview
+system generates blurry previews, you might want to consider setting a maximum
+scale factor. By default, pictures are upscaled to 10 times the original size:</p>
+<div class="highlight-python"><div class="highlight"><pre>&lt;?php
+  &#39;preview_max_scale_factor&#39; =&gt; 10,
+</pre></div>
+</div>
+<p>If you want to disable scaling at all, you can set the config value to &#8216;1&#8217;:</p>
+<div class="highlight-python"><div class="highlight"><pre>&lt;?php
+  &#39;preview_max_scale_factor&#39; =&gt; 1,
+</pre></div>
+</div>
+<p>If you want to disable the maximum scaling factor, you can set the config value
+to &#8216;null&#8217;:</p>
+<div class="highlight-python"><div class="highlight"><pre>&lt;?php
+  &#39;preview_max_scale_factor&#39; =&gt; null,
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="files_locking_transactional.html" title="Previous Chapter: Transactional File Locking"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Transactional...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="file_versioning.html" title="Next Chapter: Controlling File Versions and Aging"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Controlling F... &raquo;</span>
+    </a>
+  </li>
+</ul>
+					</div>
+				</div>
+			</div>
+  </main>  
+  </div>
+</div>
+  </body>
+</html>

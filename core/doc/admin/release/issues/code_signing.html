@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Code Signing &mdash; ownCloud 9.1 Server Administration Manual 9.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/main.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/styles.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '9.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="ownCloud 9.1 Server Administration Manual 9.1 documentation" href="../contents.html" />
+    <link rel="up" title="Issues and Troubleshooting" href="index.html" />
+    <link rel="next" title="Enterprise Edition Installation" href="../enterprise_installation/index.html" />
+    <link rel="prev" title="General Troubleshooting" href="general_troubleshooting.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1d2d44">
+
+  </head>
+  <body role="document">
+
+
+<div class="wrap container not-front">
+  <div class="content row">
+  <main class="main">
+    <div class="row page-content-header">
+      <div class="col-md-5 col-md-offset-7">
+      
+        <form class="headersearch" style="margin-bottom:-3px;" action="../search.html" method="get">
+        <input type="text" value="" name="q" id="q" class="form-control" /> 
+        <button  class="btn btn-default" type="submit" id="searchsubmit">Search</button>
+        </form>
+      
+      </div>
+    </div>
+    
+			<div class="row">
+				<div class="col-md-3">
+					<div class="sidebar">
+							<div class="menu-support-container">
+								<ul id="menu-support" class="menu">
+									<ul>
+										
+<li><a href="../contents.html">Table of Contents</a></li>
+									</ul>
+                  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">ownCloud 9.1 Server Administration Manual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">ownCloud 9.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new_admin.html">What&#8217;s New for Admins in ownCloud 9.1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_server/index.html">ownCloud Server Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_user/index.html">User Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_files/index.html">File Sharing and Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_database/index.html">Database Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_mimetypes/index.html">Mimetypes Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../maintenance/index.html">Maintenance</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Issues and Troubleshooting</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="general_troubleshooting.html">General Troubleshooting</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Code Signing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#faq">FAQ</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fixing-invalid-code-integrity-messages">Fixing Invalid Code Integrity Messages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rescans">Rescans</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#errors">Errors</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_installation/index.html">Enterprise Edition Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_clients/index.html">Creating Branded ownCloud Clients (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_server_branding/index.html">Enterprise Server Branding (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_external_storage/index.html">External Storage (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_user_management/index.html">User Management (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_file_management/index.html">Enterprise File Management (Enterprise Only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_logging/index.html">Enterprise Logging Apps (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_firewall/index.html">Enterprise Firewall (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_troubleshooting.html">Enterprise Troubleshooting</a></li>
+</ul>
+
+								</ul>
+							</div>
+					</div>
+				</div>
+        
+
+				<div class="col-md-9">
+					<div class="page-content">
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="general_troubleshooting.html" title="Previous Chapter: General Troubleshooting"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; General Troub...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="../enterprise_installation/index.html" title="Next Chapter: Enterprise Edition Installation"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Enterprise Ed... &raquo;</span>
+    </a>
+  </li>
+</ul>
+						
+  <div class="section" id="code-signing">
+<h1>Code Signing<a class="headerlink" href="#code-signing" title="Permalink to this headline">¶</a></h1>
+<p id="code-signing-label">ownCloud supports code signing for the core releases, and for ownCloud
+applications. Code signing gives our users an additional layer of security by
+ensuring that nobody other than authorized persons can push updates.</p>
+<p>It also ensures that all upgrades have been executed properly, so that no files
+are left behind, and all old files are properly replaced. In the past, invalid
+updates were a significant source of errors when updating ownCloud.</p>
+<div class="section" id="faq">
+<h2>FAQ<a class="headerlink" href="#faq" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="why-did-owncloud-add-code-signing">
+<h3>Why Did ownCloud Add Code Signing?<a class="headerlink" href="#why-did-owncloud-add-code-signing" title="Permalink to this headline">¶</a></h3>
+<p>By supporting Code Signing we add another layer of security by ensuring that
+nobody other than authorized persons can push updates for applications, and
+ensuring proper upgrades.</p>
+</div>
+<div class="section" id="do-we-lock-down-owncloud">
+<h3>Do We Lock Down ownCloud?<a class="headerlink" href="#do-we-lock-down-owncloud" title="Permalink to this headline">¶</a></h3>
+<p>The ownCloud project is open source and always will be. We do not want to
+make it more difficult for our users to run ownCloud. Any code signing errors on
+upgrades will not prevent ownCloud from running, but will display a warning on
+the Admin page. For applications that are not tagged &#8220;Official&#8221; the code signing
+process is optional.</p>
+</div>
+<div class="section" id="not-open-source-anymore">
+<h3>Not Open Source Anymore?<a class="headerlink" href="#not-open-source-anymore" title="Permalink to this headline">¶</a></h3>
+<p>The ownCloud project is open source and always will be. The code signing
+process is optional, though highly recommended. The code check for the
+core parts of ownCloud is enabled when the ownCloud release version branch has
+been set to stable.</p>
+<p>For custom distributions of ownCloud it is recommended to change the release
+version branch in version.php to something else than &#8220;stable&#8221;.</p>
+</div>
+<div class="section" id="is-code-signing-mandatory-for-apps">
+<h3>Is Code Signing Mandatory For Apps?<a class="headerlink" href="#is-code-signing-mandatory-for-apps" title="Permalink to this headline">¶</a></h3>
+<p>Code signing is optional for all third-party applications. Applications
+with a tag of &#8220;Official&#8221; on apps.owncloud.com require code signing.</p>
+</div>
+</div>
+<div class="section" id="fixing-invalid-code-integrity-messages">
+<span id="code-signing-fix-warning-label"></span><h2>Fixing Invalid Code Integrity Messages<a class="headerlink" href="#fixing-invalid-code-integrity-messages" title="Permalink to this headline">¶</a></h2>
+<p>A code integrity error message (&#8220;There were problems with the code integrity
+check. More information…&#8221;) appears in a yellow banner at the top of your
+ownCloud Web interface:</p>
+<img alt="Code integrity warning banner." src="../_images/code-integrity-notification.png" />
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The yellow banner is only shown for admin users.</p>
+</div>
+<p>Clicking on this link will take you to your ownCloud admin page, which provides
+the following options:</p>
+<ol class="arabic simple">
+<li>Link to this documentation entry.</li>
+<li>Show a list of invalid files.</li>
+<li>Trigger a rescan.</li>
+</ol>
+<img alt="Links for resolving code integrity warnings." src="../_images/code-integrity-admin.png" />
+<p>To debug issues caused by the code integrity check click on &#8220;List of invalid
+files...&#8221;, and you will be shown a text document listing the different issues. The
+content of the file will look similar to the following example:</p>
+<div class="highlight-python"><div class="highlight"><pre>Technical information
+=====================
+The following list covers which files have failed the integrity check. Please read
+the previous linked documentation to learn more about the errors and how to fix
+them.
+
+Results
+=======
+- core
+      - INVALID_HASH
+              - /index.php
+              - /version.php
+      - EXTRA_FILE
+              - /test.php
+- calendar
+      - EXCEPTION
+              - OC\IntegrityCheck\Exceptions\InvalidSignatureException
+              - Signature data not found.
+- tasks
+      - EXCEPTION
+              - OC\IntegrityCheck\Exceptions\InvalidSignatureException
+              - Certificate has been revoked.
+
+Raw output
+==========
+Array
+(
+    [core] =&gt; Array
+        (
+            [INVALID_HASH] =&gt; Array
+                (
+                    [/index.php] =&gt; Array
+                        (
+                            [expected] =&gt;
+                            f1c5e2630d784bc9cb02d5a28f55d6f24d06dae2a0fee685f3
+                            c2521b050955d9d452769f61454c9ddfa9c308146ade10546c
+                            fa829794448eaffbc9a04a29d216
+                            [current] =&gt;
+                            ce08bf30bcbb879a18b49239a9bec6b8702f52452f88a9d321
+                            42cad8d2494d5735e6bfa0d8642b2762c62ca5be49f9bf4ec2
+                            31d4a230559d4f3e2c471d3ea094
+                        )
+
+                    [/version.php] =&gt; Array
+                        (
+                            [expected] =&gt;
+                            c5a03bacae8dedf8b239997901ba1fffd2fe51271d13a00cc4
+                            b34b09cca5176397a89fc27381cbb1f72855fa18b69b6f87d7
+                            d5685c3b45aee373b09be54742ea
+                            [current] =&gt;
+                            88a3a92c11db91dec1ac3be0e1c87f862c95ba6ffaaaa3f2c3
+                            b8f682187c66f07af3a3b557a868342ef4a271218fe1c1e300
+                            c478e6c156c5955ed53c40d06585
+                        )
+
+                )
+
+            [EXTRA_FILE] =&gt; Array
+                (
+                    [/test.php] =&gt; Array
+                        (
+                            [expected] =&gt;
+                            [current] =&gt;
+                            09563164f9904a837f9ca0b5f626db56c838e5098e0ccc1d8b
+                            935f68fa03a25c5ec6f6b2d9e44a868e8b85764dafd1605522
+                            b4af8db0ae269d73432e9a01e63a
+                        )
+
+                )
+
+        )
+
+    [calendar] =&gt; Array
+        (
+            [EXCEPTION] =&gt; Array
+                (
+                    [class] =&gt; OC\IntegrityCheck\Exceptions\InvalidSignature
+                    Exception
+                    [message] =&gt; Signature data not found.
+                )
+
+        )
+    [tasks] =&gt; Array
+        (
+            [EXCEPTION] =&gt; Array
+                (
+                    [class] =&gt; OC\IntegrityCheck\Exceptions\InvalidSignatureException
+                    [message] =&gt; Certificate has been revoked.
+                )
+
+        )
+
+)
+</pre></div>
+</div>
+<p>In above error output it can be seen that:</p>
+<ol class="arabic simple">
+<li>In the ownCloud core (that is, the ownCloud server itself) the files
+&#8220;index.php&#8221; and &#8220;version.php&#8221; do have the wrong version.</li>
+<li>In the ownCloud core the unrequired extra file &#8220;/test.php&#8221; has been found.</li>
+<li>It was not possible to verify the signature of the calendar application.</li>
+<li>The certificate of the task application was revoked.</li>
+</ol>
+<p>You have to do the following steps to solve this:</p>
+<ol class="arabic simple">
+<li>Upload the correct &#8220;index.php&#8221; and &#8220;version.php&#8221; files from e.g. the archive of your ownCloud version.</li>
+<li>Delete the &#8220;test.php&#8221; file.</li>
+<li>Contact the developer of the application. A new version of the app containing a valid signature file needs to be released.</li>
+<li>Contact the developer of the application. A new version of the app signed with a valid signature needs to be released.</li>
+</ol>
+<p>For other means on how to receive support please take a look at
+<a class="reference external" href="https://owncloud.org/support/">https://owncloud.org/support/</a>. After fixing these problems verify by clicking
+&#8220;Rescan…&#8221;.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">When using a FTP client to upload those files make sure it is using the
+<code class="docutils literal"><span class="pre">Binary</span></code> transfer mode instead of the <code class="docutils literal"><span class="pre">ASCII</span></code> transfer mode.</p>
+</div>
+</div>
+<div class="section" id="rescans">
+<span id="rescans-label"></span><h2>Rescans<a class="headerlink" href="#rescans" title="Permalink to this headline">¶</a></h2>
+<p>Rescans are triggered at installation, and by updates. You may run scans manually with the <code class="docutils literal"><span class="pre">occ</span></code> command. The first command scans the ownCloud core files, and the second command scans the named app. There is not yet a command to manually scan all apps:</p>
+<div class="highlight-python"><div class="highlight"><pre>occ integrity:check-core
+occ integrity:check-app $appid
+</pre></div>
+</div>
+<p>See <a class="reference internal" href="../configuration_server/occ_command.html"><em>Using the occ Command</em></a> to learn more about using <code class="docutils literal"><span class="pre">occ</span></code>.</p>
+</div>
+<div class="section" id="errors">
+<h2>Errors<a class="headerlink" href="#errors" title="Permalink to this headline">¶</a></h2>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Please don&#8217;t modify the mentioned <code class="docutils literal"><span class="pre">signature.json</span></code> itself.</p>
+</div>
+<p>The following errors can be encountered when trying to verify a code signature.</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">INVALID_HASH</span></code><ul>
+<li>The file has a different hash than specified within <code class="docutils literal"><span class="pre">signature.json</span></code>. This
+usually happens when the file has been modified after writing the signature
+data.</li>
+</ul>
+</li>
+<li><code class="docutils literal"><span class="pre">MISSING_FILE</span></code><ul>
+<li>The file cannot be found but has been specified within <code class="docutils literal"><span class="pre">signature.json</span></code>.
+Either a required file has been left out, or <code class="docutils literal"><span class="pre">signature.json</span></code> needs to be
+edited.</li>
+</ul>
+</li>
+<li><code class="docutils literal"><span class="pre">EXTRA_FILE</span></code><ul>
+<li>The file does not exist in <code class="docutils literal"><span class="pre">signature.json</span></code>. This usually happens when a
+file has been removed and <code class="docutils literal"><span class="pre">signature.json</span></code> has not been updated. It also
+happens if you have placed additional files in your ownCloud installation
+folder.</li>
+</ul>
+</li>
+<li><code class="docutils literal"><span class="pre">EXCEPTION</span></code><ul>
+<li>Another exception has prevented the code verification. There are currently
+these following exceptions:<ul>
+<li><code class="docutils literal"><span class="pre">Signature</span> <span class="pre">data</span> <span class="pre">not</span> <span class="pre">found.`</span></code><ul>
+<li>The app has mandatory code signing enforced but no <code class="docutils literal"><span class="pre">signature.json</span></code>
+file has been found in its <code class="docutils literal"><span class="pre">appinfo</span></code> folder.</li>
+</ul>
+</li>
+<li><code class="docutils literal"><span class="pre">Certificate</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">valid.</span></code><ul>
+<li>The certificate has not been issued by the official ownCloud Code
+Signing Root Authority.</li>
+</ul>
+</li>
+<li><code class="docutils literal"><span class="pre">Certificate</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">valid</span> <span class="pre">for</span> <span class="pre">required</span> <span class="pre">scope.</span> <span class="pre">(Requested:</span> <span class="pre">%s,</span> <span class="pre">current:</span> <span class="pre">%s)</span></code><ul>
+<li>The certificate is not valid for the defined application. Certificates
+are only valid for the defined app identifier and cannot be used for
+others.</li>
+</ul>
+</li>
+<li><code class="docutils literal"><span class="pre">Signature</span> <span class="pre">could</span> <span class="pre">not</span> <span class="pre">get</span> <span class="pre">verified.</span></code><ul>
+<li>There was a problem with verifying the signature of <code class="docutils literal"><span class="pre">signature.json</span></code>.</li>
+</ul>
+</li>
+<li><code class="docutils literal"><span class="pre">Certificate</span> <span class="pre">has</span> <span class="pre">been</span> <span class="pre">revoked.</span></code><ul>
+<li>The certificate which was used to sign the application was revoked.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="general_troubleshooting.html" title="Previous Chapter: General Troubleshooting"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; General Troub...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="../enterprise_installation/index.html" title="Next Chapter: Enterprise Edition Installation"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Enterprise Ed... &raquo;</span>
+    </a>
+  </li>
+</ul>
+					</div>
+				</div>
+			</div>
+  </main>  
+  </div>
+</div>
+  </body>
+</html>

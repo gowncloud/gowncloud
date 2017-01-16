@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Configuring S3 and OpenStack Swift Objects as Primary Storage &mdash; ownCloud 9.1 Server Administration Manual 9.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/main.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/styles.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '9.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="ownCloud 9.1 Server Administration Manual 9.1 documentation" href="../contents.html" />
+    <link rel="up" title="External Storage (Enterprise only)" href="index.html" />
+    <link rel="next" title="Jive Integration" href="jive_configuration.html" />
+    <link rel="prev" title="Installing and Configuring the Windows Network Drive App" href="windows-network-drive_configuration.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1d2d44">
+
+  </head>
+  <body role="document">
+
+
+<div class="wrap container not-front">
+  <div class="content row">
+  <main class="main">
+    <div class="row page-content-header">
+      <div class="col-md-5 col-md-offset-7">
+      
+        <form class="headersearch" style="margin-bottom:-3px;" action="../search.html" method="get">
+        <input type="text" value="" name="q" id="q" class="form-control" /> 
+        <button  class="btn btn-default" type="submit" id="searchsubmit">Search</button>
+        </form>
+      
+      </div>
+    </div>
+    
+			<div class="row">
+				<div class="col-md-3">
+					<div class="sidebar">
+							<div class="menu-support-container">
+								<ul id="menu-support" class="menu">
+									<ul>
+										
+<li><a href="../contents.html">Table of Contents</a></li>
+									</ul>
+                  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">ownCloud 9.1 Server Administration Manual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">ownCloud 9.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new_admin.html">What&#8217;s New for Admins in ownCloud 9.1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_server/index.html">ownCloud Server Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_user/index.html">User Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_files/index.html">File Sharing and Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_database/index.html">Database Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_mimetypes/index.html">Mimetypes Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../maintenance/index.html">Maintenance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../issues/index.html">Issues and Troubleshooting</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_installation/index.html">Enterprise Edition Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_clients/index.html">Creating Branded ownCloud Clients (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_server_branding/index.html">Enterprise Server Branding (Enterprise only)</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">External Storage (Enterprise only)</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="enterprise_only_auth.html">Enterprise-Only Authentication Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ldap_home_connector_configuration.html">LDAP Home Connector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sharepoint-integration_configuration.html">Configuring SharePoint Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="windows-network-drive_configuration.html">Installing and Configuring the Windows Network Drive App</a></li>
+<li class="toctree-l2"><a class="reference internal" href="windows-network-drive_configuration.html#windows-network-drive-listener">Windows Network Drive Listener</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Configuring S3 and OpenStack Swift Objects as Primary Storage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#implications">Implications</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configuration">Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#s3-multibucket-configuration">S3 Multibucket Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="jive_configuration.html">Jive Integration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_user_management/index.html">User Management (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_file_management/index.html">Enterprise File Management (Enterprise Only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_logging/index.html">Enterprise Logging Apps (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_firewall/index.html">Enterprise Firewall (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_troubleshooting.html">Enterprise Troubleshooting</a></li>
+</ul>
+
+								</ul>
+							</div>
+					</div>
+				</div>
+        
+
+				<div class="col-md-9">
+					<div class="page-content">
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="windows-network-drive_configuration.html" title="Previous Chapter: Installing and Configuring the Windows Network Drive App"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Installing an...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="jive_configuration.html" title="Next Chapter: Jive Integration"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Jive Integration &raquo;</span>
+    </a>
+  </li>
+</ul>
+						
+  <div class="section" id="configuring-s3-and-openstack-swift-objects-as-primary-storage">
+<h1>Configuring S3 and OpenStack Swift Objects as Primary Storage<a class="headerlink" href="#configuring-s3-and-openstack-swift-objects-as-primary-storage" title="Permalink to this headline">¶</a></h1>
+<p>In ownCloud Enterprise edition, you can configure S3 objects as primary
+storage. This replaces the default ownCloud <code class="docutils literal"><span class="pre">owncloud/data</span></code> directory. You may
+still need to keep the <code class="docutils literal"><span class="pre">owncloud/data</span></code> directory for these reasons:</p>
+<ul class="simple">
+<li>The ownCloud log file is saved in the data directory</li>
+<li>Legacy apps may not support using anything but the <code class="docutils literal"><span class="pre">owncloud/data</span></code> directory</li>
+</ul>
+<p>You can move your logfile by changing its location in <code class="docutils literal"><span class="pre">config.php</span></code>. You may still need
+<code class="docutils literal"><span class="pre">owncloud/data</span></code> for backwards compatibility with some apps.</p>
+<div class="section" id="implications">
+<h2>Implications<a class="headerlink" href="#implications" title="Permalink to this headline">¶</a></h2>
+<p>ownCloud in object store mode expects exclusive access to the object store
+container, because it only stores the binary data for each file. The metadata
+are kept in the local database for performance reasons.</p>
+<p>The current implementation is incompatible with any app that uses
+direct file I/O and circumvents the ownCloud virtual filesystem. That includes
+Encryption and Gallery. Gallery stores thumbnails directly in the
+filesystem, and Encryption causes severe overhead because key files need
+to be fetched in addition to any requested file.</p>
+</div>
+<div class="section" id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<p>Look in <code class="docutils literal"><span class="pre">config.sample.php</span></code> for a example configurations. Copy the
+relevant part to your <code class="docutils literal"><span class="pre">config.php</span></code> file. Any object store needs to implement
+<code class="docutils literal"><span class="pre">\\OCP\\Files\\ObjectStore\\IObjectStore</span></code> and can be passed parameters in the
+constructor with the <code class="docutils literal"><span class="pre">arguments</span></code> key:</p>
+<div class="highlight-python"><div class="highlight"><pre>&#39;objectstore&#39; =&gt; [
+    &#39;class&#39; =&gt; &#39;Implementation\\Of\\OCP\\Files\\ObjectStore\\IObjectStore&#39;,
+    &#39;arguments&#39; =&gt; [
+        ...
+    ],
+],
+</pre></div>
+</div>
+<div class="section" id="amazon-s3">
+<h3>Amazon S3<a class="headerlink" href="#amazon-s3" title="Permalink to this headline">¶</a></h3>
+<p>The S3 backend mounts a bucket of the Amazon S3 object store
+into the virtual filesystem. The class to be used is <code class="docutils literal"><span class="pre">OCA\ObjectStore\S3</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre>&#39;objectstore&#39; =&gt; [
+    &#39;class&#39; =&gt; &#39;OCA\ObjectStore\S3&#39;,
+    &#39;arguments&#39; =&gt; [
+        // replace with your bucket
+        &#39;bucket&#39; =&gt; &#39;owncloud&#39;,
+        &#39;autocreate&#39; =&gt; true,
+        // uncomment to enable server side encryption
+        //&#39;serversideencryption&#39; =&gt; &#39;AES256&#39;,
+        &#39;options&#39; =&gt; [
+            // version and region are required
+            &#39;version&#39; =&gt; &#39;2006-03-01&#39;,
+            // change to your region
+            &#39;region&#39;  =&gt; &#39;eu-central-1&#39;,
+            &#39;credentials&#39; =&gt; [
+                // replace key and secret with your credentials
+                &#39;key&#39; =&gt; &#39;EJ39ITYZEUH5BGWDRUFY&#39;,
+                &#39;secret&#39; =&gt; &#39;M5MrXTRjkyMaxXPe2FRXMTfTfbKEnZCu+7uRTVSj&#39;,
+            ],
+        ],
+    ],
+],
+</pre></div>
+</div>
+</div>
+<div class="section" id="ceph-s3">
+<h3>Ceph S3<a class="headerlink" href="#ceph-s3" title="Permalink to this headline">¶</a></h3>
+<p>The S3 backend can also be used to mount the bucket of a ceph object store via the s3 API
+into the virtual filesystem. The class to be used is <code class="docutils literal"><span class="pre">OCA\ObjectStore\S3</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre>&#39;objectstore&#39; =&gt; [
+    &#39;class&#39; =&gt; &#39;OCA\ObjectStore\S3&#39;,
+    &#39;arguments&#39; =&gt; [
+        // replace with your bucket
+        &#39;bucket&#39; =&gt; &#39;owncloud&#39;,
+        &#39;autocreate&#39; =&gt; true,
+        &#39;options&#39; =&gt; [
+            // version and region are required
+            &#39;version&#39; =&gt; &#39;2006-03-01&#39;,
+            &#39;region&#39;  =&gt; &#39;&#39;,
+            // replace key, secret and bucket with your credentials
+            &#39;credentials&#39; =&gt; [
+                // replace key and secret with your credentials
+                &#39;key&#39;    =&gt; &#39;EJ39ITYZEUH5BGWDRUFY&#39;,
+                &#39;secret&#39; =&gt; &#39;M5MrXTRjkyMaxXPe2FRXMTfTfbKEnZCu+7uRTVSj&#39;,
+            ],
+            // replace the ceph endpoint with your rgw url
+            &#39;endpoint&#39; =&gt; &#39;http://cephhost:8000/&#39;,
+            // Use path style when talking to ceph
+            &#39;command.params&#39; =&gt; [
+                &#39;PathStyle&#39; =&gt; true,
+            ],
+        ],
+    ],
+],
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="s3-multibucket-configuration">
+<h2>S3 Multibucket Configuration<a class="headerlink" href="#s3-multibucket-configuration" title="Permalink to this headline">¶</a></h2>
+<p>ownCloud 9.1+ has multibucket support for S3 object stores:</p>
+<div class="highlight-python"><div class="highlight"><pre>&#39;objectstore_multibucket&#39; =&gt; [
+   &#39;class&#39; =&gt; &#39;OCA\ObjectStore\S3&#39;,
+   &#39;arguments&#39; =&gt; [
+       &#39;autocreate&#39; =&gt; true,
+       &#39;options&#39; =&gt; [
+           &#39;version&#39; =&gt; &#39;2006-03-01&#39;,
+           &#39;region&#39;  =&gt; &#39;eu-central-1&#39;,
+           &#39;credentials&#39; =&gt; [
+               &#39;key&#39; =&gt; &#39;EJ39ITYZEUH5BGWDRUFY&#39;,
+               &#39;secret&#39; =&gt; &#39;M5MrXTRjkyMaxXPe2FRXMTfTfbKEnZCu+7uRTVSj&#39;,
+           ],
+       ],
+   ],
+],
+</pre></div>
+</div>
+<div class="section" id="openstack-swift">
+<h3>OpenStack Swift<a class="headerlink" href="#openstack-swift" title="Permalink to this headline">¶</a></h3>
+<p>The Swift backend mounts a container on an OpenStack Object Storage server
+into the virtual filesystem. The class to be used is <code class="docutils literal"><span class="pre">\\OC\\Files\\ObjectStore\\Swift</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre>&#39;objectstore&#39; =&gt; [
+    &#39;class&#39; =&gt; &#39;OC\\Files\\ObjectStore\\Swift&#39;,
+    &#39;arguments&#39; =&gt; [
+        &#39;username&#39; =&gt; &#39;demo&#39;,
+        &#39;password&#39; =&gt; &#39;password&#39;,
+        &#39;container&#39; =&gt; &#39;owncloud&#39;,
+        &#39;autocreate&#39; =&gt; true,
+        &#39;region&#39; =&gt; &#39;RegionOne&#39;,
+        &#39;url&#39; =&gt; &#39;http://devstack:5000/v2.0&#39;,
+        &#39;tenantName&#39; =&gt; &#39;demo&#39;,
+        &#39;serviceName&#39; =&gt; &#39;swift&#39;,
+        // url Type, optional, public, internal or admin
+        &#39;urlType&#39; =&gt; &#39;internal&#39;
+    ],
+],
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="windows-network-drive_configuration.html" title="Previous Chapter: Installing and Configuring the Windows Network Drive App"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Installing an...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="jive_configuration.html" title="Next Chapter: Jive Integration"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Jive Integration &raquo;</span>
+    </a>
+  </li>
+</ul>
+					</div>
+				</div>
+			</div>
+  </main>  
+  </div>
+</div>
+  </body>
+</html>

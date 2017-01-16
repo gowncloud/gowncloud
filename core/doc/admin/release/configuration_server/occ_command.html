@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Using the occ Command &mdash; ownCloud 9.1 Server Administration Manual 9.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/main.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/styles.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '9.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="ownCloud 9.1 Server Administration Manual 9.1 documentation" href="../contents.html" />
+    <link rel="up" title="ownCloud Server Configuration" href="index.html" />
+    <link rel="next" title="Configuring the Activity App" href="activity_configuration.html" />
+    <link rel="prev" title="Importing System-wide and Personal SSL Certificates" href="import_ssl_cert.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1d2d44">
+
+  </head>
+  <body role="document">
+
+
+<div class="wrap container not-front">
+  <div class="content row">
+  <main class="main">
+    <div class="row page-content-header">
+      <div class="col-md-5 col-md-offset-7">
+      
+        <form class="headersearch" style="margin-bottom:-3px;" action="../search.html" method="get">
+        <input type="text" value="" name="q" id="q" class="form-control" /> 
+        <button  class="btn btn-default" type="submit" id="searchsubmit">Search</button>
+        </form>
+      
+      </div>
+    </div>
+    
+			<div class="row">
+				<div class="col-md-3">
+					<div class="sidebar">
+							<div class="menu-support-container">
+								<ul id="menu-support" class="menu">
+									<ul>
+										
+<li><a href="../contents.html">Table of Contents</a></li>
+									</ul>
+                  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">ownCloud 9.1 Server Administration Manual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">ownCloud 9.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new_admin.html">What&#8217;s New for Admins in ownCloud 9.1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">ownCloud Server Configuration</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="security_setup_warnings.html">Warnings on Admin Page</a></li>
+<li class="toctree-l2"><a class="reference internal" href="import_ssl_cert.html">Importing System-wide and Personal SSL Certificates</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Using the occ Command</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#occ-command-directory">occ Command Directory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#run-occ-as-your-http-user">Run occ As Your HTTP User</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apps-commands">Apps Commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#background-jobs-selector">Background Jobs Selector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#config-commands">Config Commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dav-commands">Dav Commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#database-conversion">Database Conversion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#encryption">Encryption</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#federation-sync">Federation Sync</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#file-operations">File Operations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#files-external">Files External</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#integrity-check">Integrity Check</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#l10n-create-javascript-translation-files-for-apps">l10n, Create Javascript Translation Files for Apps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ldap-commands">LDAP Commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#logging-commands">Logging Commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#maintenance-commands">Maintenance Commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#security">Security</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#shibboleth-modes-enterprise-edition-only">Shibboleth Modes (Enterprise Edition only)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#trashbin">Trashbin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#user-commands">User Commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#versions">Versions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#command-line-installation">Command Line Installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#command-line-upgrade">Command Line Upgrade</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#two-factor-authentication">Two-factor Authentication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#disable-users">Disable Users</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="activity_configuration.html">Configuring the Activity App</a></li>
+<li class="toctree-l2"><a class="reference internal" href="antivirus_configuration.html">Configuring the ClamAV Antivirus Scanner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="caching_configuration.html">Configuring Memory Caching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background_jobs_configuration.html">Defining Background Jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config_sample_php_parameters.html">Config.php Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="email_configuration.html">Email Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="external_sites.html">Linking External Sites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom_client_repos.html">Custom Client Download Repositories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="knowledgebase_configuration.html">Knowledge Base Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language_configuration.html">Language Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logging_configuration.html">Logging Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="harden_server.html">Hardening and Security Guidance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reverse_proxy_configuration.html">Reverse Proxy Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thirdparty_php_configuration.html">Using Third Party PHP Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="js_css_asset_management_configuration.html">JavaScript and CSS Asset Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="automatic_configuration.html">Automatic Configuration Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="oc_server_tuning.html">ownCloud Server Tuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index_php_less_urls.html">Enable index.php-less URLs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_user/index.html">User Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_files/index.html">File Sharing and Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_database/index.html">Database Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_mimetypes/index.html">Mimetypes Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../maintenance/index.html">Maintenance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../issues/index.html">Issues and Troubleshooting</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_installation/index.html">Enterprise Edition Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_clients/index.html">Creating Branded ownCloud Clients (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_server_branding/index.html">Enterprise Server Branding (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_external_storage/index.html">External Storage (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_user_management/index.html">User Management (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_file_management/index.html">Enterprise File Management (Enterprise Only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_logging/index.html">Enterprise Logging Apps (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_firewall/index.html">Enterprise Firewall (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_troubleshooting.html">Enterprise Troubleshooting</a></li>
+</ul>
+
+								</ul>
+							</div>
+					</div>
+				</div>
+        
+
+				<div class="col-md-9">
+					<div class="page-content">
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="import_ssl_cert.html" title="Previous Chapter: Importing System-wide and Personal SSL Certificates"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Importing Sys...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="activity_configuration.html" title="Next Chapter: Configuring the Activity App"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Configuring t... &raquo;</span>
+    </a>
+  </li>
+</ul>
+						
+  <div class="section" id="using-the-occ-command">
+<h1>Using the occ Command<a class="headerlink" href="#using-the-occ-command" title="Permalink to this headline">¶</a></h1>
+<p>ownCloud&#8217;s <code class="docutils literal"><span class="pre">occ</span></code> command (ownCloud console) is ownCloud&#8217;s command-line
+interface. You can perform many common server operations with <code class="docutils literal"><span class="pre">occ</span></code>, such as
+installing and upgrading ownCloud, manage users, encryption, passwords, LDAP
+setting, and more.</p>
+<p><code class="docutils literal"><span class="pre">occ</span></code> is in the <code class="file docutils literal"><span class="pre">owncloud/</span></code> directory; for example
+<code class="file docutils literal"><span class="pre">/var/www/owncloud</span></code> on Ubuntu Linux. <code class="docutils literal"><span class="pre">occ</span></code> is a PHP script. <strong>You must
+run it as your HTTP user</strong> to ensure that the correct permissions are maintained
+on your ownCloud files and directories. In ownCloud 8.2+ you may run it from
+any directory (specifying the filepath); in previous releases it had to be
+run from the <code class="file docutils literal"><span class="pre">owncloud/</span></code> directory.</p>
+<div class="section" id="occ-command-directory">
+<h2>occ Command Directory<a class="headerlink" href="#occ-command-directory" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference internal" href="#http-user-label"><span>Run occ As Your HTTP User</span></a></li>
+<li><a class="reference internal" href="#apps-commands-label"><span>Apps Commands</span></a></li>
+<li><a class="reference internal" href="#background-jobs-selector-label"><span>Background Jobs Selector</span></a></li>
+<li><a class="reference internal" href="#config-commands-label"><span>Config Commands</span></a></li>
+<li><a class="reference internal" href="#dav-label"><span>Dav Commands</span></a></li>
+<li><a class="reference internal" href="#database-conversion-label"><span>Database Conversion</span></a></li>
+<li><a class="reference internal" href="#encryption-label"><span>Encryption</span></a></li>
+<li><a class="reference internal" href="#federation-sync-label"><span>Federation Sync</span></a></li>
+<li><a class="reference internal" href="#file-operations-label"><span>File Operations</span></a></li>
+<li><a class="reference internal" href="#files-external-label"><span>Files External</span></a></li>
+<li><a class="reference internal" href="#integrity-check-label"><span>Integrity Check</span></a></li>
+<li><a class="reference internal" href="#create-javascript-translation-files-label"><span>l10n, Create Javascript Translation Files for Apps</span></a></li>
+<li><a class="reference internal" href="#ldap-commands-label"><span>LDAP Commands</span></a></li>
+<li><a class="reference internal" href="#logging-commands-label"><span>Logging Commands</span></a></li>
+<li><a class="reference internal" href="#maintenance-commands-label"><span>Maintenance Commands</span></a></li>
+<li><a class="reference internal" href="#security-commands-label"><span>Security</span></a></li>
+<li><a class="reference internal" href="#shibboleth-label"><span>Shibboleth Modes (Enterprise Edition only)</span></a></li>
+<li><a class="reference internal" href="#trashbin-label"><span>Trashbin</span></a></li>
+<li><a class="reference internal" href="#user-commands-label"><span>User Commands</span></a></li>
+<li><a class="reference internal" href="#versions-label"><span>Versions</span></a></li>
+<li><a class="reference internal" href="#command-line-installation-label"><span>Command Line Installation</span></a></li>
+<li><a class="reference internal" href="#command-line-upgrade-label"><span>Command Line Upgrade</span></a></li>
+<li><a class="reference internal" href="#two-factor-auth-label"><span>Two-factor Authentication</span></a></li>
+<li><a class="reference internal" href="#disable-user-label"><span>Disable Users</span></a></li>
+</ul>
+</div>
+<div class="section" id="run-occ-as-your-http-user">
+<span id="http-user-label"></span><h2>Run occ As Your HTTP User<a class="headerlink" href="#run-occ-as-your-http-user" title="Permalink to this headline">¶</a></h2>
+<p>The HTTP user is different on the various Linux distributions. See
+<a class="reference internal" href="../installation/installation_wizard.html#strong-perms-label"><span>Setting Strong Directory Permissions</span></a> to learn how to find your HTTP user.</p>
+<ul class="simple">
+<li>The HTTP user and group in Debian/Ubuntu is www-data.</li>
+<li>The HTTP user and group in Fedora/CentOS is apache.</li>
+<li>The HTTP user and group in Arch Linux is http.</li>
+<li>The HTTP user in openSUSE is wwwrun, and the HTTP group is www.</li>
+</ul>
+<p>If your HTTP server is configured to use a different PHP version than the
+default (/usr/bin/php), <code class="docutils literal"><span class="pre">occ</span></code> should be run with the same version. For
+example, in CentOS 6.5 with SCL-PHP54 installed, the command looks like this:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u apache /opt/rh/php54/root/usr/bin/php /var/www/html/owncloud/occ
+</pre></div>
+</div>
+<p>Running <code class="docutils literal"><span class="pre">occ</span></code> with no options lists all commands and options, like this
+example on Ubuntu:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ
+ownCloud version 9.0.0
+
+Usage:
+ command [options] [arguments]
+
+Options:
+ -h, --help            Display this help message
+ -q, --quiet           Do not output any message
+ -V, --version         Display this application version
+     --ansi            Force ANSI output
+     --no-ansi         Disable ANSI output
+ -n, --no-interaction  Do not ask any interactive question
+     --no-warnings     Skip global warnings, show command output only
+ -v|vv|vvv, --verbose  Increase the verbosity of messages: 1 for normal output,
+                       2 for more verbose output and 3 for debug
+
+Available commands:
+ check                 check dependencies of the server
+                       environment
+ help                  Displays help for a command
+ list                  Lists commands
+ status                show some status information
+ upgrade               run upgrade routines after installation of
+                       a new release. The release has to be
+                       installed before.
+</pre></div>
+</div>
+<p>This is the same as <code class="docutils literal"><span class="pre">sudo</span> <span class="pre">-u</span> <span class="pre">www-data</span> <span class="pre">php</span> <span class="pre">occ</span> <span class="pre">list</span></code>.</p>
+<p>Run it with the <code class="docutils literal"><span class="pre">-h</span></code> option for syntax help:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ -h
+</pre></div>
+</div>
+<p>Display your ownCloud version:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ -V
+  ownCloud version 9.0.0
+</pre></div>
+</div>
+<p>Query your ownCloud server status:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ status
+  - installed: true
+  - version: 9.0.0.19
+  - versionstring: 9.0.0
+  - edition:
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">occ</span></code> has options, commands, and arguments. Options and arguments are
+optional, while commands are required. The syntax is:</p>
+<div class="highlight-python"><div class="highlight"><pre>occ [options] command [arguments]
+</pre></div>
+</div>
+<p>Get detailed information on individual commands with the <code class="docutils literal"><span class="pre">help</span></code> command, like
+this example for the <code class="docutils literal"><span class="pre">maintenance:mode</span></code> command:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ help maintenance:mode
+Usage:
+ maintenance:mode [options]
+
+Options:
+     --on              enable maintenance mode
+     --off             disable maintenance mode
+ -h, --help            Display this help message
+ -q, --quiet           Do not output any message
+ -V, --version         Display this application version
+     --ansi            Force ANSI output
+     --no-ansi         Disable ANSI output
+ -n, --no-interaction  Do not ask any interactive question
+     --no-warnings     Skip global warnings, show command output only
+ -v|vv|vvv, --verbose  Increase the verbosity of messages: 1 for normal output,
+                       2 for more verbose output and 3 for debug
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">status</span></code> command from above has an option to define the output format.
+The default is plain text, but it can also be <code class="docutils literal"><span class="pre">json</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ status --output=json
+{&quot;installed&quot;:true,&quot;version&quot;:&quot;9.0.0.19&quot;,&quot;versionstring&quot;:&quot;9.0.0&quot;,&quot;edition&quot;:&quot;&quot;}
+</pre></div>
+</div>
+<p>or <code class="docutils literal"><span class="pre">json_pretty</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ status --output=json_pretty
+{
+   &quot;installed&quot;: true,
+   &quot;version&quot;: &quot;9.0.0.19&quot;,
+   &quot;versionstring&quot;: &quot;9.0.0&quot;,
+   &quot;edition&quot;: &quot;&quot;
+}
+</pre></div>
+</div>
+<p>This output option is available on all list and list-like commands:
+<code class="docutils literal"><span class="pre">status</span></code>, <code class="docutils literal"><span class="pre">check</span></code>, <code class="docutils literal"><span class="pre">app:list</span></code>, <code class="docutils literal"><span class="pre">config:list</span></code>, <code class="docutils literal"><span class="pre">encryption:status</span></code>
+and <code class="docutils literal"><span class="pre">encryption:list-modules</span></code></p>
+</div>
+<div class="section" id="apps-commands">
+<span id="apps-commands-label"></span><h2>Apps Commands<a class="headerlink" href="#apps-commands" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal"><span class="pre">app</span></code> commands list, enable, and disable apps:</p>
+<div class="highlight-python"><div class="highlight"><pre>app
+ app:check-code   check code to be compliant
+ app:disable      disable an app
+ app:enable       enable an app
+ app:getpath      Get an absolute path to the app directory
+                  (added in 9.0)
+ app:list         List all available apps
+</pre></div>
+</div>
+<p>List all of your installed apps, and show whether they are
+enabled or disabled:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ app:list
+</pre></div>
+</div>
+<p>Enable an app, for example the External Storage Support app:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ app:enable files_external
+files_external enabled
+</pre></div>
+</div>
+<p>Disable an app:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ app:disable files_external
+files_external disabled
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">app:check-code</span></code> has multiple checks: it checks if an app uses ownCloud&#8217;s
+public API (<code class="docutils literal"><span class="pre">OCP</span></code>) or private API (<code class="docutils literal"><span class="pre">OC_</span></code>), and it also checks for deprecated
+methods and the validity of the <code class="docutils literal"><span class="pre">info.xml</span></code> file. By default all checks are
+enabled. The Activity app is an example of a correctly-formatted app:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ app:check-code notifications
+App is compliant - awesome job!
+</pre></div>
+</div>
+<p>If your app has issues, you&#8217;ll see output like this:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ app:check-code foo_app
+Analysing /var/www/owncloud/apps/files/foo_app.php
+4 errors
+   line   45: OCP\Response - Static method of deprecated class must not be
+   called
+   line   46: OCP\Response - Static method of deprecated class must not be
+   called
+   line   47: OCP\Response - Static method of deprecated class must not be
+   called
+   line   49: OC_Util - Static method of private class must not be called
+</pre></div>
+</div>
+<p>You can get the full filepath to an app:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ app:getpath notifications
+/var/www/owncloud/apps/notifications
+</pre></div>
+</div>
+</div>
+<div class="section" id="background-jobs-selector">
+<span id="background-jobs-selector-label"></span><h2>Background Jobs Selector<a class="headerlink" href="#background-jobs-selector" title="Permalink to this headline">¶</a></h2>
+<p>Use the <code class="docutils literal"><span class="pre">background</span></code> command to select which scheduler you want to use for
+controlling background jobs, Ajax, Webcron, or Cron. This is the same as using
+the <strong>Cron</strong> section on your ownCloud Admin page:</p>
+<div class="highlight-python"><div class="highlight"><pre>background
+ background:ajax       Use ajax to run background jobs
+ background:cron       Use cron to run background jobs
+ background:webcron    Use webcron to run background jobs
+</pre></div>
+</div>
+<p>This example selects Ajax:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ background:ajax
+  Set mode for background jobs to &#39;ajax&#39;
+</pre></div>
+</div>
+<p>The other two commands are:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">background:cron</span></code></li>
+<li><code class="docutils literal"><span class="pre">background:webcron</span></code></li>
+</ul>
+<p>See <a class="reference internal" href="background_jobs_configuration.html"><em>Defining Background Jobs</em></a> to learn more.</p>
+</div>
+<div class="section" id="config-commands">
+<span id="config-commands-label"></span><h2>Config Commands<a class="headerlink" href="#config-commands" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal"><span class="pre">config</span></code> commands are used to configure the ownCloud server:</p>
+<div class="highlight-python"><div class="highlight"><pre>config
+ config:app:delete      Delete an app config value
+ config:app:get         Get an app config value
+ config:app:set         Set an app config value
+ config:import          Import a list of configs
+ config:list            List all configs
+ config:system:delete   Delete a system config value
+ config:system:get      Get a system config value
+ config:system:set      Set a system config value
+</pre></div>
+</div>
+<p>You can list all configuration values with one command:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ config:list
+</pre></div>
+</div>
+<p>By default, passwords and other sensitive data are omitted from the report, so
+the output can be posted publicly (e.g. as part of a bug report). In order to
+generate a full backport of all configuration values the <code class="docutils literal"><span class="pre">--private</span></code> flag
+needs to be set:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ config:list --private
+</pre></div>
+</div>
+<p>The exported content can also be imported again to allow the fast setup of
+similar instances. The import command will only add or update values. Values
+that exist in the current configuration, but not in the one that is being
+imported are left untouched:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ config:import filename.json
+</pre></div>
+</div>
+<p>It is also possible to import remote files, by piping the input:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ config:import &lt; local-backup.json
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">While it is possible to update/set/delete the versions and installation
+statuses of apps and ownCloud itself, it is <strong>not</strong> recommended to do this
+directly. Use the <code class="docutils literal"><span class="pre">occ</span> <span class="pre">app:enable</span></code>, <code class="docutils literal"><span class="pre">occ</span> <span class="pre">app:disable</span></code> and <code class="docutils literal"><span class="pre">occ</span> <span class="pre">update</span></code>
+commands instead.</p>
+</div>
+<div class="section" id="getting-a-single-configuration-value">
+<h3>Getting a Single Configuration Value<a class="headerlink" href="#getting-a-single-configuration-value" title="Permalink to this headline">¶</a></h3>
+<p>These commands get the value of a single app or system configuration:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ config:system:get version
+9.0.0.19
+
+sudo -u www-data php occ config:app:get activity installed_version
+2.2.1
+</pre></div>
+</div>
+</div>
+<div class="section" id="setting-a-single-configuration-value">
+<h3>Setting a Single Configuration Value<a class="headerlink" href="#setting-a-single-configuration-value" title="Permalink to this headline">¶</a></h3>
+<p>These commands set the value of a single app or system configuration:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ config:system:set logtimezone
+--value=&quot;Europe/Berlin&quot;
+System config value logtimezone set to Europe/Berlin
+
+sudo -u www-data php occ config:app:set files_sharing
+incoming_server2server_share_enabled --value=&quot;yes&quot; --type=boolean
+Config value incoming_server2server_share_enabled for app files_sharing set to yes
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">config:system:set</span></code> command creates the value, if it does not already
+exist. To update an existing value,  set <code class="docutils literal"><span class="pre">--update-only</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ config:system:set doesnotexist --value=&quot;true&quot;
+--type=boolean --update-only
+Value not updated, as it has not been set before.
+</pre></div>
+</div>
+<p>Note that in order to write a Boolean, float, or integer value to the
+configuration file, you need to specify the type on your command. This
+applies only to the <code class="docutils literal"><span class="pre">config:system:set</span></code> command. The following values are
+known:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">boolean</span></code></li>
+<li><code class="docutils literal"><span class="pre">integer</span></code></li>
+<li><code class="docutils literal"><span class="pre">float</span></code></li>
+<li><code class="docutils literal"><span class="pre">string</span></code> (default)</li>
+</ul>
+<p>When you want to e.g. disable the maintenance mode run the following command:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ config:system:set maintenance --value=false
+--type=boolean
+ownCloud is in maintenance mode - no app have been loaded
+System config value maintenance set to boolean false
+</pre></div>
+</div>
+</div>
+<div class="section" id="setting-an-array-configuration-value">
+<h3>Setting an array Configuration Value<a class="headerlink" href="#setting-an-array-configuration-value" title="Permalink to this headline">¶</a></h3>
+<p>Some configurations (e.g. the trusted domain setting) are an array of data.
+In order to set (and also get) the value of one key, you can specify multiple
+<code class="docutils literal"><span class="pre">config</span></code> names separated by spaces:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ config:system:get trusted_domains
+localhost
+owncloud.local
+sample.tld
+</pre></div>
+</div>
+<p>To replace <code class="docutils literal"><span class="pre">sample.tld</span></code> with <code class="docutils literal"><span class="pre">example.com</span></code> trusted_domains =&gt; 2 needs to be
+set:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ config:system:set trusted_domains 2
+--value=example.com
+System config value trusted_domains =&gt; 2 set to string example.com
+
+sudo -u www-data php occ config:system:get trusted_domains
+localhost
+owncloud.local
+example.com
+</pre></div>
+</div>
+</div>
+<div class="section" id="deleting-a-single-configuration-value">
+<h3>Deleting a Single Configuration Value<a class="headerlink" href="#deleting-a-single-configuration-value" title="Permalink to this headline">¶</a></h3>
+<p>These commands delete the configuration of an app or system configuration:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ config:system:delete maintenance:mode
+System config value maintenance:mode deleted
+
+sudo -u www-data php occ config:app:delete appname provisioning_api
+Config value provisioning_api of app appname deleted
+</pre></div>
+</div>
+<p>The delete command will by default not complain if the configuration was not set
+before. If you want to be notified in that case, set the
+<code class="docutils literal"><span class="pre">--error-if-not-exists</span></code> flag:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ config:system:delete doesnotexist
+--error-if-not-exists
+Config provisioning_api of app appname could not be deleted because it did not
+exist
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="dav-commands">
+<span id="dav-label"></span><h2>Dav Commands<a class="headerlink" href="#dav-commands" title="Permalink to this headline">¶</a></h2>
+<p>A set of commands to create addressbooks, calendars, and to
+migrate addressbooks from 8.2 when you upgrade to 9.0:</p>
+<div class="highlight-python"><div class="highlight"><pre>dav
+ dav:create-addressbook        Create a dav addressbook
+ dav:create-calendar           Create a dav calendar
+ dav:sync-birthday-calendar    Synchronizes the birthday calendar
+ dav:sync-system-addressbook   Synchronizes users to the system
+                               addressbook
+</pre></div>
+</div>
+<p>The syntax for <code class="docutils literal"><span class="pre">dav:create-addressbook</span></code> and  <code class="docutils literal"><span class="pre">dav:create-calendar</span></code> is
+<code class="docutils literal"><span class="pre">dav:create-addressbook</span> <span class="pre">[user]</span> <span class="pre">[name]</span></code>. This example creates the addressbook
+<code class="docutils literal"><span class="pre">mollybook</span></code> for the user molly:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ dav:create-addressbook molly mollybook
+</pre></div>
+</div>
+<p>This example creates a new calendar for molly:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ dav:create-calendar molly mollycal
+</pre></div>
+</div>
+<p>Molly will immediately see these on her Calendar and Contacts pages.</p>
+<p>In 9.0, the CalDAV server has been integrated into core. Your existing
+calendars and contacts should migrate automatically when you upgrade. If
+something goes wrong you can try a manual migration. First delete any
+partially-migrated calendars or addressbooks. Then run this
+command to migrate user&#8217;s contacts:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ dav:migrate-addressbooks [user]
+</pre></div>
+</div>
+<p>Run this command to migrate calendars:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ dav:migrate-calendars [user]
+</pre></div>
+</div>
+<p>See <a class="reference external" href="http://morrisjobke.de/2016/03/07/ownCloud-9.0-calendar-migration-analysis/">ownCloud 9.0 - calendar migration analysis</a>
+for help with troubleshooting and reporting problems.</p>
+<p><code class="docutils literal"><span class="pre">dav:sync-birthday-calendar</span></code> adds all birthdays to your calendar from
+addressbooks shared with you. This example syncs to your calendar from user
+bernie:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ dav:sync-birthday-calendar bernie
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">dav:sync-system-addressbook</span></code> synchronizes all users to the system
+addressbook:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ dav:sync-system-addressbook
+</pre></div>
+</div>
+<p>Added in 9.0.</p>
+</div>
+<div class="section" id="database-conversion">
+<span id="database-conversion-label"></span><h2>Database Conversion<a class="headerlink" href="#database-conversion" title="Permalink to this headline">¶</a></h2>
+<p>The SQLite database is good for testing, and for ownCloud servers with small
+single-user workloads that do not use sync clients, but production servers with
+multiple users should use MariaDB, MySQL, or PostgreSQL. You can use <code class="docutils literal"><span class="pre">occ</span></code> to
+convert from SQLite to one of these other databases.</p>
+<div class="highlight-python"><div class="highlight"><pre>db
+ db:convert-type           Convert the ownCloud database to the newly
+                           configured one
+ db:generate-change-script generates the change script from the current
+                           connected db to db_structure.xml
+</pre></div>
+</div>
+<p>You need:</p>
+<ul class="simple">
+<li>Your desired database and its PHP connector installed.</li>
+<li>The login and password of a database admin user.</li>
+<li>The database port number, if it is a non-standard port.</li>
+</ul>
+<p>This is example converts SQLite to MySQL/MariaDB:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ db:convert-type mysql oc_dbuser 127.0.0.1
+oc_database
+</pre></div>
+</div>
+<p>For a more detailed explanation see
+<a class="reference internal" href="../configuration_database/db_conversion.html"><em>Converting Database Type</em></a></p>
+</div>
+<div class="section" id="encryption">
+<span id="encryption-label"></span><h2>Encryption<a class="headerlink" href="#encryption" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal"><span class="pre">occ</span></code> includes a complete set of commands for managing encryption:</p>
+<div class="highlight-python"><div class="highlight"><pre>encryption
+ encryption:change-key-storage-root   Change key storage root
+ encryption:decrypt-all               Disable server-side encryption and
+                                      decrypt all files
+ encryption:disable                   Disable encryption
+ encryption:enable                    Enable encryption
+ encryption:enable-master-key         Enable the master key. Only available
+                                      for fresh installations with no existing
+                                      encrypted data! There is also no way to
+                                      disable it again.
+ encryption:encrypt-all               Encrypt all files for all users
+ encryption:list-modules              List all available encryption modules
+ encryption:migrate                   initial migration to encryption 2.0
+ encryption:set-default-module        Set the encryption default module
+ encryption:show-key-storage-root     Show current key storage root
+ encryption:status                    Lists the current status of encryption
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">encryption:status</span></code> shows whether you have active encryption, and your default
+encryption module. To enable encryption you must first enable the Encryption
+app, and then run <code class="docutils literal"><span class="pre">encryption:enable</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ app:enable encryption
+sudo -u www-data php occ encryption:enable
+sudo -u www-data php occ encryption:status
+ - enabled: true
+ - defaultModule: OC_DEFAULT_MODULE
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">encryption:change-key-storage-root</span></code> is for moving your encryption keys to a
+different folder. It takes one argument, <code class="docutils literal"><span class="pre">newRoot</span></code>, which defines your new
+root folder. The folder must exist, and the path is relative to your root ownCloud directory:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ encryption:change-key-storage-root ../../etc/oc-keys
+</pre></div>
+</div>
+<p>You can see the current location of your keys folder:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ encryption:show-key-storage-root
+Current key storage root:  default storage location (data/)
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">encryption:list-modules</span></code> displays your available encryption modules. You will
+see a list of modules only if you have enabled the Encryption app. Use
+<code class="docutils literal"><span class="pre">encryption:set-default-module</span> <span class="pre">[module</span> <span class="pre">name]</span></code> to set your desired module.</p>
+<p><code class="docutils literal"><span class="pre">encryption:encrypt-all</span></code> encrypts all data files for all users. You must first
+put your ownCloud server into <a class="reference internal" href="#maintenance-commands-label"><span>single-user
+mode</span></a> to prevent any user activity until encryption
+is completed.</p>
+<p><code class="docutils literal"><span class="pre">encryption:decrypt-all</span></code> decrypts all user data files, or optionally a single
+user:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ encryption:decrypt freda
+</pre></div>
+</div>
+<p>Users must have enabled recovery keys on their Personal pages. You must first
+put your ownCloud server into <a class="reference internal" href="#maintenance-commands-label"><span>single-user
+mode</span></a> to prevent any user activity until
+decryption is completed.</p>
+<p>Use <code class="docutils literal"><span class="pre">encryption:disable</span></code> to disable your encryption module. You must first put
+your ownCloud server into <a class="reference internal" href="#maintenance-commands-label"><span>single-user mode</span></a>
+to prevent any user activity.</p>
+<p><code class="docutils literal"><span class="pre">encryption:enable-master-key</span></code> creates a new master key, which is used for all
+user data instead of individual user keys. This is especially useful to enable
+single-sign on. Use this only on fresh installations with no existing data, or
+on systems where encryption has not already been enabled. It is not possible to
+disable it.</p>
+<p><code class="docutils literal"><span class="pre">encryption:migrate</span></code> migrates encryption keys after a major ownCloud version
+upgrade. You may optionally specify individual users in a space-delimited list.</p>
+<p>See <a class="reference internal" href="../configuration_files/encryption_configuration.html"><em>Encryption Configuration</em></a> to learn more.</p>
+</div>
+<div class="section" id="federation-sync">
+<span id="federation-sync-label"></span><h2>Federation Sync<a class="headerlink" href="#federation-sync" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This command is only available when the &#8220;Federation&#8221; app (<code class="docutils literal"><span class="pre">federation</span></code>) is
+enabled.</p>
+</div>
+<p>Synchronize the addressbooks of all federated ownCloud servers:</p>
+<div class="highlight-python"><div class="highlight"><pre>federation:sync-addressbooks  Synchronizes addressbooks of all
+                              federated clouds
+</pre></div>
+</div>
+<p>In ownCloud 9.+, servers connected with federation shares can share user
+address books, and auto-complete usernames in share dialogs. Use this command
+to synchronize federated servers:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ federation:sync-addressbooks
+</pre></div>
+</div>
+<p>Added in 9.0.</p>
+</div>
+<div class="section" id="file-operations">
+<span id="file-operations-label"></span><h2>File Operations<a class="headerlink" href="#file-operations" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal"><span class="pre">occ</span></code> has three commands for managing files in ownCloud:</p>
+<div class="highlight-python"><div class="highlight"><pre>files
+ files:cleanup              cleanup filecache
+ files:scan                 rescan filesystem
+ files:transfer-ownership   All files and folders are moved to another
+                            user - shares are moved as well. (Added in 9.0)
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">files:scan</span></code> command scans for new files and updates the file cache. You
+may rescan all files, per-user, a space-delimited list of users, and limit the
+search path. If not using <code class="docutils literal"><span class="pre">--quiet</span></code>, statistics will be shown at the end of
+the scan:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ files:scan --help
+  Usage:
+  files:scan [-p|--path=&quot;...&quot;] [-q|--quiet] [-v|vv|vvv --verbose] [--all]
+  [user_id1] ... [user_idN]
+
+Arguments:
+  user_id               will rescan all files of the given user(s)
+
+Options:
+  --path                limit rescan to the user/path given
+  --all                 will rescan all files of all known users
+  --quiet               suppress any output
+  --verbose             files and directories being processed are shown
+                        additionally during scanning
+  --unscanned           scan only previously unscanned files
+</pre></div>
+</div>
+<p>Verbosity levels of <code class="docutils literal"><span class="pre">-vv</span></code> or <code class="docutils literal"><span class="pre">-vvv</span></code> are automatically reset to <code class="docutils literal"><span class="pre">-v</span></code></p>
+<p>Note for option &#8211;unscanned:
+In general there is a background job (through cron) that will do that scan periodically.
+The &#8211;unscanned option makes it possible to trigger this from the CLI.</p>
+<p>When using the <code class="docutils literal"><span class="pre">--path</span></code> option, the path must consist of following
+components:</p>
+<div class="highlight-python"><div class="highlight"><pre>&quot;user_id/files/path&quot;
+  or
+&quot;user_id/files/mount_name&quot;
+  or
+&quot;user_id/files/mount_name/path&quot;
+</pre></div>
+</div>
+<p>where the term <code class="docutils literal"><span class="pre">files</span></code> is mandatory.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="o">--</span><span class="n">path</span><span class="o">=</span><span class="s2">&quot;/alice/files/Music&quot;</span>
+</pre></div>
+</div>
+<p>In the example above, the user_id <code class="docutils literal"><span class="pre">alice</span></code> is determined implicitly from the
+path component given.</p>
+<p>The <code class="docutils literal"><span class="pre">--path</span></code>, <code class="docutils literal"><span class="pre">--all</span></code> and <code class="docutils literal"><span class="pre">[user_id]</span></code> parameters and are exclusive - only
+one must be specified.</p>
+<p><code class="docutils literal"><span class="pre">files:cleanup</span></code> tidies up the server&#8217;s file cache by deleting all file
+entries that have no matching entries in the storage table.</p>
+<p>You may transfer all files and shares from one user to another. This is useful
+before removing a user:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ files:transfer-ownership &lt;source-user&gt;
+&lt;destination-user&gt;
+</pre></div>
+</div>
+</div>
+<div class="section" id="files-external">
+<span id="files-external-label"></span><h2>Files External<a class="headerlink" href="#files-external" title="Permalink to this headline">¶</a></h2>
+<p>These commands replace the <code class="docutils literal"><span class="pre">data/mount.json</span></code> configuration file used in
+ownCloud releases before 9.0.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">These commands are only available when the &#8220;External storage support&#8221; app
+(<code class="docutils literal"><span class="pre">files_external</span></code>) is enabled.</p>
+</div>
+<p>Commands for managing external storage:</p>
+<div class="highlight-python"><div class="highlight"><pre>files_external
+ files_external:applicable  Manage applicable users and groups for a mount
+ files_external:backends    Show available authentication and storage backends
+ files_external:config      Manage backend configuration for a mount
+ files_external:create      Create a new mount configuration
+ files_external:delete      Delete an external mount
+ files_external:export      Export mount configurations
+ files_external:import      Import mount configurations
+ files_external:list        List configured mounts
+ files_external:option      Manage mount options for a mount
+ files_external:verify      Verify mount configuration
+</pre></div>
+</div>
+<p>These commands replicate the functionality in the ownCloud Web GUI, plus two new
+features:  <code class="docutils literal"><span class="pre">files_external:export</span></code> and <code class="docutils literal"><span class="pre">files_external:import</span></code>.</p>
+<p>Use <code class="docutils literal"><span class="pre">files_external:export</span></code> to export all admin mounts to stdout, and
+<code class="docutils literal"><span class="pre">files_external:export</span> <span class="pre">[user_id]</span></code> to export the mounts of the specified
+ownCloud user.</p>
+<p>Use <code class="docutils literal"><span class="pre">files_external:import</span> <span class="pre">[filename]</span></code> to import legacy JSON configurations,
+and to copy external mount configurations to another ownCloud server.</p>
+<p>Added in 9.0.</p>
+</div>
+<div class="section" id="integrity-check">
+<span id="integrity-check-label"></span><h2>Integrity Check<a class="headerlink" href="#integrity-check" title="Permalink to this headline">¶</a></h2>
+<p>Apps which have an official tag MUST be code signed starting with ownCloud 9.0. Unsigned official apps won&#8217;t be installable anymore. Code signing is optional for all third-party applications:</p>
+<div class="highlight-python"><div class="highlight"><pre>integrity
+ integrity:check-app                 Check app integrity using a signature.
+ integrity:check-core                Check core integrity using a signature.
+ integrity:sign-app                  Signs an app using a private key.
+ integrity:sign-core                 Sign core using a private key
+</pre></div>
+</div>
+<p>After creating your signing key, sign your app like this example:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ integrity:sign-app --privateKey=/Users/lukasreschke/contacts.key --certificate=/Users/lukasreschke/CA/contacts.crt --path=/Users/lukasreschke/Programming/contacts
+</pre></div>
+</div>
+<p>Verify your app:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ integrity:check-app --path=/pathto/app appname
+</pre></div>
+</div>
+<p>When it returns nothing, your app is signed correctly. When it returns a message then there is an error. See <a class="reference external" href="https://doc.owncloud.org/server/9.0/developer_manual/app/code_signing.html#how-to-get-your-app-signed">Code Signing</a> in the Developer manual for more detailed information.</p>
+<p><code class="docutils literal"><span class="pre">integrity:sign-core</span></code> is for ownCloud core developers only.</p>
+<p>See <a class="reference internal" href="../issues/code_signing.html"><em>Code Signing</em></a> to learn more.</p>
+<p>Added in 9.0.</p>
+</div>
+<div class="section" id="l10n-create-javascript-translation-files-for-apps">
+<span id="create-javascript-translation-files-label"></span><h2>l10n, Create Javascript Translation Files for Apps<a class="headerlink" href="#l10n-create-javascript-translation-files-for-apps" title="Permalink to this headline">¶</a></h2>
+<p>This command is for app developers to update their translation mechanism from
+ownCloud 7 to ownCloud 8 and later.</p>
+</div>
+<div class="section" id="ldap-commands">
+<span id="ldap-commands-label"></span><h2>LDAP Commands<a class="headerlink" href="#ldap-commands" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">These commands are only available when the &#8220;LDAP user and group backend&#8221; app
+(<code class="docutils literal"><span class="pre">user_ldap</span></code>) is enabled.</p>
+</div>
+<p>These LDAP commands appear only when you have enabled the LDAP app. Then
+you can run the following LDAP commands with <code class="docutils literal"><span class="pre">occ</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre>ldap
+ ldap:check-user               checks whether a user exists on LDAP.
+ ldap:create-empty-config      creates an empty LDAP configuration
+ ldap:delete-config            deletes an existing LDAP configuration
+ ldap:search                   executes a user or group search
+ ldap:set-config               modifies an LDAP configuration
+ ldap:show-config              shows the LDAP configuration
+ ldap:show-remnants            shows which users are not available on
+                               LDAP anymore, but have remnants in
+                               ownCloud.
+ ldap:test-config              tests an LDAP configuration
+</pre></div>
+</div>
+<p>Search for an LDAP user, using this syntax:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ ldap:search [--group] [--offset=&quot;...&quot;]
+[--limit=&quot;...&quot;] search
+</pre></div>
+</div>
+<p>Searches will match at the beginning of the attribute value only. This example
+searches for givenNames that start with &#8220;rob&#8221;:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ ldap:search &quot;rob&quot;
+</pre></div>
+</div>
+<p>This will find robbie, roberta, and robin. Broaden the search to find, for
+example, <code class="docutils literal"><span class="pre">jeroboam</span></code> with the asterisk wildcard:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ ldap:search &quot;*rob&quot;
+</pre></div>
+</div>
+<p>User search attributes are set with <code class="docutils literal"><span class="pre">ldap:set-config</span></code>
+(below). For example, if your search attributes are
+<code class="docutils literal"><span class="pre">givenName</span></code> and <code class="docutils literal"><span class="pre">sn</span></code> you can find users by first name + last name very
+quickly. For example, you&#8217;ll find Terri Hanson by searching for <code class="docutils literal"><span class="pre">te</span> <span class="pre">ha</span></code>.
+Trailing whitespaces are ignored.</p>
+<p>Check if an LDAP user exists. This works only if the ownCloud server is
+connected to an LDAP server:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ ldap:check-user robert
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">ldap:check-user</span></code> will not run a check when it finds a disabled LDAP
+connection. This prevents users that exist on disabled LDAP connections from
+being marked as deleted. If you know for certain that the user you are searching for
+is not in one of the disabled connections, and exists on an active connection,
+use the <code class="docutils literal"><span class="pre">--force</span></code> option to force it to check all active LDAP connections:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ ldap:check-user --force robert
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">ldap:create-empty-config</span></code> creates an empty LDAP configuration. The first
+one you create has no <code class="docutils literal"><span class="pre">configID</span></code>, like this example:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ ldap:create-empty-config
+  Created new configuration with configID &#39;&#39;
+</pre></div>
+</div>
+<p>This is a holdover from the early days, when there was no option to create
+additional configurations. The second, and all subsequent, configurations
+that you create are automatically assigned IDs:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ ldap:create-empty-config
+   Created new configuration with configID &#39;s01&#39;
+</pre></div>
+</div>
+<p>Then you can list and view your configurations:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ ldap:show-config
+</pre></div>
+</div>
+<p>And view the configuration for a single configID:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ ldap:show-config s01
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">ldap:delete-config</span> <span class="pre">[configID]</span></code> deletes an existing LDAP configuration:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ ldap:delete  s01
+Deleted configuration with configID &#39;s01&#39;
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">ldap:set-config</span></code> command is for manipulating configurations, like this
+example that sets search attributes:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ ldap:set-config s01 ldapAttributesForUserSearch
+&quot;cn;givenname;sn;displayname;mail&quot;
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">ldap:test-config</span></code> tests whether your configuration is correct and can bind to
+the server:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ ldap:test-config s01
+The configuration is valid and the connection could be established!
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">ldap:show-remnants</span></code> is for cleaning up the LDAP mappings table, and is
+documented in <a class="reference internal" href="../configuration_user/user_auth_ldap_cleanup.html"><em>LDAP User Cleanup</em></a>.</p>
+</div>
+<div class="section" id="logging-commands">
+<span id="logging-commands-label"></span><h2>Logging Commands<a class="headerlink" href="#logging-commands" title="Permalink to this headline">¶</a></h2>
+<p>These commands view and configure your ownCloud logging preferences:</p>
+<div class="highlight-python"><div class="highlight"><pre>log
+ log:manage     manage logging configuration
+ log:owncloud   manipulate ownCloud logging backend
+</pre></div>
+</div>
+<p>Run <code class="docutils literal"><span class="pre">log:owncloud</span></code> to see your current logging status:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ log:owncloud
+Log backend ownCloud: enabled
+Log file: /opt/owncloud/data/owncloud.log
+Rotate at: disabled
+</pre></div>
+</div>
+<p>Use the <code class="docutils literal"><span class="pre">--enable</span></code> option to turn on logging. Use <code class="docutils literal"><span class="pre">--file</span></code> to set a
+different log file path. Set your rotation by log file size in bytes with
+<code class="docutils literal"><span class="pre">--rotate-size</span></code>; 0 disables rotation.</p>
+<p><code class="docutils literal"><span class="pre">log:manage</span></code> sets your logging backend, log level, and timezone. The defaults
+are <code class="docutils literal"><span class="pre">owncloud</span></code>, <code class="docutils literal"><span class="pre">Warning</span></code>, and <code class="docutils literal"><span class="pre">UTC</span></code>. Available options are:</p>
+<ul class="simple">
+<li>&#8211;backend [owncloud, syslog, errorlog]</li>
+<li>&#8211;level [debug, info, warning, error]</li>
+</ul>
+</div>
+<div class="section" id="maintenance-commands">
+<span id="maintenance-commands-label"></span><h2>Maintenance Commands<a class="headerlink" href="#maintenance-commands" title="Permalink to this headline">¶</a></h2>
+<p>Use these commands when you upgrade ownCloud, manage encryption, perform
+backups and other tasks that require locking users out until you are finished:</p>
+<div class="highlight-python"><div class="highlight"><pre>maintenance
+ maintenance:mimetype:update-db       Update database mimetypes and update
+                                      filecache
+ maintenance:mimetype:update-js       Update mimetypelist.js
+ maintenance:mode                     set maintenance mode
+ maintenance:repair                   repair this installation
+ maintenance:singleuser               set single user mode
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">maintenance:mode</span></code> locks the sessions of all logged-in users, including
+administrators, and displays a status screen warning that the server is in
+maintenance mode. Users who are not already logged in cannot log in until
+maintenance mode is turned off. When you take the server out of maintenance mode
+logged-in users must refresh their Web browsers to continue working:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ maintenance:mode --on
+sudo -u www-data php occ maintenance:mode --off
+</pre></div>
+</div>
+<p>Putting your ownCloud server into single-user mode allows admins to log in and
+work, but not ordinary users. This is useful for performing maintenance and
+troubleshooting on a running server:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ maintenance:singleuser --on
+Single user mode enabled
+</pre></div>
+</div>
+<p>Turn it off when you&#8217;re finished:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ maintenance:singleuser --off
+Single user mode disabled
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">maintenance:repair</span></code> command runs automatically during upgrades to clean
+up the database, so while you can run it manually there usually isn&#8217;t a need
+to:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ maintenance:repair
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">maintenance:mimetype:update-db</span></code> updates the ownCloud database and file cache
+with changed mimetypes found in <code class="docutils literal"><span class="pre">config/mimetypemapping.json</span></code>. Run this
+command after modifying <code class="docutils literal"><span class="pre">config/mimetypemapping.json</span></code>. If you change a
+mimetype, run <code class="docutils literal"><span class="pre">maintenance:mimetype:update-db</span> <span class="pre">--repair-filecache</span></code> to apply the
+change to existing files.</p>
+</div>
+<div class="section" id="security">
+<span id="security-commands-label"></span><h2>Security<a class="headerlink" href="#security" title="Permalink to this headline">¶</a></h2>
+<p>Use these commands to manage server-wide SSL certificates. These are useful when you create federation shares with other ownCloud servers that use self-signed certificates:</p>
+<div class="highlight-python"><div class="highlight"><pre>security
+ security:certificates         list trusted certificates
+ security:certificates:import  import trusted certificate
+ security:certificates:remove  remove trusted certificate
+</pre></div>
+</div>
+<p>This example lists your installed certificates:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ security:certificates
+</pre></div>
+</div>
+<p>Import a new certificate:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ security:import /path/to/certificate
+</pre></div>
+</div>
+<p>Remove a certificate:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ security:remove [certificate name]
+</pre></div>
+</div>
+</div>
+<div class="section" id="shibboleth-modes-enterprise-edition-only">
+<span id="shibboleth-label"></span><h2>Shibboleth Modes (Enterprise Edition only)<a class="headerlink" href="#shibboleth-modes-enterprise-edition-only" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This command is only available when the &#8220;Shibboleth user backend&#8221; app
+(<code class="docutils literal"><span class="pre">user_shibboleth</span></code>) is enabled.</p>
+</div>
+<p><code class="docutils literal"><span class="pre">shibboleth:mode</span></code> sets your Shibboleth mode to <code class="docutils literal"><span class="pre">notactive</span></code>,
+<code class="docutils literal"><span class="pre">autoprovision</span></code>, or <code class="docutils literal"><span class="pre">ssoonly</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre>shibboleth:mode [mode]
+</pre></div>
+</div>
+</div>
+<div class="section" id="trashbin">
+<span id="trashbin-label"></span><h2>Trashbin<a class="headerlink" href="#trashbin" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This command is only available when the &#8220;Deleted files&#8221; app
+(<code class="docutils literal"><span class="pre">files_trashbin</span></code>) is enabled.</p>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>trashbin
+ trashbin:cleanup   Remove deleted files
+ trashbin:expire    Expires the users trashbin
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">trashbin:cleanup</span></code> command removes the deleted files of the specified
+users in a space-delimited list, or all users if none are specified. This example removes all the deleted files of all users:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ trashbin:cleanup
+Remove all deleted files
+Remove deleted files for users on backend Database
+ freda
+ molly
+ stash
+ rosa
+ edward
+</pre></div>
+</div>
+<p>This example removes the deleted files of users molly and freda:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ trashbin:cleanup molly freda
+Remove deleted files of   molly
+Remove deleted files of   freda
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">trashbin:expire</span></code> deletes only expired files according to the <code class="docutils literal"><span class="pre">trashbin_retention_obligation</span></code> setting in <code class="docutils literal"><span class="pre">config.php</span></code> (see the Deleted Files section in <a class="reference internal" href="config_sample_php_parameters.html"><em>Config.php Parameters</em></a>). The default is to delete expired files for all users, or you may list users in a space-delimited list.</p>
+</div>
+<div class="section" id="user-commands">
+<span id="user-commands-label"></span><h2>User Commands<a class="headerlink" href="#user-commands" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal"><span class="pre">user</span></code> commands create and remove users, reset passwords, display a simple
+report showing how many users you have, and when a user was last logged in:</p>
+<div class="highlight-python"><div class="highlight"><pre>user
+ user:add            adds a user
+ user:delete         deletes the specified user
+ user:lastseen       shows when the user was logged it last
+                     time
+ user:report         shows how many users have access
+ user:resetpassword  Resets the password of the named user
+</pre></div>
+</div>
+<p>You can create a new user with their display name, login name, and any group
+memberships with the <code class="docutils literal"><span class="pre">user:add</span></code> command. The syntax is:</p>
+<div class="highlight-python"><div class="highlight"><pre>user:add [--password-from-env] [--display-name[=&quot;...&quot;]] [-g|--group[=&quot;...&quot;]]
+uid
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">display-name</span></code> corresponds to the <strong>Full Name</strong> on the Users page in your
+ownCloud Web UI, and the <code class="docutils literal"><span class="pre">uid</span></code> is their <strong>Username</strong>, which is their
+login name. This example adds new user Layla Smith, and adds her to the
+<strong>users</strong> and <strong>db-admins</strong> groups. Any groups that do not exist are created:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ user:add --display-name=&quot;Layla Smith&quot;
+  --group=&quot;users&quot; --group=&quot;db-admins&quot; layla
+  Enter password:
+  Confirm password:
+  The user &quot;layla&quot; was created successfully
+  Display name set to &quot;Layla Smith&quot;
+  User &quot;layla&quot; added to group &quot;users&quot;
+  User &quot;layla&quot; added to group &quot;db-admins&quot;
+</pre></div>
+</div>
+<p>Go to your Users page, and you will see your new user.</p>
+<p><code class="docutils literal"><span class="pre">password-from-env</span></code> allows you to set the user&#8217;s password from an environment
+variable. This prevents the password from being exposed to all users via the
+process list, and will only be visible in the history of the user (root)
+running the command. This also permits creating scripts for adding multiple new
+users.</p>
+<p>To use <code class="docutils literal"><span class="pre">password-from-env</span></code> you must run as &#8220;real&#8221; root, rather than <code class="docutils literal"><span class="pre">sudo</span></code>,
+because <code class="docutils literal"><span class="pre">sudo</span></code> strips environment variables. This example adds new user Fred
+Jones:</p>
+<div class="highlight-python"><div class="highlight"><pre>export OC_PASS=newpassword
+su -s /bin/sh www-data -c &#39;php occ user:add --password-from-env
+  --display-name=&quot;Fred Jones&quot; --group=&quot;users&quot; fred&#39;
+The user &quot;fred&quot; was created successfully
+Display name set to &quot;Fred Jones&quot;
+User &quot;fred&quot; added to group &quot;users&quot;
+</pre></div>
+</div>
+<p>You can reset any user&#8217;s password, including administrators (see
+<a class="reference internal" href="../configuration_user/reset_admin_password.html"><em>Resetting a Lost Admin Password</em></a>):</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ user:resetpassword layla
+  Enter a new password:
+  Confirm the new password:
+  Successfully reset password for layla
+</pre></div>
+</div>
+<p>You may also use <code class="docutils literal"><span class="pre">password-from-env</span></code> to reset passwords:</p>
+<div class="highlight-python"><div class="highlight"><pre>export OC_PASS=newpassword
+su -s /bin/sh www-data -c &#39;php occ user:resetpassword --password-from-env
+  layla&#39;
+  Successfully reset password for layla
+</pre></div>
+</div>
+<p>You can delete users:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ user:delete fred
+</pre></div>
+</div>
+<p>View a user&#8217;s most recent login:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ user:lastseen layla
+  layla&#39;s last login: 09.01.2015 18:46
+</pre></div>
+</div>
+<p>Generate a simple report that counts all users, including users on external user
+authentication servers such as LDAP:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ user:report
++------------------+----+
+| User Report      |    |
++------------------+----+
+| Database         | 12 |
+| LDAP             | 86 |
+|                  |    |
+| total users      | 98 |
+|                  |    |
+| user directories | 2  |
++------------------+----+
+</pre></div>
+</div>
+</div>
+<div class="section" id="versions">
+<span id="versions-label"></span><h2>Versions<a class="headerlink" href="#versions" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This command is only available when the &#8220;Versions&#8221; app (<code class="docutils literal"><span class="pre">files_versions</span></code>) is
+enabled.</p>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>versions
+ versions:cleanup   Delete versions
+ versions:expire    Expires the users file versions
+</pre></div>
+</div>
+<p>Use <code class="docutils literal"><span class="pre">versions:cleanup</span></code> to delete all older file versions for specific users (keeping the most recent versions), or for all users when none are specified.</p>
+<p>This example deletes all files versions for all users, except the most recent versions:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ versions:cleanup
+Delete all versions
+Delete versions for users on backend Database
+  freda
+  molly
+  stash
+  rosa
+  edward
+</pre></div>
+</div>
+<p>You can delete versions for specific users in a space-delimited list:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ versions:cleanup freda molly
+Delete versions of   freda
+Delete versions of   molly
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">versions:expire</span></code> Deletes only expired files according to the <code class="docutils literal"><span class="pre">versions_retention_obligation</span></code> setting in <code class="docutils literal"><span class="pre">config.php</span></code> (see the File versions section in <a class="reference internal" href="config_sample_php_parameters.html"><em>Config.php Parameters</em></a>). The default is to delete expired files for all users, or you may list users in a space-delimited list.</p>
+</div>
+<div class="section" id="command-line-installation">
+<span id="command-line-installation-label"></span><h2>Command Line Installation<a class="headerlink" href="#command-line-installation" title="Permalink to this headline">¶</a></h2>
+<p>These commands are available only after you have downloaded and unpacked the
+ownCloud archive, and taken no further installation steps.</p>
+<p>You can install ownCloud entirely from the command line. After downloading the
+tarball and copying ownCloud into the appropriate directories, or
+after installing ownCloud packages (See
+<a class="reference internal" href="../installation/linux_installation.html"><em>Preferred Linux Installation Method</em></a> and
+<a class="reference internal" href="../installation/source_installation.html"><em>Manual Installation on Linux</em></a>) you can use <code class="docutils literal"><span class="pre">occ</span></code> commands in
+place of running the graphical Installation Wizard.</p>
+<p>Apply correct permissions to your ownCloud directories; see
+<a class="reference internal" href="../installation/installation_wizard.html#strong-perms-label"><span>Setting Strong Directory Permissions</span></a>. Then choose your <code class="docutils literal"><span class="pre">occ</span></code> options. This lists your
+available options:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php /var/www/owncloud/occ
+ownCloud is not installed - only a limited number of commands are available
+ownCloud version 9.0.0
+
+Usage:
+ [options] command [arguments]
+
+Options:
+ --help (-h)           Display this help message
+ --quiet (-q)          Do not output any message
+ --verbose (-v|vv|vvv) Increase the verbosity of messages: 1 for normal
+ output,  2 for more verbose output and 3 for debug
+ --version (-V)        Display this application version
+ --ansi                Force ANSI output
+ --no-ansi             Disable ANSI output
+ --no-interaction (-n) Do not ask any interactive question
+
+Available commands:
+ check                 check dependencies of the server environment
+ help                  Displays help for a command
+ list                  Lists commands
+ status                show some status information
+ app
+ app:check-code        check code to be compliant
+ l10n
+ l10n:createjs         Create javascript translation files for a given app
+ maintenance
+ maintenance:install   install ownCloud
+</pre></div>
+</div>
+<p>Display your <code class="docutils literal"><span class="pre">maintenance:install</span></code> options:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ help maintenance:install
+ownCloud is not installed - only a limited number of commands are available
+Usage:
+ maintenance:install [--database=&quot;...&quot;] [--database-name=&quot;...&quot;]
+[--database-host=&quot;...&quot;] [--database-user=&quot;...&quot;] [--database-pass[=&quot;...&quot;]]
+[--database-table-prefix[=&quot;...&quot;]] [--admin-user=&quot;...&quot;] [--admin-pass=&quot;...&quot;]
+[--data-dir=&quot;...&quot;]
+
+Options:
+ --database               Supported database type (default: &quot;sqlite&quot;)
+ --database-name          Name of the database
+ --database-host          Hostname of the database (default: &quot;localhost&quot;)
+ --database-user          User name to connect to the database
+ --database-pass          Password of the database user
+ --database-table-prefix  Prefix for all tables (default: oc_)
+ --admin-user             User name of the admin account (default: &quot;admin&quot;)
+ --admin-pass             Password of the admin account
+ --data-dir               Path to data directory (default:
+                          &quot;/var/www/owncloud/data&quot;)
+ --help (-h)              Display this help message
+ --quiet (-q)             Do not output any message
+ --verbose (-v|vv|vvv)    Increase the verbosity of messages: 1 for normal
+  output, 2 for more verbose output and 3 for debug
+ --version (-V)           Display this application version
+ --ansi                   Force ANSI output
+ --no-ansi                Disable ANSI output
+ --no-interaction (-n)    Do not ask any interactive question
+</pre></div>
+</div>
+<p>This example completes the installation:</p>
+<div class="highlight-python"><div class="highlight"><pre>cd /var/www/owncloud/
+sudo -u www-data php occ maintenance:install --database
+&quot;mysql&quot; --database-name &quot;owncloud&quot;  --database-user &quot;root&quot; --database-pass
+&quot;password&quot; --admin-user &quot;admin&quot; --admin-pass &quot;password&quot;
+ownCloud is not installed - only a limited number of commands are available
+ownCloud was successfully installed
+</pre></div>
+</div>
+<p>Supported databases are:</p>
+<div class="highlight-python"><div class="highlight"><pre>- sqlite (SQLite3 - ownCloud Community edition only)
+- mysql (MySQL/MariaDB)
+- pgsql (PostgreSQL)
+- oci (Oracle - ownCloud Enterprise edition only)
+</pre></div>
+</div>
+</div>
+<div class="section" id="command-line-upgrade">
+<span id="command-line-upgrade-label"></span><h2>Command Line Upgrade<a class="headerlink" href="#command-line-upgrade" title="Permalink to this headline">¶</a></h2>
+<p>These commands are available only after you have downloaded upgraded packages or
+tar archives, and before you complete the upgrade.</p>
+<p>List all options, like this example on CentOS Linux:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u apache php occ upgrade -h
+Usage:
+upgrade [--skip-migration-test] [--dry-run] [--no-app-disable]
+
+Options:
+--skip-migration-test  skips the database schema migration simulation and
+   update directly
+--dry-run              only runs the database schema migration simulation, do
+  not actually update
+--no-app-disable       skips the disable of third party apps
+--help (-h)            Display this help message.
+--quiet (-q)           Do not output any message.
+--verbose (-v|vv|vvv)  Increase the verbosity of messages: 1 for normal output,
+  2 for more verbose output and 3 for debug.
+--version (-V)         Display this application version.
+--ansi                 Force ANSI output.
+--no-ansi              Disable ANSI output.
+--no-interaction (-n)  Do not ask any interactive question
+</pre></div>
+</div>
+<p>When you are performing an update or upgrade on your ownCloud server (see the
+Maintenance section of this manual), it is better to use <code class="docutils literal"><span class="pre">occ</span></code> to perform the
+database upgrade step, rather than the Web GUI, in order to avoid timeouts. PHP
+scripts invoked from the Web interface are limited to 3600 seconds. In larger
+environments this may not be enough, leaving the system in an inconsistent
+state. After performing all the preliminary steps (see
+<a class="reference internal" href="../maintenance/upgrade.html"><em>How to Upgrade Your ownCloud Server</em></a>) use this command to upgrade your databases,
+like this example on CentOS Linux. Note how it details the steps:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ upgrade
+ownCloud or one of the apps require upgrade - only a limited number of
+commands are available
+Turned on maintenance mode
+Checked database schema update
+Checked database schema update for apps
+Updated database
+Updating &lt;gallery&gt; ...
+Updated &lt;gallery&gt; to 0.6.1
+Updating &lt;activity&gt; ...
+Updated &lt;activity&gt; to 2.1.0
+Update successful
+Turned off maintenance mode
+</pre></div>
+</div>
+<p>Enabling verbosity displays timestamps:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ upgrade -v
+ownCloud or one of the apps require upgrade - only a limited number of commands are available
+2015-06-23T09:06:15+0000 Turned on maintenance mode
+2015-06-23T09:06:15+0000 Checked database schema update
+2015-06-23T09:06:15+0000 Checked database schema update for apps
+2015-06-23T09:06:15+0000 Updated database
+2015-06-23T09:06:15+0000 Updated &lt;files_sharing&gt; to 0.6.6
+2015-06-23T09:06:15+0000 Update successful
+2015-06-23T09:06:15+0000 Turned off maintenance mode
+</pre></div>
+</div>
+<p>If there is an error it throws an exception, and the error is detailed in your
+ownCloud logfile, so you can use the log output to figure out what went wrong,
+or to use in a bug report:</p>
+<div class="highlight-python"><div class="highlight"><pre>Turned on maintenance mode
+Checked database schema update
+Checked database schema update for apps
+Updated database
+Updating &lt;files_sharing&gt; ...
+Exception
+ServerNotAvailableException: LDAP server is not available
+Update failed
+Turned off maintenance mode
+</pre></div>
+</div>
+<p>Before completing the upgrade, ownCloud first runs a simulation by copying all
+database tables to new tables, and then performs the upgrade on them, to ensure
+that the upgrade will complete correctly. The copied tables are deleted after
+the upgrade. This takes twice as much time, which on large installations can be
+many hours, so you can omit this step with the <code class="docutils literal"><span class="pre">--skip-migration-test</span></code>
+option:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ upgrade --skip-migration-test
+</pre></div>
+</div>
+<p>You can perform this simulation manually with the <code class="docutils literal"><span class="pre">--dry-run</span></code> option:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ upgrade --dry-run
+</pre></div>
+</div>
+</div>
+<div class="section" id="two-factor-authentication">
+<span id="two-factor-auth-label"></span><h2>Two-factor Authentication<a class="headerlink" href="#two-factor-authentication" title="Permalink to this headline">¶</a></h2>
+<p>If a two-factor provider app is enabled, it is enabled for all users by default
+(though the provider can decide whether or not the user has to pass the challenge).
+In the case of an user losing access to the second factor (e.g. lost phone with
+two-factor SMS verification), the admin can temporarily disable the two-factor
+check for that user via the occ command:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ twofactor:disable &lt;username&gt;
+</pre></div>
+</div>
+<p>To re-enable two-factor auth again use the following commmand:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ twofactor:enable &lt;username&gt;
+</pre></div>
+</div>
+</div>
+<div class="section" id="disable-users">
+<span id="disable-user-label"></span><h2>Disable Users<a class="headerlink" href="#disable-users" title="Permalink to this headline">¶</a></h2>
+<p>Admins can disable users via the occ command too:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ user:disable &lt;username&gt;
+</pre></div>
+</div>
+<p>Use the following command to enable the user again:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php occ user:enable &lt;username&gt;
+</pre></div>
+</div>
+<p>Note that once users are disabled, their connected browsers will be disconnected.</p>
+</div>
+</div>
+
+
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="import_ssl_cert.html" title="Previous Chapter: Importing System-wide and Personal SSL Certificates"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Importing Sys...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="activity_configuration.html" title="Next Chapter: Configuring the Activity App"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Configuring t... &raquo;</span>
+    </a>
+  </li>
+</ul>
+					</div>
+				</div>
+			</div>
+  </main>  
+  </div>
+</div>
+  </body>
+</html>

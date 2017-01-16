@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Advanced File Tagging With the Workflow App (Enterprise only) &mdash; ownCloud 9.1 Server Administration Manual 9.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/main.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/styles.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '9.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="ownCloud 9.1 Server Administration Manual 9.1 documentation" href="../contents.html" />
+    <link rel="up" title="Enterprise File Management (Enterprise Only)" href="index.html" />
+    <link rel="next" title="Enterprise Logging Apps (Enterprise only)" href="../enterprise_logging/index.html" />
+    <link rel="prev" title="Enabling Anonymous Uploads with Files Drop (Enterprise Only)" href="files_drop.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1d2d44">
+
+  </head>
+  <body role="document">
+
+
+<div class="wrap container not-front">
+  <div class="content row">
+  <main class="main">
+    <div class="row page-content-header">
+      <div class="col-md-5 col-md-offset-7">
+      
+        <form class="headersearch" style="margin-bottom:-3px;" action="../search.html" method="get">
+        <input type="text" value="" name="q" id="q" class="form-control" /> 
+        <button  class="btn btn-default" type="submit" id="searchsubmit">Search</button>
+        </form>
+      
+      </div>
+    </div>
+    
+			<div class="row">
+				<div class="col-md-3">
+					<div class="sidebar">
+							<div class="menu-support-container">
+								<ul id="menu-support" class="menu">
+									<ul>
+										
+<li><a href="../contents.html">Table of Contents</a></li>
+									</ul>
+                  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">ownCloud 9.1 Server Administration Manual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">ownCloud 9.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new_admin.html">What&#8217;s New for Admins in ownCloud 9.1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_server/index.html">ownCloud Server Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_user/index.html">User Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_files/index.html">File Sharing and Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_database/index.html">Database Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_mimetypes/index.html">Mimetypes Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../maintenance/index.html">Maintenance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../issues/index.html">Issues and Troubleshooting</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_installation/index.html">Enterprise Edition Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_clients/index.html">Creating Branded ownCloud Clients (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_server_branding/index.html">Enterprise Server Branding (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_external_storage/index.html">External Storage (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_user_management/index.html">User Management (Enterprise only)</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Enterprise File Management (Enterprise Only)</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="files_drop.html">Enabling Anonymous Uploads with Files Drop (Enterprise Only)</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Advanced File Tagging With the Workflow App (Enterprise only)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tag-manager">Tag Manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#automatic-tagging">Automatic Tagging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#retention">Retention</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#retention-engines">Retention Engines</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_logging/index.html">Enterprise Logging Apps (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_firewall/index.html">Enterprise Firewall (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_troubleshooting.html">Enterprise Troubleshooting</a></li>
+</ul>
+
+								</ul>
+							</div>
+					</div>
+				</div>
+        
+
+				<div class="col-md-9">
+					<div class="page-content">
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="files_drop.html" title="Previous Chapter: Enabling Anonymous Uploads with Files Drop (Enterprise Only)"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Enabling Anon...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="../enterprise_logging/index.html" title="Next Chapter: Enterprise Logging Apps (Enterprise only)"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Enterprise Lo... &raquo;</span>
+    </a>
+  </li>
+</ul>
+						
+  <div class="section" id="advanced-file-tagging-with-the-workflow-app-enterprise-only">
+<h1>Advanced File Tagging With the Workflow App (Enterprise only)<a class="headerlink" href="#advanced-file-tagging-with-the-workflow-app-enterprise-only" title="Permalink to this headline">¶</a></h1>
+<p>New in ownCloud 9.0, the Workflow App provides advanced management of file
+tagging. The app has three parts: Tag Manager, Automatic Tagging, and Retention.</p>
+<p>The Workflow App should be enabled by default (Apps page), and the three
+configuration modules visible on your ownCloud Admin page.</p>
+<p>See <a class="reference external" href="https://doc.owncloud.com/server/9.2/user_manual/files/access_webgui.html">Tagging Files</a> in
+the ownCloud User manual to learn how to apply and filter tags on files.</p>
+<div class="section" id="tag-manager">
+<h2>Tag Manager<a class="headerlink" href="#tag-manager" title="Permalink to this headline">¶</a></h2>
+<p>The Tag Manager is for creating new tags, editing existing tags, and deleting tags. Tags may be marked as <strong>Visible</strong>, <strong>Restricted</strong>, or <strong>Invisible</strong>.</p>
+<p><strong>Visible</strong> means that all users may see, rename, and apply these tags to files and folders.</p>
+<p><strong>Restricted</strong> means tags are assignable and editable only to the user groups that you select. Other users can filter files by restricted tags, but cannot tag files with them or rename them. The tags are marked (restricted).</p>
+<p><strong>Invisible</strong> means visible only to ownCloud admins.</p>
+<p>Use the <strong>Collaborative tag management</strong> module on your ownCloud admin page to edit and create tags.</p>
+<div class="figure">
+<img alt="Tag Manager." src="../_images/workflow-1.png" />
+</div>
+<p>This is what your tags look like in the <strong>Tags</strong> view on your files page. Non-admin users will not see invisible tags, but they will see visible and restricted tags.</p>
+<div class="figure">
+<img alt="Tag Manager." src="../_images/workflow-5.png" />
+</div>
+</div>
+<div class="section" id="automatic-tagging">
+<h2>Automatic Tagging<a class="headerlink" href="#automatic-tagging" title="Permalink to this headline">¶</a></h2>
+<p>The Automatic Tagging module operates on newly-uploaded files. Create a set of
+conditions, and then when a file or folder matches those conditions it is
+automatically tagged. The tag must already have been created with the Tag
+Manager.</p>
+<p>For example, you can assign the invisible tag <strong>iOS Uploads</strong> to all files
+uploaded from iOS devices. This tag is visible only to admins.</p>
+<div class="figure">
+<img alt="Automatic tagging." src="../_images/workflow-2.png" />
+</div>
+<p>When files with this tag are shared with you, you can view them with the Tags
+filter on the Files page.</p>
+<div class="figure">
+<img alt="Viewing tagged files." src="../_images/workflow-3.png" />
+</div>
+<p>Automatic Tagging is especially useful with the Retention module.</p>
+</div>
+<div class="section" id="retention">
+<h2>Retention<a class="headerlink" href="#retention" title="Permalink to this headline">¶</a></h2>
+<p>The Retention module is your housecleaning power tool, because it automatically
+deletes files after a time period that you specify. Select which tag to
+set a time limit on, and then set your time limit. File age is calculated from
+the file mtime (modification time).</p>
+<div class="figure">
+<img alt="Setting retention times via tag." src="../_images/workflow-4.png" />
+</div>
+<p>For best performance, retention tags should be applied high in your file
+hierarchy. If subfolders have the same tags as their parent folders, their tags
+must also be processed, so it will take a little longer.</p>
+</div>
+<div class="section" id="retention-engines">
+<h2>Retention Engines<a class="headerlink" href="#retention-engines" title="Permalink to this headline">¶</a></h2>
+<p>There are two retention engines that further allow you to fine-tune your
+retention settings: <strong>TagBasedRetention</strong> and <strong>UserBasedRetention</strong>.
+<strong>TagBasedRetention</strong> is the default.</p>
+<p><strong>TagBasedRetention</strong>: This checks files that have a particular tag
+assigned. Then it checks (depth-first) the children of the tagged item, before
+continuing with the other tagged items. Children that have already been checked
+will not be checked a second time.</p>
+<p>This is optimised for processing smaller numbers of files that have multiple
+retention tags.</p>
+<p><strong>UserBasedRetention</strong>: Examines files per user. It first iterates over all
+files and folders (siblings first), then examines the tags for those items and
+checks their respective retention periods. This is optimised for many files with
+few retention tags.</p>
+<p>To select UserBasedRetention, add this line to your ee.config.php:</p>
+<div class="highlight-python"><div class="highlight"><pre>&#39;workflow.retention_engine&#39; =&gt; userbased,
+</pre></div>
+</div>
+</div>
+</div>
+
+
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="files_drop.html" title="Previous Chapter: Enabling Anonymous Uploads with Files Drop (Enterprise Only)"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Enabling Anon...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="../enterprise_logging/index.html" title="Next Chapter: Enterprise Logging Apps (Enterprise only)"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Enterprise Lo... &raquo;</span>
+    </a>
+  </li>
+</ul>
+					</div>
+				</div>
+			</div>
+  </main>  
+  </div>
+</div>
+  </body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Converting Database Type &mdash; ownCloud 9.1 Server Administration Manual 9.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/main.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/styles.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '9.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="ownCloud 9.1 Server Administration Manual 9.1 documentation" href="../contents.html" />
+    <link rel="up" title="Database Configuration" href="index.html" />
+    <link rel="next" title="Database Configuration" href="linux_database_configuration.html" />
+    <link rel="prev" title="Database Configuration" href="index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1d2d44">
+
+  </head>
+  <body role="document">
+
+
+<div class="wrap container not-front">
+  <div class="content row">
+  <main class="main">
+    <div class="row page-content-header">
+      <div class="col-md-5 col-md-offset-7">
+      
+        <form class="headersearch" style="margin-bottom:-3px;" action="../search.html" method="get">
+        <input type="text" value="" name="q" id="q" class="form-control" /> 
+        <button  class="btn btn-default" type="submit" id="searchsubmit">Search</button>
+        </form>
+      
+      </div>
+    </div>
+    
+			<div class="row">
+				<div class="col-md-3">
+					<div class="sidebar">
+							<div class="menu-support-container">
+								<ul id="menu-support" class="menu">
+									<ul>
+										
+<li><a href="../contents.html">Table of Contents</a></li>
+									</ul>
+                  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">ownCloud 9.1 Server Administration Manual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">ownCloud 9.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new_admin.html">What&#8217;s New for Admins in ownCloud 9.1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_server/index.html">ownCloud Server Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_user/index.html">User Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_files/index.html">File Sharing and Management</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Database Configuration</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="">Converting Database Type</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#run-the-conversion">Run the conversion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#unconvertible-tables">Unconvertible Tables</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="linux_database_configuration.html">Database Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_mimetypes/index.html">Mimetypes Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../maintenance/index.html">Maintenance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../issues/index.html">Issues and Troubleshooting</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_installation/index.html">Enterprise Edition Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_clients/index.html">Creating Branded ownCloud Clients (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_server_branding/index.html">Enterprise Server Branding (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_external_storage/index.html">External Storage (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_user_management/index.html">User Management (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_file_management/index.html">Enterprise File Management (Enterprise Only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_logging/index.html">Enterprise Logging Apps (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_firewall/index.html">Enterprise Firewall (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_troubleshooting.html">Enterprise Troubleshooting</a></li>
+</ul>
+
+								</ul>
+							</div>
+					</div>
+				</div>
+        
+
+				<div class="col-md-9">
+					<div class="page-content">
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="index.html" title="Previous Chapter: Database Configuration"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Database Conf...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="linux_database_configuration.html" title="Next Chapter: Database Configuration"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Database Conf... &raquo;</span>
+    </a>
+  </li>
+</ul>
+						
+  <div class="section" id="converting-database-type">
+<h1>Converting Database Type<a class="headerlink" href="#converting-database-type" title="Permalink to this headline">¶</a></h1>
+<p>You can convert a SQLite database to a more performing MySQL, MariaDB or
+PostgreSQL database with the ownCloud command line tool. SQLite is good for
+testing and simple single-user ownCloud servers, but it does not scale for
+multiple-user production users.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">ownCloud Enterprise edition does not support SQLite.</p>
+</div>
+<div class="section" id="run-the-conversion">
+<h2>Run the conversion<a class="headerlink" href="#run-the-conversion" title="Permalink to this headline">¶</a></h2>
+<p>First setup the new database, here called &#8220;new_db_name&#8221;.
+In ownCloud root folder call</p>
+<div class="highlight-python"><div class="highlight"><pre>php occ db:convert-type [options] type username hostname database
+</pre></div>
+</div>
+<p>The Options</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">--port=&quot;3306&quot;</span></code>                       the database port (optional)</li>
+<li><code class="docutils literal"><span class="pre">--password=&quot;mysql_user_password&quot;</span></code>    password for the new database. If omitted the tool will ask you (optional)</li>
+<li><code class="docutils literal"><span class="pre">--clear-schema</span></code>                      clear schema (optional)</li>
+<li><code class="docutils literal"><span class="pre">--all-apps</span></code>                          by default, tables for enabled apps are converted, use to convert also tables of deactivated apps (optional)</li>
+</ul>
+<p><em>Note:</em> The converter searches for apps in your configured app folders and uses
+the schema definitions in the apps to create the new table. So tables of removed
+apps will not be converted even with option <code class="docutils literal"><span class="pre">--all-apps</span></code></p>
+<p>For example</p>
+<div class="highlight-python"><div class="highlight"><pre>php occ db:convert-type --all-apps mysql oc_mysql_user 127.0.0.1 new_db_name
+</pre></div>
+</div>
+<p>To successfully proceed with the conversion, you must type <code class="docutils literal"><span class="pre">yes</span></code> when prompted
+with the question <code class="docutils literal"><span class="pre">Continue</span> <span class="pre">with</span> <span class="pre">the</span> <span class="pre">conversion?</span></code></p>
+<p>On success the converter will automatically configure the new database in your
+ownCloud config <code class="docutils literal"><span class="pre">config.php</span></code>.</p>
+</div>
+<div class="section" id="unconvertible-tables">
+<h2>Unconvertible Tables<a class="headerlink" href="#unconvertible-tables" title="Permalink to this headline">¶</a></h2>
+<p>If you updated your ownCloud installation there might exist old tables, which
+are not used anymore. The converter will tell you which ones.</p>
+<div class="highlight-python"><div class="highlight"><pre>The following tables will not be converted:
+oc_permissions
+...
+</pre></div>
+</div>
+<p>You can ignore these tables.
+Here is a list of known old tables:</p>
+<ul class="simple">
+<li>oc_calendar_calendars</li>
+<li>oc_calendar_objects</li>
+<li>oc_calendar_share_calendar</li>
+<li>oc_calendar_share_event</li>
+<li>oc_fscache</li>
+<li>oc_log</li>
+<li>oc_media_albums</li>
+<li>oc_media_artists</li>
+<li>oc_media_sessions</li>
+<li>oc_media_songs</li>
+<li>oc_media_users</li>
+<li>oc_permissions</li>
+<li>oc_queuedtasks</li>
+<li>oc_sharing</li>
+</ul>
+</div>
+</div>
+
+
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="index.html" title="Previous Chapter: Database Configuration"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Database Conf...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="linux_database_configuration.html" title="Next Chapter: Database Configuration"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Database Conf... &raquo;</span>
+    </a>
+  </li>
+</ul>
+					</div>
+				</div>
+			</div>
+  </main>  
+  </div>
+</div>
+  </body>
+</html>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Upgrading ownCloud with the Updater App &mdash; ownCloud 9.1 Server Administration Manual 9.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/main.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/styles.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '9.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="ownCloud 9.1 Server Administration Manual 9.1 documentation" href="../contents.html" />
+    <link rel="up" title="Maintenance" href="index.html" />
+    <link rel="next" title="Manual ownCloud Upgrade" href="manual_upgrade.html" />
+    <link rel="prev" title="Upgrade ownCloud From Packages" href="package_upgrade.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1d2d44">
+
+  </head>
+  <body role="document">
+
+
+<div class="wrap container not-front">
+  <div class="content row">
+  <main class="main">
+    <div class="row page-content-header">
+      <div class="col-md-5 col-md-offset-7">
+      
+        <form class="headersearch" style="margin-bottom:-3px;" action="../search.html" method="get">
+        <input type="text" value="" name="q" id="q" class="form-control" /> 
+        <button  class="btn btn-default" type="submit" id="searchsubmit">Search</button>
+        </form>
+      
+      </div>
+    </div>
+    
+			<div class="row">
+				<div class="col-md-3">
+					<div class="sidebar">
+							<div class="menu-support-container">
+								<ul id="menu-support" class="menu">
+									<ul>
+										
+<li><a href="../contents.html">Table of Contents</a></li>
+									</ul>
+                  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">ownCloud 9.1 Server Administration Manual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">ownCloud 9.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new_admin.html">What&#8217;s New for Admins in ownCloud 9.1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_server/index.html">ownCloud Server Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_user/index.html">User Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_files/index.html">File Sharing and Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_database/index.html">Database Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_mimetypes/index.html">Mimetypes Management</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Maintenance</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="enable_maintenance.html">Maintenance Mode Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backup.html">Backing up ownCloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="upgrade.html">How to Upgrade Your ownCloud Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="package_upgrade.html">Upgrade ownCloud From Packages</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Upgrading ownCloud with the Updater App</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#setting-permissions-for-updating">Setting Permissions for Updating</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#command-line-options">Command Line Options</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="manual_upgrade.html">Manual ownCloud Upgrade</a></li>
+<li class="toctree-l2"><a class="reference internal" href="restore.html">Restoring ownCloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="migrating.html">Migrating to a Different Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../issues/index.html">Issues and Troubleshooting</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_installation/index.html">Enterprise Edition Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_clients/index.html">Creating Branded ownCloud Clients (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_server_branding/index.html">Enterprise Server Branding (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_external_storage/index.html">External Storage (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_user_management/index.html">User Management (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_file_management/index.html">Enterprise File Management (Enterprise Only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_logging/index.html">Enterprise Logging Apps (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_firewall/index.html">Enterprise Firewall (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_troubleshooting.html">Enterprise Troubleshooting</a></li>
+</ul>
+
+								</ul>
+							</div>
+					</div>
+				</div>
+        
+
+				<div class="col-md-9">
+					<div class="page-content">
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="package_upgrade.html" title="Previous Chapter: Upgrade ownCloud From Packages"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Upgrade ownCl...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="manual_upgrade.html" title="Next Chapter: Manual ownCloud Upgrade"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Manual ownClo... &raquo;</span>
+    </a>
+  </li>
+</ul>
+						
+  <div class="section" id="upgrading-owncloud-with-the-updater-app">
+<h1>Upgrading ownCloud with the Updater App<a class="headerlink" href="#upgrading-owncloud-with-the-updater-app" title="Permalink to this headline">¶</a></h1>
+<p>The Updater app automates many of the steps of upgrading an ownCloud
+installation. It is useful for installations that do not have root access,
+such as shared hosting, for installations with a smaller number of users
+and data, and it automates updating
+<a class="reference internal" href="../installation/source_installation.html"><em>manual installations</em></a>.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">When upgrading from oC 9.0 to 9.1 with existing Calendars or Adressbooks
+please have a look at the <a class="reference internal" href="../release_notes.html"><em>ownCloud 9.1 Release Notes</em></a> of oC 9.0 for important info
+about the needed migration steps during that upgrade.</p>
+</div>
+<p>New in 9.0, the Updater app has <a class="reference internal" href="#updater-cli-label"><span>command-line options</span></a>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>The Updater app is <strong>not enabled and not supported</strong> in ownCloud
+Enterprise edition.</p>
+<p>The Updater app is <strong>not included</strong> in the
+<a class="reference external" href="https://download.owncloud.org/download/repositories/stable/owncloud/">Linux packages on our Open Build Service</a>,
+but only in the <a class="reference external" href="https://owncloud.org/install/#instructions-server">tar and zip archives</a>. When you install
+ownCloud from packages you should keep it updated with your package manager.</p>
+<p class="last"><strong>Downgrading</strong> is not supported and risks corrupting your data! If you want
+to revert to an older ownCloud version, install it from scratch and then
+restore your data from backup. Before doing this, file a support ticket (if
+you have paid support) or ask for help in the ownCloud forums to see if your
+issue can be resolved without downgrading.</p>
+</div>
+<p>You should maintain regular backups (see <a class="reference internal" href="backup.html"><em>Backing up ownCloud</em></a>), and make a backup
+before every update. The Updater app does not backup your database or data
+directory.</p>
+<p>The Updater app performs these operations:</p>
+<ul class="simple">
+<li>Creates an <code class="docutils literal"><span class="pre">updater_backup</span></code> directory under your ownCloud data directory</li>
+<li>Downloads and extracts updated package content into the
+<code class="docutils literal"><span class="pre">updater_backup/packageVersion</span></code> directory</li>
+<li>Makes a copy of your current ownCloud instance, except for your data
+directory, to <code class="docutils literal"><span class="pre">updater_backup/currentVersion-randomstring</span></code></li>
+<li>Moves all directories except <code class="docutils literal"><span class="pre">data</span></code>, <code class="docutils literal"><span class="pre">config</span></code> and <code class="docutils literal"><span class="pre">themes</span></code> from the
+current instance to <code class="docutils literal"><span class="pre">updater_backup/tmp</span></code></li>
+<li>Moves all directories from <code class="docutils literal"><span class="pre">updater_backup/packageVersion</span></code> to the current
+version</li>
+<li>Copies your old <code class="docutils literal"><span class="pre">config.php</span></code> to the new <code class="docutils literal"><span class="pre">config/</span></code> directory</li>
+</ul>
+<p>Using the Updater app to update your ownCloud installation is just a few
+steps:</p>
+<ol class="arabic simple">
+<li>You should see a notification at the top of any ownCloud page when there is
+a new update available.</li>
+<li>Even though the Updater app backs up important directories, you should
+always have your own current backups (See <a class="reference internal" href="backup.html"><em>Backing up ownCloud</em></a> for details.)</li>
+<li>Verify that the HTTP user on your system can write to your whole ownCloud
+directory; see the <a class="reference internal" href="#set-updating-permissions-label"><span>Setting Permissions for Updating</span></a> section below.</li>
+<li>Navigate to your Admin page and click the <strong>Update Center</strong> button under
+Updater. This takes you to the Updater control panel.</li>
+<li>Click Update, and carefully read the messages. If there are any problems it
+will tell you. The most common issue is directory permissions; your HTTP
+user needs write permissions to your whole ownCloud directory. (See
+<a class="reference internal" href="../installation/installation_wizard.html#strong-perms-label"><span>Setting Strong Directory Permissions</span></a>.) Another common issue is SELinux rules
+(see <a class="reference internal" href="../installation/selinux_configuration.html#selinux-config-label"><span>SELinux Configuration</span></a>.) Otherwise you will see messages
+about checking your installation and making backups.</li>
+<li>Click Proceed, and then it performs the remaining steps, which takes a few
+minutes.</li>
+<li>If your directory permissions are correct, a backup was made, and
+downloading the new ownCloud archive succeeded you will see the following
+screen. Click the Start Update button to complete your update:</li>
+</ol>
+<div class="figure">
+<a class="reference internal image-reference" href="../_images/upgrade-2.png"><img alt="ownCloud upgrade wizard screen." src="../_images/upgrade-2.png" style="width: 252.75px; height: 273.0px;" /></a>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you have a large ownCloud installation and have shell access,
+you should use the <code class="docutils literal"><span class="pre">occ</span> <span class="pre">upgrade</span></code> command, running it as your HTTP user,
+instead of clicking the Start Update button, in order to avoid PHP
+timeouts.</p>
+</div>
+<p>This example is for Ubuntu Linux:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ sudo -u www-data php occ upgrade
+</pre></div>
+</div>
+<p>Optionally disable the <a class="reference internal" href="upgrade.html#migration-test-label"><span>Migration Test</span></a> which might take a
+long time on large installations.</p>
+<p>See <a class="reference internal" href="../configuration_server/occ_command.html"><em>Using the occ Command</em></a> to learn more.</p>
+<ol class="arabic simple" start="8">
+<li>It runs for a few minutes, and when it is finished displays a success
+message, which disappears after a short time.</li>
+</ol>
+<p>Refresh your Admin page to verify your new version number. In the Updater
+section of your Admin page you can see the current status and backups. These
+are backups of your old and new ownCloud installations, and do not contain your
+data files. If your update works and there are no problems you can delete the
+backups from this screen.</p>
+<p>If the update fails, then you must update manually. (See <a class="reference internal" href="manual_upgrade.html"><em>Manually
+upgrading</em></a>.)</p>
+<div class="section" id="setting-permissions-for-updating">
+<span id="set-updating-permissions-label"></span><h2>Setting Permissions for Updating<a class="headerlink" href="#setting-permissions-for-updating" title="Permalink to this headline">¶</a></h2>
+<p>For hardened security we  highly recommend setting the permissions on your
+ownCloud directory as strictly as possible. These commands should be executed
+immediately after the initial installation. Please follow the steps in
+<a class="reference internal" href="../installation/installation_wizard.html#strong-perms-label"><span>Setting Strong Directory Permissions</span></a>.</p>
+<p>These strict permissions will prevent the Updater app from working, as it needs
+your whole ownCloud directory to be owned by the HTTP user. Run this script to
+set the appropriate permissions for updating. Replace the <code class="docutils literal"><span class="pre">ocpath</span></code> variable
+with the path to your ownCloud directory, and replace the <code class="docutils literal"><span class="pre">htuser</span></code> and
+<code class="docutils literal"><span class="pre">htgroup</span></code> variables with your HTTP user and group.:</p>
+<div class="highlight-python"><div class="highlight"><pre>#!/bin/bash
+# Sets permissions of the owncloud instance for updating
+
+ocpath=&#39;/var/www/owncloud&#39;
+htuser=&#39;www-data&#39;
+htgroup=&#39;www-data&#39;
+
+chown -R ${htuser}:${htgroup} ${ocpath}
+</pre></div>
+</div>
+<p>You can find your HTTP user in your HTTP server configuration files. Or you can
+use <a class="reference internal" href="../issues/general_troubleshooting.html#label-phpinfo"><span>PHP Version and Information</span></a> (Look for the <strong>User/Group</strong> line).</p>
+<ul class="simple">
+<li>The HTTP user and group in Debian/Ubuntu is <code class="docutils literal"><span class="pre">www-data</span></code>.</li>
+<li>The HTTP user and group in Fedora/CentOS is <code class="docutils literal"><span class="pre">apache</span></code>.</li>
+<li>The HTTP user and group in Arch Linux is <code class="docutils literal"><span class="pre">http</span></code>.</li>
+<li>The HTTP user in openSUSE is <code class="docutils literal"><span class="pre">wwwrun</span></code>, and the HTTP group is <code class="docutils literal"><span class="pre">www</span></code>.</li>
+</ul>
+<p>After the update is completed, re-apply the strong directory permissions
+immediately by running the script in <a class="reference internal" href="../installation/installation_wizard.html#strong-perms-label"><span>Setting Strong Directory Permissions</span></a>.</p>
+</div>
+<div class="section" id="command-line-options">
+<span id="updater-cli-label"></span><h2>Command Line Options<a class="headerlink" href="#command-line-options" title="Permalink to this headline">¶</a></h2>
+<p>The Updater app includes command-line options to automate updates, to create
+checkpoints and to roll back to older checkpoints. You must run it as your HTTP
+user. This example on Ubuntu Linux displays command options:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php updater/application.php list
+</pre></div>
+</div>
+<p>See usage for commands, like this example for the <code class="docutils literal"><span class="pre">upgrade:checkpoint</span></code>
+command:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php updater/application.php upgrade:checkpoint -h
+</pre></div>
+</div>
+<p>You can display a help summary:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php updater/application.php --help
+</pre></div>
+</div>
+<p>When you run it without options it runs a system check:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php owncloud/updater/application.php
+ownCloud updater 1.0 - CLI based ownCloud server upgrades
+Checking system health.
+- file permissions are ok.
+Current version is 9.0.0.12
+No updates found online.
+Done
+</pre></div>
+</div>
+<p>Create a checkpoint:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php updater/application.php upgrade:checkpoint  --create
+Created checkpoint 9.0.0.12-56d5e4e004964
+</pre></div>
+</div>
+<p>List checkpoints:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php updater/application.php upgrade:checkpoint --list
+</pre></div>
+</div>
+<p>Restore an earlier checkpoint:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -u www-data php owncloud/updater/application.php upgrade:checkpoint
+ --restore=9.0.0.12-56d5e4e004964
+</pre></div>
+</div>
+<p>Add a line like this to your crontab to automatically create daily
+checkpoints:</p>
+<div class="highlight-python"><div class="highlight"><pre>2 15 * * * sudo -u www-data php /path/to/owncloud/updater/application.php
+upgrade:checkpoint --create &gt; /dev/null 2&gt;&amp;1
+</pre></div>
+</div>
+</div>
+</div>
+
+
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="package_upgrade.html" title="Previous Chapter: Upgrade ownCloud From Packages"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Upgrade ownCl...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="manual_upgrade.html" title="Next Chapter: Manual ownCloud Upgrade"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Manual ownClo... &raquo;</span>
+    </a>
+  </li>
+</ul>
+					</div>
+				</div>
+			</div>
+  </main>  
+  </div>
+</div>
+  </body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Creating Branded Client Apps (Enterprise Only) &mdash; ownCloud 9.1 Server Administration Manual 9.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/main.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/styles.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '9.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="ownCloud 9.1 Server Administration Manual 9.1 documentation" href="../contents.html" />
+    <link rel="up" title="Creating Branded ownCloud Clients (Enterprise only)" href="index.html" />
+    <link rel="next" title="Custom Client Download Repositories" href="custom_client_repos.html" />
+    <link rel="prev" title="Creating Branded ownCloud Clients (Enterprise only)" href="index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1d2d44">
+
+  </head>
+  <body role="document">
+
+
+<div class="wrap container not-front">
+  <div class="content row">
+  <main class="main">
+    <div class="row page-content-header">
+      <div class="col-md-5 col-md-offset-7">
+      
+        <form class="headersearch" style="margin-bottom:-3px;" action="../search.html" method="get">
+        <input type="text" value="" name="q" id="q" class="form-control" /> 
+        <button  class="btn btn-default" type="submit" id="searchsubmit">Search</button>
+        </form>
+      
+      </div>
+    </div>
+    
+			<div class="row">
+				<div class="col-md-3">
+					<div class="sidebar">
+							<div class="menu-support-container">
+								<ul id="menu-support" class="menu">
+									<ul>
+										
+<li><a href="../contents.html">Table of Contents</a></li>
+									</ul>
+                  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">ownCloud 9.1 Server Administration Manual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">ownCloud 9.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new_admin.html">What&#8217;s New for Admins in ownCloud 9.1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_server/index.html">ownCloud Server Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_user/index.html">User Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_files/index.html">File Sharing and Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_database/index.html">Database Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_mimetypes/index.html">Mimetypes Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../maintenance/index.html">Maintenance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../issues/index.html">Issues and Troubleshooting</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_installation/index.html">Enterprise Edition Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Creating Branded ownCloud Clients (Enterprise only)</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="">Creating Branded Client Apps (Enterprise Only)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#building-a-branded-desktop-sync-client">Building a Branded Desktop Sync Client</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#building-a-branded-ios-app">Building a Branded iOS App</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#building-an-android-app">Building an Android App</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="custom_client_repos.html">Custom Client Download Repositories</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_server_branding/index.html">Enterprise Server Branding (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_external_storage/index.html">External Storage (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_user_management/index.html">User Management (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_file_management/index.html">Enterprise File Management (Enterprise Only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_logging/index.html">Enterprise Logging Apps (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_firewall/index.html">Enterprise Firewall (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_troubleshooting.html">Enterprise Troubleshooting</a></li>
+</ul>
+
+								</ul>
+							</div>
+					</div>
+				</div>
+        
+
+				<div class="col-md-9">
+					<div class="page-content">
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="index.html" title="Previous Chapter: Creating Branded ownCloud Clients (Enterprise only)"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Creating Bran...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="custom_client_repos.html" title="Next Chapter: Custom Client Download Repositories"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Custom Client... &raquo;</span>
+    </a>
+  </li>
+</ul>
+						
+  <div class="section" id="creating-branded-client-apps-enterprise-only">
+<h1>Creating Branded Client Apps (Enterprise Only)<a class="headerlink" href="#creating-branded-client-apps-enterprise-only" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>ownBrander is an ownCloud build service that is exclusive to Enterprise
+customers for creating branded Android and iOS ownCloud sync apps, and branded
+ownCloud desktop sync clients. You build your apps with the
+ownBrander app on your <a class="reference external" href="https://customer.owncloud.com/owncloud/">Customer.owncloud.com</a> account, and within 24-48 hours
+the completed, customized apps are loaded into your account. You must supply
+your own artwork, and you&#8217;ll find all the specifications and required elements
+in ownBrander.</p>
+<img alt="../_images/ownbrander-1.png" src="../_images/ownbrander-1.png" />
+</div>
+<div class="section" id="building-a-branded-desktop-sync-client">
+<h2>Building a Branded Desktop Sync Client<a class="headerlink" href="#building-a-branded-desktop-sync-client" title="Permalink to this headline">¶</a></h2>
+<p>See <a class="reference external" href="https://doc.owncloud.com/branded_clients/">Building Branded ownCloud Clients (Enterprise Only)</a> for instructions on
+building your own branded desktop sync client, and for setting up an automatic
+update service.</p>
+<p>Your users may run both a branded and un-branded desktop sync client
+side-by-side. Both clients run independently of each other, and do not share
+account information or files.</p>
+</div>
+<div class="section" id="building-a-branded-ios-app">
+<h2>Building a Branded iOS App<a class="headerlink" href="#building-a-branded-ios-app" title="Permalink to this headline">¶</a></h2>
+<p>Building and distributing your branded iOS ownCloud app involves a large number
+of interdependent steps. The process is detailed in the <a class="reference external" href="https://doc.owncloud.com/branded_clients/">Building Branded
+ownCloud Clients (Enterprise Only)</a> manual. Follow these instructions exactly
+and in order, and you will have a nice branded iOS app that you can distribute
+to your users.</p>
+</div>
+<div class="section" id="building-an-android-app">
+<h2>Building an Android App<a class="headerlink" href="#building-an-android-app" title="Permalink to this headline">¶</a></h2>
+<p>Building and distributing your branded Android ownCloud app is fairly simple,
+and the process is detailed in
+<a class="reference external" href="https://doc.owncloud.com/branded_clients/">Building Branded ownCloud Clients (Enterprise Only)</a>.</p>
+</div>
+</div>
+
+
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="index.html" title="Previous Chapter: Creating Branded ownCloud Clients (Enterprise only)"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Creating Bran...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="custom_client_repos.html" title="Next Chapter: Custom Client Download Repositories"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Custom Client... &raquo;</span>
+    </a>
+  </li>
+</ul>
+					</div>
+				</div>
+			</div>
+  </main>  
+  </div>
+</div>
+  </body>
+</html>

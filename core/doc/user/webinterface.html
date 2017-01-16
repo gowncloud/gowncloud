@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>The ownCloud Web Interface &mdash; ownCloud 9.1 User Manual 9.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/main.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/styles.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '9.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="ownCloud 9.1 User Manual 9.1 documentation" href="contents.html" />
+    <link rel="next" title="Files &amp; Synchronization" href="files/index.html" />
+    <link rel="prev" title="What’s New for Users in ownCloud 9.1" href="whats_new.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1d2d44">
+
+  </head>
+  <body role="document">
+
+
+<div class="wrap container not-front">
+  <div class="content row">
+  <main class="main">
+    <div class="row page-content-header">
+      <div class="col-md-5 col-md-offset-7">
+      
+        <form class="headersearch" style="margin-bottom:-3px;" action="search.html" method="get">
+        <input type="text" value="" name="q" id="q" class="form-control" /> 
+        <button  class="btn btn-default" type="submit" id="searchsubmit">Search</button>
+        </form>
+      
+      </div>
+    </div>
+    
+			<div class="row">
+				<div class="col-md-3">
+					<div class="sidebar">
+							<div class="menu-support-container">
+								<ul id="menu-support" class="menu">
+									<ul>
+										
+<li><a href="contents.html">Table of Contents</a></li>
+									</ul>
+                  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">ownCloud 9.1 User Manual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="whats_new.html">What&#8217;s New for Users in ownCloud 9.1</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">The ownCloud Web Interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#navigating-the-main-user-interface">Navigating the Main User Interface</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="files/index.html">Files &amp; Synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pim/index.html">Contacts &amp; Calendar</a></li>
+<li class="toctree-l1"><a class="reference internal" href="documents.html">Collaborative Document Editing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="userpreferences.html">Setting Your Preferences</a></li>
+<li class="toctree-l1"><a class="reference internal" href="session_management.html">Manage Connected Browsers and Devices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="external_storage/index.html">External Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bookmarks.html">Using the Bookmarks App</a></li>
+</ul>
+
+								</ul>
+							</div>
+					</div>
+				</div>
+        
+
+				<div class="col-md-9">
+					<div class="page-content">
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="whats_new.html" title="Previous Chapter: What’s New for Users in ownCloud 9.1"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; What’s New fo...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="files/index.html" title="Next Chapter: Files & Synchronization"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Files & Synch... &raquo;</span>
+    </a>
+  </li>
+</ul>
+						
+  <div class="section" id="the-owncloud-web-interface">
+<h1>The ownCloud Web Interface<a class="headerlink" href="#the-owncloud-web-interface" title="Permalink to this headline">¶</a></h1>
+<p>You can connect to your ownCloud server using any Web browser; just point it to
+your ownCloud server and enter your username and password. Supported Web
+browsers are:</p>
+<ul>
+<li><p class="first">Firefox 14+</p>
+</li>
+<li><p class="first">Chrome 18+</p>
+</li>
+<li><p class="first">Safari 5+</p>
+</li>
+<li><p class="first">IE11+ (except Compatibility Mode)</p>
+<div class="figure">
+<img alt="ownCloud login screen." src="_images/oc_connect.png" />
+</div>
+</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Some apps like <code class="docutils literal"><span class="pre">files_external</span></code> or <code class="docutils literal"><span class="pre">encryption</span></code> will disable
+the <strong>Stay logged in</strong> checkbox.</p>
+</div>
+<div class="section" id="navigating-the-main-user-interface">
+<h2>Navigating the Main User Interface<a class="headerlink" href="#navigating-the-main-user-interface" title="Permalink to this headline">¶</a></h2>
+<p>By default, the ownCloud Web interface opens to your Files page. You can add,
+remove, and share files, and make changes based on the access privileges set by
+you (if you are administering the server) or by your server administrator.</p>
+<div class="figure">
+<a class="reference internal image-reference" href="_images/files_page1.png"><img alt="The main Files view." src="_images/files_page1.png" style="width: 487.5px; height: 274.5px;" /></a>
+</div>
+<p>The ownCloud user interface contains the following fields and functions:</p>
+<ul class="simple">
+<li><strong>Apps Selection Menu</strong>: Located in the upper left corner, click the arrow to
+open a dropdown menu to navigate to your various available apps.</li>
+<li><strong>Apps Information</strong> field: Located in the left sidebar, this provides
+filters and tasks associated with your selected app.  For example, when you
+are using the Files apps you have a special set of filters for quickly
+finding your files, such as files that have been shared with you, and files
+that you have shared with others. You&#8217;ll see different items for other apps.</li>
+<li><strong>Application View</strong>: The main central field in the ownCloud user interface.
+This field displays the contents or user features of your selected app.</li>
+<li><strong>Navigation Bar</strong>: Located over the main viewing window (the Application
+View), this bar provides a type of breadcrumbs navigation that enables you to
+migrate to higher levels of the folder hierarchy up to the root level (home).</li>
+<li><strong>New</strong> button: Located in the Navigation Bar, the <code class="docutils literal"><span class="pre">New</span></code> button
+enables you to create new files, new folders, or upload files.</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">You can also drag and drop files from your file manager into the
+ownCloud Files Application View to upload them to ownCloud. Currently,
+the only Web browsers that support drag-and-drop folders are Chrome and
+Chromium.</p>
+</div>
+<ul class="simple">
+<li><strong>Search</strong> field: Click on the magnifier in the upper right hand corner of
+to search for files.</li>
+<li><strong>Gallery</strong> button. This looks like four little squares, and takes you
+directly to your image gallery.</li>
+<li><strong>Personal Settings</strong> menu: Click on your ownCloud username, located to the
+right of the Search field, to open your Personal Settings dropdown menu. Your
+Personal page provides the following settings and features:<ul>
+<li>Links to download desktop and mobile apps</li>
+<li>Re-run the First Run Wizard</li>
+<li>Server usage and space availability</li>
+<li>Password management</li>
+<li>Name, email, and profile picture settings</li>
+<li>Manage connected browsers and devices</li>
+<li>Group memberships</li>
+<li>Interface language settings</li>
+<li>Manage notifications</li>
+<li>Federated Cloud ID</li>
+<li>Social media sharing buttons</li>
+<li>SSL certificate manager</li>
+<li>ownCloud Version information</li>
+</ul>
+</li>
+</ul>
+<p>See <a class="reference internal" href="userpreferences.html"><em>Setting Your Preferences</em></a> section to learn more about these settings.</p>
+</div>
+</div>
+
+
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="whats_new.html" title="Previous Chapter: What’s New for Users in ownCloud 9.1"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; What’s New fo...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="files/index.html" title="Next Chapter: Files & Synchronization"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Files & Synch... &raquo;</span>
+    </a>
+  </li>
+</ul>
+					</div>
+				</div>
+			</div>
+  </main>  
+  </div>
+</div>
+  </body>
+</html>

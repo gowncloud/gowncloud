@@ -1,0 +1,13 @@
+{
+  "shippedApps": [
+    "dav",
+    "federatedfilesharing",
+    "federation",
+    "files"
+  ],
+  "alwaysEnabled": [
+    "files",
+    "dav",
+    "federatedfilesharing"
+  ]
+}

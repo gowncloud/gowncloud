@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>External Storage (Enterprise only) &mdash; ownCloud 9.1 Server Administration Manual 9.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/main.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/styles.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '9.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="ownCloud 9.1 Server Administration Manual 9.1 documentation" href="../contents.html" />
+    <link rel="next" title="Enterprise-Only Authentication Options" href="enterprise_only_auth.html" />
+    <link rel="prev" title="Custom Theming ownCloud (Enterprise only)" href="../enterprise_server_branding/enterprise_server_branding.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1d2d44">
+
+  </head>
+  <body role="document">
+
+
+<div class="wrap container not-front">
+  <div class="content row">
+  <main class="main">
+    <div class="row page-content-header">
+      <div class="col-md-5 col-md-offset-7">
+      
+        <form class="headersearch" style="margin-bottom:-3px;" action="../search.html" method="get">
+        <input type="text" value="" name="q" id="q" class="form-control" /> 
+        <button  class="btn btn-default" type="submit" id="searchsubmit">Search</button>
+        </form>
+      
+      </div>
+    </div>
+    
+			<div class="row">
+				<div class="col-md-3">
+					<div class="sidebar">
+							<div class="menu-support-container">
+								<ul id="menu-support" class="menu">
+									<ul>
+										
+<li><a href="../contents.html">Table of Contents</a></li>
+									</ul>
+                  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">ownCloud 9.1 Server Administration Manual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">ownCloud 9.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new_admin.html">What&#8217;s New for Admins in ownCloud 9.1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_server/index.html">ownCloud Server Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_user/index.html">User Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_files/index.html">File Sharing and Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_database/index.html">Database Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_mimetypes/index.html">Mimetypes Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../maintenance/index.html">Maintenance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../issues/index.html">Issues and Troubleshooting</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_installation/index.html">Enterprise Edition Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_clients/index.html">Creating Branded ownCloud Clients (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_server_branding/index.html">Enterprise Server Branding (Enterprise only)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">External Storage (Enterprise only)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="enterprise_only_auth.html">Enterprise-Only Authentication Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ldap_home_connector_configuration.html">LDAP Home Connector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sharepoint-integration_configuration.html">Configuring SharePoint Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="windows-network-drive_configuration.html">Installing and Configuring the Windows Network Drive App</a></li>
+<li class="toctree-l2"><a class="reference internal" href="windows-network-drive_configuration.html#windows-network-drive-listener">Windows Network Drive Listener</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s3_swift_as_primary_object_store_configuration.html">Configuring S3 and OpenStack Swift Objects as Primary Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jive_configuration.html">Jive Integration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_user_management/index.html">User Management (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_file_management/index.html">Enterprise File Management (Enterprise Only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_logging/index.html">Enterprise Logging Apps (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_firewall/index.html">Enterprise Firewall (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_troubleshooting.html">Enterprise Troubleshooting</a></li>
+</ul>
+
+								</ul>
+							</div>
+					</div>
+				</div>
+        
+
+				<div class="col-md-9">
+					<div class="page-content">
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="../enterprise_server_branding/enterprise_server_branding.html" title="Previous Chapter: Custom Theming ownCloud (Enterprise only)"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Custom Themin...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="enterprise_only_auth.html" title="Next Chapter: Enterprise-Only Authentication Options"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Enterprise-On... &raquo;</span>
+    </a>
+  </li>
+</ul>
+						
+  <div class="section" id="external-storage-enterprise-only">
+<h1>External Storage (Enterprise only)<a class="headerlink" href="#external-storage-enterprise-only" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="enterprise_only_auth.html">Enterprise-Only Authentication Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ldap_home_connector_configuration.html">LDAP Home Connector</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ldap_home_connector_configuration.html#mount-home-directory">Mount Home Directory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ldap_home_connector_configuration.html#configure-the-ldap-home-connector">Configure the LDAP Home Connector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ldap_home_connector_configuration.html#configure-the-ldap-server">Configure the LDAP Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sharepoint-integration_configuration.html">Configuring SharePoint Integration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sharepoint-integration_configuration.html#creating-a-sharepoint-mount">Creating a Sharepoint Mount</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sharepoint-integration_configuration.html#enabling-users">Enabling Users</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sharepoint-integration_configuration.html#note">Note</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sharepoint-integration_configuration.html#troubleshooting">Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="windows-network-drive_configuration.html">Installing and Configuring the Windows Network Drive App</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="windows-network-drive_configuration.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="windows-network-drive_configuration.html#creating-a-new-share">Creating a New Share</a></li>
+<li class="toctree-l2"><a class="reference internal" href="windows-network-drive_configuration.html#personal-wnd-mounts">Personal WND Mounts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="windows-network-drive_configuration.html#libsmclient-issues">libsmclient Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="windows-network-drive_configuration.html#windows-network-drive-listener">Windows Network Drive Listener</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="windows-network-drive_configuration.html#setup-notifications-for-an-smb-share">Setup Notifications for an SMB Share</a></li>
+<li class="toctree-l2"><a class="reference internal" href="windows-network-drive_configuration.html#one-listener-for-many-shares">One Listener for Many Shares</a></li>
+<li class="toctree-l2"><a class="reference internal" href="windows-network-drive_configuration.html#running-the-wnd-listener-as-a-service">Running the WND Listener as a Service</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="s3_swift_as_primary_object_store_configuration.html">Configuring S3 and OpenStack Swift Objects as Primary Storage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="s3_swift_as_primary_object_store_configuration.html#implications">Implications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s3_swift_as_primary_object_store_configuration.html#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s3_swift_as_primary_object_store_configuration.html#s3-multibucket-configuration">S3 Multibucket Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="jive_configuration.html">Jive Integration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="jive_configuration.html#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jive_configuration.html#use-cases">Use Cases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jive_configuration.html#configuring-the-jive-app">Configuring the Jive app</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="../enterprise_server_branding/enterprise_server_branding.html" title="Previous Chapter: Custom Theming ownCloud (Enterprise only)"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Custom Themin...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="enterprise_only_auth.html" title="Next Chapter: Enterprise-Only Authentication Options"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Enterprise-On... &raquo;</span>
+    </a>
+  </li>
+</ul>
+					</div>
+				</div>
+			</div>
+  </main>  
+  </div>
+</div>
+  </body>
+</html>

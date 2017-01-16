@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>What’s New for Admins in ownCloud 9.1 &mdash; ownCloud 9.1 Server Administration Manual 9.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/main.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/styles.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '9.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="ownCloud 9.1 Server Administration Manual 9.1 documentation" href="contents.html" />
+    <link rel="next" title="Installation" href="installation/index.html" />
+    <link rel="prev" title="ownCloud 9.1 Release Notes" href="release_notes.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1d2d44">
+
+  </head>
+  <body role="document">
+
+
+<div class="wrap container not-front">
+  <div class="content row">
+  <main class="main">
+    <div class="row page-content-header">
+      <div class="col-md-5 col-md-offset-7">
+      
+        <form class="headersearch" style="margin-bottom:-3px;" action="search.html" method="get">
+        <input type="text" value="" name="q" id="q" class="form-control" /> 
+        <button  class="btn btn-default" type="submit" id="searchsubmit">Search</button>
+        </form>
+      
+      </div>
+    </div>
+    
+			<div class="row">
+				<div class="col-md-3">
+					<div class="sidebar">
+							<div class="menu-support-container">
+								<ul id="menu-support" class="menu">
+									<ul>
+										
+<li><a href="contents.html">Table of Contents</a></li>
+									</ul>
+                  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">ownCloud 9.1 Server Administration Manual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release_notes.html">ownCloud 9.1 Release Notes</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">What&#8217;s New for Admins in ownCloud 9.1</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#enterprise-only">Enterprise Only</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="installation/index.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration_server/index.html">ownCloud Server Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration_user/index.html">User Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration_files/index.html">File Sharing and Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration_database/index.html">Database Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration_mimetypes/index.html">Mimetypes Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="maintenance/index.html">Maintenance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="issues/index.html">Issues and Troubleshooting</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="enterprise_installation/index.html">Enterprise Edition Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="enterprise_clients/index.html">Creating Branded ownCloud Clients (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="enterprise_server_branding/index.html">Enterprise Server Branding (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="enterprise_external_storage/index.html">External Storage (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="enterprise_user_management/index.html">User Management (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="enterprise_file_management/index.html">Enterprise File Management (Enterprise Only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="enterprise_logging/index.html">Enterprise Logging Apps (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="enterprise_firewall/index.html">Enterprise Firewall (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="enterprise_troubleshooting.html">Enterprise Troubleshooting</a></li>
+</ul>
+
+								</ul>
+							</div>
+					</div>
+				</div>
+        
+
+				<div class="col-md-9">
+					<div class="page-content">
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="release_notes.html" title="Previous Chapter: ownCloud 9.1 Release Notes"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; ownCloud 9.1 ...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="installation/index.html" title="Next Chapter: Installation"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Installation &raquo;</span>
+    </a>
+  </li>
+</ul>
+						
+  <div class="section" id="what-s-new-for-admins-in-owncloud-version">
+<h1>What&#8217;s New for Admins in ownCloud 9.1<a class="headerlink" href="#what-s-new-for-admins-in-owncloud-version" title="Permalink to this headline">¶</a></h1>
+<p>See the <a class="reference external" href="https://github.com/owncloud/core/wiki/ownCloud-9.1-Features">ownCloud 9.1 Features page</a> on Github for a
+comprehensive list of new features and updates.</p>
+<p>ownCloud has many improvements. Some of our new features are:</p>
+<ul class="simple">
+<li>Two Factor authentication plug-in system</li>
+<li>OCC command added to (temporarily) disable/enable two-factor authentication for single users</li>
+</ul>
+<p>Note: the current desktop and mobile client versions do not support two-factor yet, this will be added later. It is already possible to generate a device specific password and enter that in the current client versions.</p>
+<ul class="simple">
+<li>New <code class="docutils literal"><span class="pre">occ</span></code> option, <code class="docutils literal"><span class="pre">--unscanned</span></code>, to scan only previously unscanned
+files (<a class="reference external" href="https://github.com/owncloud/core/pull/24702">https://github.com/owncloud/core/pull/24702</a>)</li>
+<li>New <code class="docutils literal"><span class="pre">occ</span></code> command to disable/enable users</li>
+<li>New <code class="docutils literal"><span class="pre">occ</span></code> command to disable/enable two-factor auth for specific users</li>
+<li>New group tags for system file tags
+(<a class="reference external" href="https://github.com/owncloud/enterprise/issues/1208">https://github.com/owncloud/enterprise/issues/1208</a>)</li>
+<li>Cleaner internal file URLs
+(<a class="reference external" href="https://github.com/owncloud/core/issues/11732">https://github.com/owncloud/core/issues/11732</a>)</li>
+<li>Google Drive/Dropbox configuration dropdown; easier configuration for shared
+hosters (<a class="reference external" href="https://github.com/owncloud/core/pull/22214">https://github.com/owncloud/core/pull/22214</a>)</li>
+</ul>
+<div class="section" id="enterprise-only">
+<h2>Enterprise Only<a class="headerlink" href="#enterprise-only" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>ownCloud 9.1 Enterprise can now handle notifications directly from Windows network drives as a technology preview, making complete file scans obsolete.</li>
+<li>The Workflow engine represents a powerful new feature for enterprise customers. Triggers can be placed on new or modified files, while scripts of any type can be run. This allows documents to be converted automatically into PDFs or sent to a specific recipient by e-mail. In conjunction with the retention app, the file firewall and integrated tagging, it also allows numerous workflows to be addressed for integration into business processes.</li>
+</ul>
+</div>
+</div>
+
+
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="release_notes.html" title="Previous Chapter: ownCloud 9.1 Release Notes"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; ownCloud 9.1 ...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="installation/index.html" title="Next Chapter: Installation"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Installation &raquo;</span>
+    </a>
+  </li>
+</ul>
+					</div>
+				</div>
+			</div>
+  </main>  
+  </div>
+</div>
+  </body>
+</html>

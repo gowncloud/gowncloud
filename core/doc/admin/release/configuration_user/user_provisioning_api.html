@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>User Provisioning API &mdash; ownCloud 9.1 Server Administration Manual 9.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/main.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/styles.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '9.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="ownCloud 9.1 Server Administration Manual 9.1 documentation" href="../contents.html" />
+    <link rel="up" title="User Management" href="index.html" />
+    <link rel="next" title="File Sharing and Management" href="../configuration_files/index.html" />
+    <link rel="prev" title="LDAP User Cleanup" href="user_auth_ldap_cleanup.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1d2d44">
+
+  </head>
+  <body role="document">
+
+
+<div class="wrap container not-front">
+  <div class="content row">
+  <main class="main">
+    <div class="row page-content-header">
+      <div class="col-md-5 col-md-offset-7">
+      
+        <form class="headersearch" style="margin-bottom:-3px;" action="../search.html" method="get">
+        <input type="text" value="" name="q" id="q" class="form-control" /> 
+        <button  class="btn btn-default" type="submit" id="searchsubmit">Search</button>
+        </form>
+      
+      </div>
+    </div>
+    
+			<div class="row">
+				<div class="col-md-3">
+					<div class="sidebar">
+							<div class="menu-support-container">
+								<ul id="menu-support" class="menu">
+									<ul>
+										
+<li><a href="../contents.html">Table of Contents</a></li>
+									</ul>
+                  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">ownCloud 9.1 Server Administration Manual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">ownCloud 9.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new_admin.html">What&#8217;s New for Admins in ownCloud 9.1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_server/index.html">ownCloud Server Configuration</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">User Management</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="user_configuration.html">User Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reset_admin_password.html">Resetting a Lost Admin Password</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reset_user_password.html">Resetting a User Password</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_auth_ftp_smb_imap.html">User Authentication with IMAP, SMB, and FTP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_auth_ldap.html">User Authentication with LDAP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_auth_ldap_cleanup.html">LDAP User Cleanup</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">User Provisioning API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#instruction-set-for-users">Instruction Set For Users</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#instruction-set-for-groups">Instruction Set For Groups</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#instruction-set-for-apps">Instruction Set For Apps</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_files/index.html">File Sharing and Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_database/index.html">Database Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_mimetypes/index.html">Mimetypes Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../maintenance/index.html">Maintenance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../issues/index.html">Issues and Troubleshooting</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_installation/index.html">Enterprise Edition Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_clients/index.html">Creating Branded ownCloud Clients (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_server_branding/index.html">Enterprise Server Branding (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_external_storage/index.html">External Storage (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_user_management/index.html">User Management (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_file_management/index.html">Enterprise File Management (Enterprise Only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_logging/index.html">Enterprise Logging Apps (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_firewall/index.html">Enterprise Firewall (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_troubleshooting.html">Enterprise Troubleshooting</a></li>
+</ul>
+
+								</ul>
+							</div>
+					</div>
+				</div>
+        
+
+				<div class="col-md-9">
+					<div class="page-content">
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="user_auth_ldap_cleanup.html" title="Previous Chapter: LDAP User Cleanup"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; LDAP User Cle...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="../configuration_files/index.html" title="Next Chapter: File Sharing and Management"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">File Sharing ... &raquo;</span>
+    </a>
+  </li>
+</ul>
+						
+  <div class="section" id="user-provisioning-api">
+<h1>User Provisioning API<a class="headerlink" href="#user-provisioning-api" title="Permalink to this headline">¶</a></h1>
+<p>The Provisioning API application enables a set of APIs that external systems can use to create,
+edit, delete and query user attributes, query, set and remove groups, set quota
+and query total storage used in ownCloud. Group admin users can also query
+ownCloud and perform the same functions as an admin for groups they manage. The
+API also enables an admin to query for active ownCloud applications, application
+info, and to enable or disable an app remotely. HTTP
+requests can be used via a Basic Auth header to perform any of the functions
+listed above. The Provisioning API app is enabled by default.</p>
+<p>The base URL for all calls to the share API is <strong>owncloud_base_url/ocs/v1.php/cloud</strong>.</p>
+<div class="section" id="instruction-set-for-users">
+<h2>Instruction Set For Users<a class="headerlink" href="#instruction-set-for-users" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="users-adduser">
+<h3><strong>users / adduser</strong><a class="headerlink" href="#users-adduser" title="Permalink to this headline">¶</a></h3>
+<p>Create a new user on the ownCloud server. Authentication is done by sending a
+basic HTTP authentication header.</p>
+<p><strong>Syntax: ocs/v1.php/cloud/users</strong></p>
+<ul class="simple">
+<li>HTTP method: POST</li>
+<li>POST argument: userid - string, the required username for the new user</li>
+<li>POST argument: password - string, the required password for the new user</li>
+</ul>
+<p>Status codes:</p>
+<ul class="simple">
+<li>100 - successful</li>
+<li>101 - invalid input data</li>
+<li>102 - username already exists</li>
+<li>103 - unknown error occurred whilst adding the user</li>
+</ul>
+<div class="section" id="example">
+<h4>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h4>
+<ul class="simple">
+<li>POST <code class="docutils literal"><span class="pre">http://admin:secret&#64;example.com/ocs/v1.php/cloud/users</span> <span class="pre">-d</span>
+<span class="pre">userid=&quot;Frank&quot;</span> <span class="pre">-d</span> <span class="pre">password=&quot;frankspassword&quot;</span></code></li>
+<li>Creates the user <code class="docutils literal"><span class="pre">Frank</span></code> with password <code class="docutils literal"><span class="pre">frankspassword</span></code></li>
+</ul>
+</div>
+<div class="section" id="xml-output">
+<h4>XML Output<a class="headerlink" href="#xml-output" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python"><div class="highlight"><pre>&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;ocs&gt;
+ &lt;meta&gt;
+  &lt;status&gt;ok&lt;/status&gt;
+  &lt;statuscode&gt;100&lt;/statuscode&gt;
+  &lt;message/&gt;
+ &lt;/meta&gt;
+ &lt;data/&gt;
+&lt;/ocs&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="users-getusers">
+<h3><strong>users / getusers</strong><a class="headerlink" href="#users-getusers" title="Permalink to this headline">¶</a></h3>
+<p>Retrieves a list of users from the ownCloud server. Authentication is done by
+sending a Basic HTTP Authorization header.</p>
+<p><strong>Syntax: ocs/v1.php/cloud/users</strong></p>
+<ul class="simple">
+<li>HTTP method: GET</li>
+<li>url arguments: search - string, optional search string</li>
+<li>url arguments: limit - int, optional limit value</li>
+<li>url arguments: offset - int, optional offset value</li>
+</ul>
+<p>Status codes:</p>
+<ul class="simple">
+<li>100 - successful</li>
+</ul>
+<div class="section" id="id1">
+<h4>Example<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h4>
+<ul class="simple">
+<li>GET <code class="docutils literal"><span class="pre">http://admin:secret&#64;example.com/ocs/v1.php/cloud/users?search=Frank</span></code></li>
+<li>Returns list of users matching the search string.</li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h4>XML Output<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python"><div class="highlight"><pre>&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;ocs&gt;
+  &lt;meta&gt;
+    &lt;statuscode&gt;100&lt;/statuscode&gt;
+    &lt;status&gt;ok&lt;/status&gt;
+  &lt;/meta&gt;
+  &lt;data&gt;
+    &lt;users&gt;
+      &lt;element&gt;Frank&lt;/element&gt;
+     &lt;/users&gt;
+  &lt;/data&gt;
+&lt;/ocs&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="users-getuser">
+<h3><strong>users / getuser</strong><a class="headerlink" href="#users-getuser" title="Permalink to this headline">¶</a></h3>
+<p>Retrieves information about a single user. Authentication is done by sending a
+Basic HTTP Authorization header.</p>
+<p><strong>Syntax: ocs/v1.php/cloud/users/{userid}</strong></p>
+<ul class="simple">
+<li>HTTP method: GET</li>
+</ul>
+<p>Status codes:</p>
+<ul class="simple">
+<li>100 - successful</li>
+</ul>
+<div class="section" id="id3">
+<h4>Example<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><ul class="simple">
+<li>GET <code class="docutils literal"><span class="pre">http://admin:secret&#64;example.com/ocs/v1.php/cloud/users/Frank</span></code></li>
+<li>Returns information on the user <code class="docutils literal"><span class="pre">Frank</span></code></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="id4">
+<h4>XML Output<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python"><div class="highlight"><pre>&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;ocs&gt;
+  &lt;meta&gt;
+    &lt;statuscode&gt;100&lt;/statuscode&gt;
+    &lt;status&gt;ok&lt;/status&gt;
+  &lt;/meta&gt;
+  &lt;data&gt;
+    &lt;email&gt;frank@example.org&lt;/email&gt;
+    &lt;quota&gt;0&lt;/quota&gt;
+    &lt;enabled&gt;true&lt;/enabled&gt;
+  &lt;/data&gt;
+&lt;/ocs&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="users-edituser">
+<h3><strong>users / edituser</strong><a class="headerlink" href="#users-edituser" title="Permalink to this headline">¶</a></h3>
+<p>Edits attributes related to a user. Users are able to edit email, displayname
+and password; admins can also edit the quota value. Authentication is done by
+sending a Basic HTTP Authorization header.</p>
+<p><strong>Syntax: ocs/v1.php/cloud/users/{userid}</strong></p>
+<ul class="simple">
+<li>HTTP method: PUT</li>
+<li>PUT argument: key, the field to edit (email, quota, display, password)</li>
+<li>PUT argument: value, the new value for the field</li>
+</ul>
+<p>Status codes:</p>
+<ul class="simple">
+<li>100 - successful</li>
+<li>101 - user not found</li>
+<li>102 - invalid input data</li>
+</ul>
+<div class="section" id="examples">
+<h4>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><ul class="simple">
+<li>PUT <code class="docutils literal"><span class="pre">PUT</span> <span class="pre">http://admin:secret&#64;example.com/ocs/v1.php/cloud/users/Frank</span> <span class="pre">-d</span>
+<span class="pre">key=&quot;email&quot;</span> <span class="pre">-d</span> <span class="pre">value=&quot;franksnewemail&#64;example.org&quot;</span></code></li>
+<li>Updates the email address for the user <code class="docutils literal"><span class="pre">Frank</span></code></li>
+<li>PUT <code class="docutils literal"><span class="pre">PUT</span> <span class="pre">http://admin:secret&#64;example.com/ocs/v1.php/cloud/users/Frank</span> <span class="pre">-d</span>
+<span class="pre">key=&quot;quota&quot;</span> <span class="pre">-d</span> <span class="pre">value=&quot;100MB&quot;</span></code></li>
+<li>Updates the quota for the user <code class="docutils literal"><span class="pre">Frank</span></code></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="id5">
+<h4>XML Output<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python"><div class="highlight"><pre>&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;ocs&gt;
+  &lt;meta&gt;
+    &lt;statuscode&gt;100&lt;/statuscode&gt;
+    &lt;status&gt;ok&lt;/status&gt;
+  &lt;/meta&gt;
+  &lt;data/&gt;
+&lt;/ocs&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="users-deleteuser">
+<h3><strong>users / deleteuser</strong><a class="headerlink" href="#users-deleteuser" title="Permalink to this headline">¶</a></h3>
+<p>Deletes a user from the ownCloud server. Authentication is done by sending a
+Basic HTTP Authorization header.</p>
+<p><strong>Syntax: ocs/v1.php/cloud/users/{userid}</strong></p>
+<ul class="simple">
+<li>HTTP method: DELETE</li>
+</ul>
+<p>Statuscodes:</p>
+<ul class="simple">
+<li>100 - successful</li>
+<li>101 - failure</li>
+</ul>
+<div class="section" id="id6">
+<h4>Example<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><ul class="simple">
+<li>DELETE <code class="docutils literal"><span class="pre">http://admin:secret&#64;example.com/ocs/v1.php/cloud/users/Frank</span></code></li>
+<li>Deletes the user <code class="docutils literal"><span class="pre">Frank</span></code></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="id7">
+<h4>XML Output<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python"><div class="highlight"><pre>&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;ocs&gt;
+  &lt;meta&gt;
+    &lt;statuscode&gt;100&lt;/statuscode&gt;
+    &lt;status&gt;ok&lt;/status&gt;
+  &lt;/meta&gt;
+  &lt;data/&gt;
+&lt;/ocs&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="users-getgroups">
+<h3><strong>users / getgroups</strong><a class="headerlink" href="#users-getgroups" title="Permalink to this headline">¶</a></h3>
+<p>Retrieves a list of groups the specified user is a member of. Authentication is
+done by sending a Basic HTTP Authorization header.</p>
+<p><strong>Syntax: ocs/v1.php/cloud/users/{userid}/groups</strong></p>
+<ul class="simple">
+<li>HTTP method: GET</li>
+</ul>
+<p>Status codes:</p>
+<ul class="simple">
+<li>100 - successful</li>
+</ul>
+<div class="section" id="id8">
+<h4>Example<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><ul class="simple">
+<li>GET  <code class="docutils literal"><span class="pre">http://admin:secret&#64;example.com/ocs/v1.php/cloud/users/Frank/groups</span></code></li>
+<li>Retrieves a list of groups of which <code class="docutils literal"><span class="pre">Frank</span></code> is a member</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="id9">
+<h4>XML Output<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python"><div class="highlight"><pre>&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;ocs&gt;
+  &lt;meta&gt;
+    &lt;statuscode&gt;100&lt;/statuscode&gt;
+    &lt;status&gt;ok&lt;/status&gt;
+  &lt;/meta&gt;
+  &lt;data&gt;
+    &lt;groups&gt;
+      &lt;element&gt;admin&lt;/element&gt;
+      &lt;element&gt;group1&lt;/element&gt;
+    &lt;/groups&gt;
+  &lt;/data&gt;
+&lt;/ocs&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="users-addtogroup">
+<h3><strong>users / addtogroup</strong><a class="headerlink" href="#users-addtogroup" title="Permalink to this headline">¶</a></h3>
+<p>Adds the specified user to the specified group. Authentication is done by
+sending a Basic HTTP Authorization header.</p>
+<p><strong>Syntax: ocs/v1.php/cloud/users/{userid}/groups</strong></p>
+<ul class="simple">
+<li>HTTP method: POST</li>
+<li>POST argument: groupid, string - the group to add the user to</li>
+</ul>
+<p>Status codes:</p>
+<ul class="simple">
+<li>100 - successful</li>
+<li>101 - no group specified</li>
+<li>102 - group does not exist</li>
+<li>103 - user does not exist</li>
+<li>104 - insufficient privileges</li>
+<li>105 - failed to add user to group</li>
+</ul>
+<div class="section" id="id10">
+<h4>Example<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><ul class="simple">
+<li>POST <code class="docutils literal"><span class="pre">http://admin:secret&#64;example.com/ocs/v1.php/cloud/users/Frank/groups</span>
+<span class="pre">-d</span> <span class="pre">groupid=&quot;newgroup&quot;</span></code></li>
+<li>Adds the user <code class="docutils literal"><span class="pre">Frank</span></code> to the group <code class="docutils literal"><span class="pre">newgroup</span></code></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="id11">
+<h4>XML Output<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python"><div class="highlight"><pre>&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;ocs&gt;
+  &lt;meta&gt;
+    &lt;statuscode&gt;100&lt;/statuscode&gt;
+    &lt;status&gt;ok&lt;/status&gt;
+  &lt;/meta&gt;
+  &lt;data/&gt;
+&lt;/ocs&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="users-removefromgroup">
+<h3><strong>users / removefromgroup</strong><a class="headerlink" href="#users-removefromgroup" title="Permalink to this headline">¶</a></h3>
+<p>Removes the specified user from the specified group. Authentication is done by
+sending a Basic HTTP Authorization header.</p>
+<p><strong>Syntax: ocs/v1.php/cloud/users/{userid}/groups</strong></p>
+<ul class="simple">
+<li>HTTP method: DELETE</li>
+<li>POST argument: groupid, string - the group to remove the user from</li>
+</ul>
+<p>Status codes:</p>
+<ul class="simple">
+<li>100 - successful</li>
+<li>101 - no group specified</li>
+<li>102 - group does not exist</li>
+<li>103 - user does not exist</li>
+<li>104 - insufficient privileges</li>
+<li>105 - failed to remove user from group</li>
+</ul>
+<div class="section" id="id12">
+<h4>Example<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><ul class="simple">
+<li>DELETE
+<code class="docutils literal"><span class="pre">http://admin:secret&#64;example.com/ocs/v1.php/cloud/users/Frank/groups</span> <span class="pre">-d</span>
+<span class="pre">groupid=&quot;newgroup&quot;</span></code></li>
+<li>Removes the user <code class="docutils literal"><span class="pre">Frank</span></code> from the group <code class="docutils literal"><span class="pre">newgroup</span></code></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="id13">
+<h4>XML Output<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python"><div class="highlight"><pre>&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;ocs&gt;
+  &lt;meta&gt;
+    &lt;statuscode&gt;100&lt;/statuscode&gt;
+    &lt;status&gt;ok&lt;/status&gt;
+  &lt;/meta&gt;
+  &lt;data/&gt;
+&lt;/ocs&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="users-createsubadmin">
+<h3><strong>users / createsubadmin</strong><a class="headerlink" href="#users-createsubadmin" title="Permalink to this headline">¶</a></h3>
+<p>Makes a user the subadmin of a group. Authentication is done by sending a Basic
+HTTP Authorization header.</p>
+<p><strong>Syntax: ocs/v1.php/cloud/users/{userid}/subadmins</strong></p>
+<ul class="simple">
+<li>HTTP method: POST</li>
+<li>POST argument: groupid, string - the group of which to make the user a
+subadmin</li>
+</ul>
+<p>Status codes:</p>
+<ul class="simple">
+<li>100 - successful</li>
+<li>101 - user does not exist</li>
+<li>102 - group does not exist</li>
+<li>103 - unknown failure</li>
+</ul>
+<div class="section" id="id14">
+<h4>Example<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><ul class="simple">
+<li>POST
+<code class="docutils literal"><span class="pre">https://admin:secret&#64;example.com/ocs/v1.php/cloud/users/Frank/subadmins</span>
+<span class="pre">-d</span> <span class="pre">groupid=&quot;group&quot;</span></code></li>
+<li>Makes the user <code class="docutils literal"><span class="pre">Frank</span></code> a subadmin of the <code class="docutils literal"><span class="pre">group</span></code> group</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="id15">
+<h4>XML Output<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python"><div class="highlight"><pre>&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;ocs&gt;
+  &lt;meta&gt;
+    &lt;statuscode&gt;100&lt;/statuscode&gt;
+    &lt;status&gt;ok&lt;/status&gt;
+  &lt;/meta&gt;
+  &lt;data/&gt;
+&lt;/ocs&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="users-removesubadmin">
+<h3><strong>users / removesubadmin</strong><a class="headerlink" href="#users-removesubadmin" title="Permalink to this headline">¶</a></h3>
+<p>Removes the subadmin rights for the user specified from the group specified.
+Authentication is done by sending a Basic HTTP Authorization header.</p>
+<p><strong>Syntax: ocs/v1.php/cloud/users/{userid}/subadmins</strong></p>
+<ul class="simple">
+<li>HTTP method: DELETE</li>
+<li>DELETE argument: groupid, string - the group from which to remove the user&#8217;s
+subadmin rights</li>
+</ul>
+<p>Status codes:</p>
+<ul class="simple">
+<li>100 - successful</li>
+<li>101 - user does not exist</li>
+<li>102 - user is not a subadmin of the group / group does not exist</li>
+<li>103 - unknown failure</li>
+</ul>
+<div class="section" id="id16">
+<h4>Example<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><ul class="simple">
+<li>DELETE
+<code class="docutils literal"><span class="pre">https://admin:secret&#64;example.com/ocs/v1.php/cloud/users/Frank/subadmins</span>
+<span class="pre">-d</span> <span class="pre">groupid=&quot;oldgroup&quot;</span></code></li>
+<li>Removes <code class="docutils literal"><span class="pre">Frank's</span></code> subadmin rights from the <code class="docutils literal"><span class="pre">oldgroup</span></code> group</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="id17">
+<h4>XML Output<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python"><div class="highlight"><pre>&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;ocs&gt;
+  &lt;meta&gt;
+    &lt;statuscode&gt;100&lt;/statuscode&gt;
+    &lt;status&gt;ok&lt;/status&gt;
+  &lt;/meta&gt;
+  &lt;data/&gt;
+&lt;/ocs&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="users-getsubadmingroups">
+<h3><strong>users / getsubadmingroups</strong><a class="headerlink" href="#users-getsubadmingroups" title="Permalink to this headline">¶</a></h3>
+<p>Returns the groups in which the user is a subadmin. Authentication is done by
+sending a Basic HTTP Authorization header.</p>
+<p><strong>Syntax: ocs/v1.php/cloud/users/{userid}/subadmins</strong></p>
+<ul class="simple">
+<li>HTTP method: GET</li>
+</ul>
+<p>Status codes:</p>
+<ul class="simple">
+<li>100 - successful</li>
+<li>101 - user does not exist</li>
+<li>102 - unknown failure</li>
+</ul>
+<div class="section" id="id18">
+<h4>Example<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><ul class="simple">
+<li>GET
+<code class="docutils literal"><span class="pre">https://admin:secret&#64;example.com/ocs/v1.php/cloud/users/Frank/subadmins</span></code></li>
+<li>Returns the groups of which <code class="docutils literal"><span class="pre">Frank</span></code> is a subadmin</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="id19">
+<h4>XML Output<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python"><div class="highlight"><pre>&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;ocs&gt;
+  &lt;meta&gt;
+      &lt;status&gt;ok&lt;/status&gt;
+      &lt;statuscode&gt;100&lt;/statuscode&gt;
+    &lt;message/&gt;
+  &lt;/meta&gt;
+  &lt;data&gt;
+    &lt;element&gt;testgroup&lt;/element&gt;
+  &lt;/data&gt;
+&lt;/ocs&gt;
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="instruction-set-for-groups">
+<h2>Instruction Set For Groups<a class="headerlink" href="#instruction-set-for-groups" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="groups-getgroups">
+<h3><strong>groups / getgroups</strong><a class="headerlink" href="#groups-getgroups" title="Permalink to this headline">¶</a></h3>
+<p>Retrieves a list of groups from the ownCloud server. Authentication is done by
+sending a Basic HTTP Authorization header.</p>
+<p><strong>Syntax: ocs/v1.php/cloud/groups</strong></p>
+<ul class="simple">
+<li>HTTP method: GET</li>
+<li>url arguments: search - string, optional search string</li>
+<li>url arguments: limit - int, optional limit value</li>
+<li>url arguments: offset - int, optional offset value</li>
+</ul>
+<p>Status codes:</p>
+<ul class="simple">
+<li>100 - successful</li>
+</ul>
+<div class="section" id="id20">
+<h4>Example<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><ul class="simple">
+<li>GET <code class="docutils literal"><span class="pre">http://admin:secret&#64;example.com/ocs/v1.php/cloud/groups?search=adm</span></code></li>
+<li>Returns list of groups matching the search string.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="id21">
+<h4>XML Output<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python"><div class="highlight"><pre>&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;ocs&gt;
+  &lt;meta&gt;
+    &lt;statuscode&gt;100&lt;/statuscode&gt;
+    &lt;status&gt;ok&lt;/status&gt;
+  &lt;/meta&gt;
+  &lt;data&gt;
+    &lt;groups&gt;
+      &lt;element&gt;admin&lt;/element&gt;
+    &lt;/groups&gt;
+  &lt;/data&gt;
+&lt;/ocs&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="groups-addgroup">
+<h3><strong>groups / addgroup</strong><a class="headerlink" href="#groups-addgroup" title="Permalink to this headline">¶</a></h3>
+<p>Adds a new group. Authentication is done by
+sending a Basic HTTP Authorization header.</p>
+<p><strong>Syntax: ocs/v1.php/cloud/groups</strong></p>
+<ul class="simple">
+<li>HTTP method: POST</li>
+<li>POST argument: groupid, string - the new groups name</li>
+</ul>
+<p>Status codes:</p>
+<ul class="simple">
+<li>100 - successful</li>
+<li>101 - invalid input data</li>
+<li>102 - group already exists</li>
+<li>103 - failed to add the group</li>
+</ul>
+<div class="section" id="id22">
+<h4>Example<a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><ul class="simple">
+<li>POST <code class="docutils literal"><span class="pre">http://admin:secret&#64;example.com/ocs/v1.php/cloud/groups</span> <span class="pre">-d</span>
+<span class="pre">groupid=&quot;newgroup&quot;</span></code></li>
+<li>Adds a new group called <code class="docutils literal"><span class="pre">newgroup</span></code></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="id23">
+<h4>XML Output<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python"><div class="highlight"><pre>&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;ocs&gt;
+  &lt;meta&gt;
+    &lt;statuscode&gt;100&lt;/statuscode&gt;
+    &lt;status&gt;ok&lt;/status&gt;
+  &lt;/meta&gt;
+  &lt;data/&gt;
+&lt;/ocs&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="groups-getgroup">
+<h3><strong>groups / getgroup</strong><a class="headerlink" href="#groups-getgroup" title="Permalink to this headline">¶</a></h3>
+<p>Retrieves a list of group members. Authentication is done by sending a Basic
+HTTP Authorization header.</p>
+<p><strong>Syntax: ocs/v1.php/cloud/groups/{groupid}</strong></p>
+<ul class="simple">
+<li>HTTP method: GET</li>
+</ul>
+<p>Status codes:</p>
+<ul class="simple">
+<li>100 - successful</li>
+</ul>
+<div class="section" id="id24">
+<h4>Example<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><ul class="simple">
+<li>POST <code class="docutils literal"><span class="pre">http://admin:secret&#64;example.com/ocs/v1.php/cloud/groups/admin</span></code></li>
+<li>Returns a list of users in the <code class="docutils literal"><span class="pre">admin</span></code> group</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="id25">
+<h4>XML Output<a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python"><div class="highlight"><pre>&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;ocs&gt;
+  &lt;meta&gt;
+    &lt;statuscode&gt;100&lt;/statuscode&gt;
+    &lt;status&gt;ok&lt;/status&gt;
+  &lt;/meta&gt;
+  &lt;data&gt;
+    &lt;users&gt;
+      &lt;element&gt;Frank&lt;/element&gt;
+    &lt;/users&gt;
+  &lt;/data&gt;
+&lt;/ocs&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="groups-getsubadmins">
+<h3><strong>groups / getsubadmins</strong><a class="headerlink" href="#groups-getsubadmins" title="Permalink to this headline">¶</a></h3>
+<p>Returns subadmins of the group. Authentication is done by
+sending a Basic HTTP Authorization header.</p>
+<p><strong>Syntax: ocs/v1.php/cloud/groups/{groupid}/subadmins</strong></p>
+<ul class="simple">
+<li>HTTP method: GET</li>
+</ul>
+<p>Status codes:</p>
+<ul class="simple">
+<li>100 - successful</li>
+<li>101 - group does not exist</li>
+<li>102 - unknown failure</li>
+</ul>
+<div class="section" id="id26">
+<h4>Example<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><ul class="simple">
+<li>GET
+<code class="docutils literal"><span class="pre">https://admin:secret&#64;example.com/ocs/v1.php/cloud/groups/mygroup/subadmins</span></code></li>
+<li>Return the subadmins of the group: <code class="docutils literal"><span class="pre">mygroup</span></code></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="id27">
+<h4>XML Output<a class="headerlink" href="#id27" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python"><div class="highlight"><pre>&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;ocs&gt;
+  &lt;meta&gt;
+    &lt;status&gt;ok&lt;/status&gt;
+    &lt;statuscode&gt;100&lt;/statuscode&gt;
+    &lt;message/&gt;
+  &lt;/meta&gt;
+  &lt;data&gt;
+    &lt;element&gt;Tom&lt;/element&gt;
+  &lt;/data&gt;
+&lt;/ocs&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="groups-deletegroup">
+<h3><strong>groups / deletegroup</strong><a class="headerlink" href="#groups-deletegroup" title="Permalink to this headline">¶</a></h3>
+<p>Removes a group. Authentication is done by
+sending a Basic HTTP Authorization header.</p>
+<p><strong>Syntax: ocs/v1.php/cloud/groups/{groupid}</strong></p>
+<ul class="simple">
+<li>HTTP method: DELETE</li>
+</ul>
+<p>Status codes:</p>
+<ul class="simple">
+<li>100 - successful</li>
+<li>101 - group does not exist</li>
+<li>102 - failed to delete group</li>
+</ul>
+<div class="section" id="id28">
+<h4>Example<a class="headerlink" href="#id28" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><ul class="simple">
+<li>DELETE <code class="docutils literal"><span class="pre">http://admin:secret&#64;example.com/ocs/v1.php/cloud/groups/mygroup</span></code></li>
+<li>Delete the group <code class="docutils literal"><span class="pre">mygroup</span></code></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="id29">
+<h4>XML Output<a class="headerlink" href="#id29" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python"><div class="highlight"><pre>&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;ocs&gt;
+  &lt;meta&gt;
+    &lt;statuscode&gt;100&lt;/statuscode&gt;
+    &lt;status&gt;ok&lt;/status&gt;
+  &lt;/meta&gt;
+  &lt;data/&gt;
+&lt;/ocs&gt;
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="instruction-set-for-apps">
+<h2>Instruction Set For Apps<a class="headerlink" href="#instruction-set-for-apps" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="apps-getapps">
+<h3><strong>apps / getapps</strong><a class="headerlink" href="#apps-getapps" title="Permalink to this headline">¶</a></h3>
+<p>Returns a list of apps installed on the ownCloud server. Authentication is done
+by sending a Basic HTTP Authorization
+header.</p>
+<p><strong>Syntax: ocs/v1.php/cloud/apps/</strong></p>
+<ul class="simple">
+<li>HTTP method: GET</li>
+<li>url argument: filter, string - optional (<code class="docutils literal"><span class="pre">enabled</span></code> or <code class="docutils literal"><span class="pre">disabled</span></code>)</li>
+</ul>
+<p>Status codes:</p>
+<ul class="simple">
+<li>100 - successful</li>
+<li>101 - invalid input data</li>
+</ul>
+<div class="section" id="id30">
+<h4>Example<a class="headerlink" href="#id30" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><ul class="simple">
+<li>GET <code class="docutils literal"><span class="pre">http://admin:secret&#64;example.com/ocs/v1.php/cloud/apps?filter=enabled</span></code></li>
+<li>Gets enabled apps</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="id31">
+<h4>XML Output<a class="headerlink" href="#id31" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python"><div class="highlight"><pre>&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;ocs&gt;
+  &lt;meta&gt;
+    &lt;statuscode&gt;100&lt;/statuscode&gt;
+    &lt;status&gt;ok&lt;/status&gt;
+  &lt;/meta&gt;
+  &lt;data&gt;
+    &lt;apps&gt;
+      &lt;element&gt;files&lt;/element&gt;
+      &lt;element&gt;provisioning_api&lt;/element&gt;
+    &lt;/apps&gt;
+  &lt;/data&gt;
+&lt;/ocs&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="apps-getappinfo">
+<h3><strong>apps / getappinfo</strong><a class="headerlink" href="#apps-getappinfo" title="Permalink to this headline">¶</a></h3>
+<p>Provides information on a specific application. Authentication is done by
+sending a Basic HTTP Authorization header.</p>
+<p><strong>Syntax: ocs/v1.php/cloud/apps/{appid}</strong></p>
+<ul class="simple">
+<li>HTTP method: GET</li>
+</ul>
+<p>Status codes:</p>
+<ul class="simple">
+<li>100 - successful</li>
+</ul>
+<div class="section" id="id32">
+<h4>Example<a class="headerlink" href="#id32" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><ul class="simple">
+<li>GET <code class="docutils literal"><span class="pre">http://admin:secret&#64;example.com/ocs/v1.php/cloud/apps/files</span></code></li>
+<li>Get app info for the <code class="docutils literal"><span class="pre">files</span></code> app</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="id33">
+<h4>XML Output<a class="headerlink" href="#id33" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python"><div class="highlight"><pre>&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;ocs&gt;
+  &lt;meta&gt;
+    &lt;statuscode&gt;100&lt;/statuscode&gt;
+    &lt;status&gt;ok&lt;/status&gt;
+  &lt;/meta&gt;
+  &lt;data&gt;
+    &lt;info/&gt;
+    &lt;remote&gt;
+      &lt;files&gt;appinfo/remote.php&lt;/files&gt;
+      &lt;webdav&gt;appinfo/remote.php&lt;/webdav&gt;
+      &lt;filesync&gt;appinfo/filesync.php&lt;/filesync&gt;
+    &lt;/remote&gt;
+    &lt;public/&gt;
+    &lt;id&gt;files&lt;/id&gt;
+    &lt;name&gt;Files&lt;/name&gt;
+    &lt;description&gt;File Management&lt;/description&gt;
+    &lt;licence&gt;AGPL&lt;/licence&gt;
+    &lt;author&gt;Robin Appelman&lt;/author&gt;
+    &lt;require&gt;4.9&lt;/require&gt;
+    &lt;shipped&gt;true&lt;/shipped&gt;
+    &lt;standalone&gt;&lt;/standalone&gt;
+    &lt;default_enable&gt;&lt;/default_enable&gt;
+    &lt;types&gt;
+      &lt;element&gt;filesystem&lt;/element&gt;
+    &lt;/types&gt;
+  &lt;/data&gt;
+&lt;/ocs&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="apps-enable">
+<h3><strong>apps / enable</strong><a class="headerlink" href="#apps-enable" title="Permalink to this headline">¶</a></h3>
+<p>Enable an app.  Authentication is done by sending a Basic HTTP Authorization
+header.</p>
+<p><strong>Syntax: ocs/v1.php/cloud/apps/{appid}</strong></p>
+<ul class="simple">
+<li>HTTP method: POST</li>
+</ul>
+<p>Status codes:</p>
+<ul class="simple">
+<li>100 - successful</li>
+</ul>
+<div class="section" id="id34">
+<h4>Example<a class="headerlink" href="#id34" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><ul class="simple">
+<li>POST <code class="docutils literal"><span class="pre">http://admin:secret&#64;example.com/ocs/v1.php/cloud/apps/files_texteditor</span></code></li>
+<li>Enable the <code class="docutils literal"><span class="pre">files_texteditor</span></code> app</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="id35">
+<h4>XML Output<a class="headerlink" href="#id35" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python"><div class="highlight"><pre>&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;ocs&gt;
+  &lt;meta&gt;
+    &lt;statuscode&gt;100&lt;/statuscode&gt;
+    &lt;status&gt;ok&lt;/status&gt;
+  &lt;/meta&gt;
+&lt;/ocs&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="apps-disable">
+<h3><strong>apps / disable</strong><a class="headerlink" href="#apps-disable" title="Permalink to this headline">¶</a></h3>
+<p>Disables the specified app. Authentication is
+done by sending a Basic HTTP Authorization header.</p>
+<p><strong>Syntax: ocs/v1.php/cloud/apps/{appid}</strong></p>
+<ul class="simple">
+<li>HTTP method: DELETE</li>
+</ul>
+<p>Status codes:</p>
+<ul class="simple">
+<li>100 - successful</li>
+</ul>
+<div class="section" id="id36">
+<h4>Example<a class="headerlink" href="#id36" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><ul class="simple">
+<li>DELETE <code class="docutils literal"><span class="pre">http://admin:secret&#64;example.com/ocs/v1.php/cloud/apps/files_texteditor</span></code></li>
+<li>Disable the <code class="docutils literal"><span class="pre">files_texteditor</span></code> app</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="id37">
+<h4>XML Output<a class="headerlink" href="#id37" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python"><div class="highlight"><pre>&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;ocs&gt;
+  &lt;meta&gt;
+    &lt;statuscode&gt;100&lt;/statuscode&gt;
+    &lt;status&gt;ok&lt;/status&gt;
+  &lt;/meta&gt;
+&lt;/ocs&gt;
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="user_auth_ldap_cleanup.html" title="Previous Chapter: LDAP User Cleanup"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; LDAP User Cle...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="../configuration_files/index.html" title="Next Chapter: File Sharing and Management"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">File Sharing ... &raquo;</span>
+    </a>
+  </li>
+</ul>
+					</div>
+				</div>
+			</div>
+  </main>  
+  </div>
+</div>
+  </body>
+</html>

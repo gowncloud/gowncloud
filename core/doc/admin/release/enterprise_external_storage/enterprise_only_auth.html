@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Enterprise-Only Authentication Options &mdash; ownCloud 9.1 Server Administration Manual 9.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/main.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/styles.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '9.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="ownCloud 9.1 Server Administration Manual 9.1 documentation" href="../contents.html" />
+    <link rel="up" title="External Storage (Enterprise only)" href="index.html" />
+    <link rel="next" title="LDAP Home Connector" href="ldap_home_connector_configuration.html" />
+    <link rel="prev" title="External Storage (Enterprise only)" href="index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1d2d44">
+
+  </head>
+  <body role="document">
+
+
+<div class="wrap container not-front">
+  <div class="content row">
+  <main class="main">
+    <div class="row page-content-header">
+      <div class="col-md-5 col-md-offset-7">
+      
+        <form class="headersearch" style="margin-bottom:-3px;" action="../search.html" method="get">
+        <input type="text" value="" name="q" id="q" class="form-control" /> 
+        <button  class="btn btn-default" type="submit" id="searchsubmit">Search</button>
+        </form>
+      
+      </div>
+    </div>
+    
+			<div class="row">
+				<div class="col-md-3">
+					<div class="sidebar">
+							<div class="menu-support-container">
+								<ul id="menu-support" class="menu">
+									<ul>
+										
+<li><a href="../contents.html">Table of Contents</a></li>
+									</ul>
+                  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">ownCloud 9.1 Server Administration Manual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">ownCloud 9.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new_admin.html">What&#8217;s New for Admins in ownCloud 9.1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_server/index.html">ownCloud Server Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_user/index.html">User Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_files/index.html">File Sharing and Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_database/index.html">Database Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_mimetypes/index.html">Mimetypes Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../maintenance/index.html">Maintenance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../issues/index.html">Issues and Troubleshooting</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_installation/index.html">Enterprise Edition Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_clients/index.html">Creating Branded ownCloud Clients (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_server_branding/index.html">Enterprise Server Branding (Enterprise only)</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">External Storage (Enterprise only)</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="">Enterprise-Only Authentication Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ldap_home_connector_configuration.html">LDAP Home Connector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sharepoint-integration_configuration.html">Configuring SharePoint Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="windows-network-drive_configuration.html">Installing and Configuring the Windows Network Drive App</a></li>
+<li class="toctree-l2"><a class="reference internal" href="windows-network-drive_configuration.html#windows-network-drive-listener">Windows Network Drive Listener</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s3_swift_as_primary_object_store_configuration.html">Configuring S3 and OpenStack Swift Objects as Primary Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jive_configuration.html">Jive Integration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_user_management/index.html">User Management (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_file_management/index.html">Enterprise File Management (Enterprise Only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_logging/index.html">Enterprise Logging Apps (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_firewall/index.html">Enterprise Firewall (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_troubleshooting.html">Enterprise Troubleshooting</a></li>
+</ul>
+
+								</ul>
+							</div>
+					</div>
+				</div>
+        
+
+				<div class="col-md-9">
+					<div class="page-content">
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="index.html" title="Previous Chapter: External Storage (Enterprise only)"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; External Stor...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="ldap_home_connector_configuration.html" title="Next Chapter: LDAP Home Connector"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">LDAP Home Con... &raquo;</span>
+    </a>
+  </li>
+</ul>
+						
+  <div class="section" id="enterprise-only-authentication-options">
+<h1>Enterprise-Only Authentication Options<a class="headerlink" href="#enterprise-only-authentication-options" title="Permalink to this headline">¶</a></h1>
+<p>In ownCloud 9.0+, there are five authentication backends for external storage
+mounts:</p>
+<ul class="simple">
+<li>Username and password</li>
+<li>Log-in credentials, save in session</li>
+<li>Log-in credentials, save in database</li>
+<li>User entered, store in database</li>
+<li>Global credentials</li>
+</ul>
+<p>The first two are common to all editions of ownCloud, and the last three are
+only in the Enterprise edition. These are available to:</p>
+<ul class="simple">
+<li>FTP</li>
+<li>ownCloud</li>
+<li>SFTP</li>
+<li>SMB/CIFS</li>
+<li>WebDAV</li>
+<li>Windows Network Drive</li>
+</ul>
+<dl class="docutils">
+<dt>Username and password</dt>
+<dd>This is the default; a login entered by the admin when the external mount is
+created. The login is stored in the database, which allows sharing, and
+background jobs, such as file scanning, to operate.</dd>
+<dt>Log-in credentials, save in session</dt>
+<dd>Credentials are only stored in the session and not captured in the database.
+Files cannot be shared, as credentials are not stored.</dd>
+<dt>Log-in credentials, save in database</dt>
+<dd>Credentials are stored in the database, and files can be shared.</dd>
+<dt>User entered, store in database</dt>
+<dd>Users provide their own login credentials, rather than using admin-supplied
+credentials. User credentials are stored in the  database, and files can be
+shared.</dd>
+<dt>Global credentials</dt>
+<dd>Re-usable credentials entered by the admin, files can be shared.</dd>
+</dl>
+<p>Global credentials are entered in a separate form.</p>
+<div class="figure">
+<img alt="Global credentials form." src="../_images/auth_backends-2.png" />
+</div>
+<p>Use the dropdown selector to choose the authentication backend when you create a
+new external mount.</p>
+<div class="figure">
+<img alt="Authentication dropdown selector." src="../_images/auth_backends.png" />
+</div>
+</div>
+
+
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="index.html" title="Previous Chapter: External Storage (Enterprise only)"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; External Stor...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="ldap_home_connector_configuration.html" title="Next Chapter: LDAP Home Connector"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">LDAP Home Con... &raquo;</span>
+    </a>
+  </li>
+</ul>
+					</div>
+				</div>
+			</div>
+  </main>  
+  </div>
+</div>
+  </body>
+</html>

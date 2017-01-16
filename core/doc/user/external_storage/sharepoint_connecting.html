@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Connecting to SharePoint (Enterprise only) &mdash; ownCloud 9.1 User Manual 9.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/main.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/styles.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '9.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="ownCloud 9.1 User Manual 9.1 documentation" href="../contents.html" />
+    <link rel="up" title="External Storage" href="index.html" />
+    <link rel="next" title="Using the Bookmarks App" href="../bookmarks.html" />
+    <link rel="prev" title="Configuring External Storage" href="external_storage.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1d2d44">
+
+  </head>
+  <body role="document">
+
+
+<div class="wrap container not-front">
+  <div class="content row">
+  <main class="main">
+    <div class="row page-content-header">
+      <div class="col-md-5 col-md-offset-7">
+      
+        <form class="headersearch" style="margin-bottom:-3px;" action="../search.html" method="get">
+        <input type="text" value="" name="q" id="q" class="form-control" /> 
+        <button  class="btn btn-default" type="submit" id="searchsubmit">Search</button>
+        </form>
+      
+      </div>
+    </div>
+    
+			<div class="row">
+				<div class="col-md-3">
+					<div class="sidebar">
+							<div class="menu-support-container">
+								<ul id="menu-support" class="menu">
+									<ul>
+										
+<li><a href="../contents.html">Table of Contents</a></li>
+									</ul>
+                  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">ownCloud 9.1 User Manual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new.html">What&#8217;s New for Users in ownCloud 9.1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../webinterface.html">The ownCloud Web Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../files/index.html">Files &amp; Synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pim/index.html">Contacts &amp; Calendar</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../documents.html">Collaborative Document Editing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../userpreferences.html">Setting Your Preferences</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../session_management.html">Manage Connected Browsers and Devices</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">External Storage</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="external_storage.html">Configuring External Storage</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Connecting to SharePoint (Enterprise only)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#accessing-sharepoint-folders">Accessing SharePoint Folders</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#personal-page">Personal Page</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../bookmarks.html">Using the Bookmarks App</a></li>
+</ul>
+
+								</ul>
+							</div>
+					</div>
+				</div>
+        
+
+				<div class="col-md-9">
+					<div class="page-content">
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="external_storage.html" title="Previous Chapter: Configuring External Storage"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Configuring E...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="../bookmarks.html" title="Next Chapter: Using the Bookmarks App"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Using the Boo... &raquo;</span>
+    </a>
+  </li>
+</ul>
+						
+  <div class="section" id="connecting-to-sharepoint-enterprise-only">
+<h1>Connecting to SharePoint (Enterprise only)<a class="headerlink" href="#connecting-to-sharepoint-enterprise-only" title="Permalink to this headline">¶</a></h1>
+<p>Native SharePoint support has been added to ownCloud Enterprise Subscription as
+a secondary storage location for SharePoint 2007, 2010 and 2013. To the user,
+these appear as normal ownCloud mounts, with bi-directional updates in any
+ownCloud client: desktop, mobile, or Web. There is one difference, and that is
+ownCloud sharing is intentionally disabled for SharePoint mountpoints in order
+to preserve SharePoint access controls, and to ensure that content is properly
+accessed as per SharePoint rules.</p>
+<p>Your ownCloud admin may optionally allow users to mount their own SharePoint
+libraries.</p>
+<div class="section" id="accessing-sharepoint-folders">
+<h2>Accessing SharePoint Folders<a class="headerlink" href="#accessing-sharepoint-folders" title="Permalink to this headline">¶</a></h2>
+<p>When you first log in to ownCloud, the Web interface shows a gray bar behind all
+SharePoint folders. The gray bar disappears when the mountpoint is verified by
+the server. If you see a red error bar, you&#8217;ll see either an hourglass that
+indicates a connection error, or a key to indicate that authentication is
+required.</p>
+<p>Your ownCloud admin has the option to configure SharePoint credentials so that
+you are authenticated automatically, or you may be required to enter your
+credentials. If you have to enter your credentials, click the red bar and you&#8217;ll
+get a login window. You should only have to do this once, as ownCloud will store
+your credentials.</p>
+<p>If your SharePoint login ever changes, go to your Personal page to update it in
+the <code class="docutils literal"><span class="pre">Sharepoint</span> <span class="pre">Personal</span> <span class="pre">Configuration</span></code> section.</p>
+</div>
+<div class="section" id="personal-page">
+<h2>Personal Page<a class="headerlink" href="#personal-page" title="Permalink to this headline">¶</a></h2>
+<p>You can manage your SharePoint connections in the <code class="docutils literal"><span class="pre">Sharepoint</span> <span class="pre">Personal</span>
+<span class="pre">Configuration</span></code> section of your ownCloud Personal page. You&#8217;ll see two sections:
+the <code class="docutils literal"><span class="pre">Admin</span> <span class="pre">added</span> <span class="pre">mount</span> <span class="pre">points</span></code> section lists SharePoint mounts controlled by
+your ownCloud admin. If users have permissions to mount their own SharePoint
+libraries you&#8217;ll also see a <code class="docutils literal"><span class="pre">Personal</span> <span class="pre">mount</span> <span class="pre">points</span></code> section.</p>
+<p>There are two types of authentication available to you. If you have multiple
+SharePoint libraries that use the same authentication, enter your credentials
+in <code class="docutils literal"><span class="pre">Sharepoint</span> <span class="pre">Personal</span> <span class="pre">Configuration</span></code>. Then follow these steps to add your
+libraries:</p>
+<ul class="simple">
+<li>Enter the name of your local mountpoint in the <code class="docutils literal"><span class="pre">Local</span> <span class="pre">Folder</span> <span class="pre">Name</span></code> column.
+This can be an existing folder, or automatically create a new one.</li>
+<li>Enter your SharePoint server URL.</li>
+<li>Click the little refresh icon to the left of the <code class="docutils literal"><span class="pre">Document</span> <span class="pre">Library</span></code> field.
+If your credentials and URL are correct you&#8217;ll get a dropdown list of SharePoint
+libraries to choose from.</li>
+<li>Select the document library you want to mount.</li>
+<li>Select &#8220;Use user credentials&#8221;.</li>
+<li>Click the <code class="docutils literal"><span class="pre">Save</span></code> button, and you&#8217;re done</li>
+</ul>
+<p>You may elect to use different authentication credentials for some of your
+SharePoint libraries. For these, you must first select <code class="docutils literal"><span class="pre">use</span> <span class="pre">custom</span>
+<span class="pre">credentials</span></code>, and then fill in the mountpoint and SharePoint site URL. Then
+ownCloud can authenticate you, and you can click the refresh icon to see your
+libraries. Then select the library you want to mount and click the <code class="docutils literal"><span class="pre">Save</span></code>
+button.</p>
+</div>
+</div>
+
+
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="external_storage.html" title="Previous Chapter: Configuring External Storage"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Configuring E...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="../bookmarks.html" title="Next Chapter: Using the Bookmarks App"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Using the Boo... &raquo;</span>
+    </a>
+  </li>
+</ul>
+					</div>
+				</div>
+			</div>
+  </main>  
+  </div>
+</div>
+  </body>
+</html>

@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ownCloud Deployment Recommendations &mdash; ownCloud 9.1 Server Administration Manual 9.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/main.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/styles.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '9.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="ownCloud 9.1 Server Administration Manual 9.1 documentation" href="../contents.html" />
+    <link rel="up" title="Installation" href="index.html" />
+    <link rel="next" title="Preferred Linux Installation Method" href="linux_installation.html" />
+    <link rel="prev" title="System Requirements" href="system_requirements.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1d2d44">
+
+  </head>
+  <body role="document">
+
+
+<div class="wrap container not-front">
+  <div class="content row">
+  <main class="main">
+    <div class="row page-content-header">
+      <div class="col-md-5 col-md-offset-7">
+      
+        <form class="headersearch" style="margin-bottom:-3px;" action="../search.html" method="get">
+        <input type="text" value="" name="q" id="q" class="form-control" /> 
+        <button  class="btn btn-default" type="submit" id="searchsubmit">Search</button>
+        </form>
+      
+      </div>
+    </div>
+    
+			<div class="row">
+				<div class="col-md-3">
+					<div class="sidebar">
+							<div class="menu-support-container">
+								<ul id="menu-support" class="menu">
+									<ul>
+										
+<li><a href="../contents.html">Table of Contents</a></li>
+									</ul>
+                  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">ownCloud 9.1 Server Administration Manual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">ownCloud 9.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new_admin.html">What&#8217;s New for Admins in ownCloud 9.1</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Installation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="system_requirements.html">System Requirements</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">ownCloud Deployment Recommendations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#general-recommendations">General Recommendations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#small-workgroups-or-departments">Small Workgroups or Departments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mid-sized-enterprises">Mid-sized Enterprises</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#large-enterprises-and-service-providers">Large Enterprises and Service Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hardware-considerations">Hardware Considerations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#software-considerations">Software Considerations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#file-storage">File Storage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#session-storage">Session Storage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="linux_installation.html">Preferred Linux Installation Method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation_wizard.html">Installation Wizard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command_line_installation.html">Installing ownCloud From the Command Line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changing_the_web_route.html">Changing the Web Route</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apps_management_installation.html">Installing and Managing Apps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apps_supported.html">Supported Apps in ownCloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source_installation.html">Manual Installation on Linux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="appliance_installation.html">ownCloud Community Appliance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="php_54_installation.html">Installing PHP 5.4 on RHEL 6 and CentOS 6</a></li>
+<li class="toctree-l2"><a class="reference internal" href="php_55_installation.html">Installing PHP 5.5 on RHEL 7 and CentOS 7</a></li>
+<li class="toctree-l2"><a class="reference internal" href="selinux_configuration.html">SELinux Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nginx_examples.html">nginx Example Configurations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_server/index.html">ownCloud Server Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_user/index.html">User Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_files/index.html">File Sharing and Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_database/index.html">Database Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_mimetypes/index.html">Mimetypes Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../maintenance/index.html">Maintenance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../issues/index.html">Issues and Troubleshooting</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_installation/index.html">Enterprise Edition Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_clients/index.html">Creating Branded ownCloud Clients (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_server_branding/index.html">Enterprise Server Branding (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_external_storage/index.html">External Storage (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_user_management/index.html">User Management (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_file_management/index.html">Enterprise File Management (Enterprise Only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_logging/index.html">Enterprise Logging Apps (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_firewall/index.html">Enterprise Firewall (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_troubleshooting.html">Enterprise Troubleshooting</a></li>
+</ul>
+
+								</ul>
+							</div>
+					</div>
+				</div>
+        
+
+				<div class="col-md-9">
+					<div class="page-content">
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="system_requirements.html" title="Previous Chapter: System Requirements"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; System Requir...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="linux_installation.html" title="Next Chapter: Preferred Linux Installation Method"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Preferred Lin... &raquo;</span>
+    </a>
+  </li>
+</ul>
+						
+  <div class="section" id="owncloud-deployment-recommendations">
+<h1>ownCloud Deployment Recommendations<a class="headerlink" href="#owncloud-deployment-recommendations" title="Permalink to this headline">¶</a></h1>
+<p>What is the best way to install and maintain ownCloud? The answer to that is
+<em>&#8220;it depends&#8221;</em> because every ownCloud customer has their own
+particular needs and IT infrastructure. ownCloud and the LAMP stack are
+highly-configurable, so we will present three typical scenarios and make
+best-practice recommendations for both software and hardware.</p>
+<div class="section" id="general-recommendations">
+<h2>General Recommendations<a class="headerlink" href="#general-recommendations" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Whatever the size of your organization, always keep one thing in mind:
+the amount of data stored in ownCloud will only grow. Plan ahead.</p>
+</div>
+<p>Consider setting up a scale-out deployment, or using Federated Cloud Sharing to
+keep individual ownCloud instances to a manageable size.</p>
+<ul class="simple">
+<li>Operating system: Ubuntu 16.04 LTS.</li>
+<li>Web server: Apache 2.4.</li>
+<li>Database: MySQL/MariaDB with InnoDB storage engine (MyISAM is not supported, see: <a class="reference internal" href="../configuration_database/linux_database_configuration.html#db-storage-engine-label"><span>MySQL / MariaDB storage engine</span></a>)</li>
+<li>PHP 7.</li>
+</ul>
+</div>
+<div class="section" id="small-workgroups-or-departments">
+<h2>Small Workgroups or Departments<a class="headerlink" href="#small-workgroups-or-departments" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><dl class="first docutils">
+<dt>Number of users</dt>
+<dd><p class="first last">Up to 150 users.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>High availability level</dt>
+<dd><p class="first last">Zero-downtime backups via filesystem snapshots, component failure leads to
+interruption of service. Alternative backup scheme:
+nightly backups with service interruption.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<div class="section" id="recommended-system-setup">
+<h3>Recommended System Setup<a class="headerlink" href="#recommended-system-setup" title="Permalink to this headline">¶</a></h3>
+<p>One machine running the application server, Web server, database server and
+local storage.</p>
+<p>Authentication via an existing LDAP or Active Directory server.</p>
+<div class="figure">
+<img alt="Network diagram for small enterprises." src="../_images/deprecs-1.png" />
+</div>
+<ul>
+<li><dl class="first docutils">
+<dt>Components</dt>
+<dd><p class="first last">One server with at least 2 CPU cores, 16GB RAM, local storage as needed.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Operating system</dt>
+<dd><p class="first last">Enterprise-grade Linux distribution with full support from OS vendor. We
+recommend Ubuntu 16.04 LTS. Other distributions are also supported (e.g.
+RedHat or SuSE) but they may not ship all the required dependencies in their
+official repositories and therefore it may be necessary to enable third party
+repositories for modules like APCu and Redis.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>SSL Configuration</dt>
+<dd><p class="first last">The SSL termination is done in Apache. A standard SSL certificate is
+needed, installed according to the Apache documentation.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Load Balancer</dt>
+<dd><p class="first last">None.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Database</dt>
+<dd><p class="first last">We currently recommend MySQL / MariaDB, as our customers have had good experiences
+with these when moving to a Galera cluster to scale the DB. (InnoDB storage engine, MyISAM is
+not supported, see: <a class="reference internal" href="../configuration_database/linux_database_configuration.html#db-storage-engine-label"><span>MySQL / MariaDB storage engine</span></a>)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Authentication</dt>
+<dd><p class="first last">User authentication via one or several LDAP or Active Directory servers. (See
+<a class="reference external" href="https://doc.owncloud.com/server/9.1/admin_manual/configuration_user/user_auth_ldap.html">User Authentication with LDAP</a> for information on configuring ownCloud to
+use LDAP and AD.)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Session Management</dt>
+<dd><p class="first last">Local session management on the application server. PHP sessions are stored
+in a tmpfs mounted at the operating system-specific session storage
+location. You can find out where that is by running <code class="docutils literal"><span class="pre">grep</span> <span class="pre">-R</span>
+<span class="pre">'session.save_path'</span> <span class="pre">/etc/php5</span></code> and then add it to the <code class="docutils literal"><span class="pre">/etc/fstab</span></code> file,
+for example:
+<code class="docutils literal"><span class="pre">echo</span> <span class="pre">&quot;tmpfs</span> <span class="pre">/var/lib/php5/pool-www</span> <span class="pre">tmpfs</span> <span class="pre">defaults,noatime,mode=1777</span> <span class="pre">0</span> <span class="pre">0&quot;</span>
+<span class="pre">&gt;&gt;</span> <span class="pre">/etc/fstab</span></code>.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Memory Caching</dt>
+<dd><p class="first last">We recommend:
+- APC/APCu for local caching.
+- Redis for Transactional File Locking and distributed caching, running on a dedicated server.
+A memcache speeds up server performance, and ownCloud supports four
+memcaches; refer to <a class="reference external" href="https://doc.owncloud.com/server/9.1/admin_manual/configuration_server/caching_configuration.html">Configuring Memory Caching</a> for information on
+selecting and configuring a memcache.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Storage</dt>
+<dd><p class="first last">Local storage.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="mid-sized-enterprises">
+<h2>Mid-sized Enterprises<a class="headerlink" href="#mid-sized-enterprises" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><dl class="first docutils">
+<dt>Number of users</dt>
+<dd><p class="first last">150 to 1,000 users.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>High availability level</dt>
+<dd><p class="first last">Every component is fully redundant and can fail without service interruption.
+Backups without service interruption</p>
+</dd>
+</dl>
+</li>
+</ul>
+<div class="section" id="recommended-system-requirements">
+<h3>Recommended System Requirements<a class="headerlink" href="#recommended-system-requirements" title="Permalink to this headline">¶</a></h3>
+<p>2 to 4 application servers.</p>
+<p>A cluster of two database servers.</p>
+<p>Storage on an NFS server, or an object store that is S3 compatible.</p>
+<p>Authentication via an existing LDAP or Active Directory server.</p>
+<div class="figure">
+<img alt="Network diagram for mid-sized enterprise." src="../_images/deprecs-2.png" />
+</div>
+<ul>
+<li><dl class="first docutils">
+<dt>Components</dt>
+<dd><ul class="first last simple">
+<li>2 to 4 application servers with 4 sockets and 32GB RAM.</li>
+<li>2 DB servers with 4 sockets and 32GB RAM.</li>
+<li>1 HAproxy load balancer with 2 sockets and 16GB RAM.</li>
+<li>NFS storage server as needed.</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Operating system</dt>
+<dd><p class="first last">Enterprise-grade Linux distribution with full support from OS vendor. We
+recommend Ubuntu 16.04 LTS. Other distributions are also supported (e.g.
+RedHat or SuSE) but they may not ship all the required dependencies in their
+official repositories and therefore it may be necessary to enable third party
+repositories for modules like APCu and Redis.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>SSL Configuration</dt>
+<dd><p class="first last">The SSL termination is done in the HAProxy load balancer. A standard SSL
+certificate is needed, installed according to the <a class="reference external" href="http://www.haproxy.org/#docs">HAProxy documentation</a>.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Load Balancer</dt>
+<dd><p class="first last">HAProxy running on a dedicated server in front of the application servers.
+Sticky session needs to be used because of local session management on the
+application servers.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Database</dt>
+<dd><p class="first last">We recommend MySQL/MariaDB, either as a Galera cluster with master-master replication or as a master-slave setup with automatic failover. (InnoDB storage engine, MyISAM is not supported, see: <a class="reference internal" href="../configuration_database/linux_database_configuration.html#db-storage-engine-label"><span>MySQL / MariaDB storage engine</span></a>)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Authentication</dt>
+<dd><p class="first last">User authentication via one or several LDAP or Active Directory servers.
+(See <a class="reference external" href="https://doc.owncloud.com/server/9.1/admin_manual/configuration_user/user_auth_ldap.html">User Authentication with LDAP</a>  for information on configuring
+ownCloud to use LDAP and AD.)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>LDAP</dt>
+<dd><p class="first last">Read-only slaves should be deployed on every application server for
+optimal scalability</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Session Management</dt>
+<dd><p class="first last">Session management on the application server. PHP sessions are stored
+in a tmpfs mounted at the operating system-specific session storage
+location. You can find out where that is by running <code class="docutils literal"><span class="pre">grep</span> <span class="pre">-R</span>
+<span class="pre">'session.save_path'</span> <span class="pre">/etc/php5</span></code> and then add it to the <code class="docutils literal"><span class="pre">/etc/fstab</span></code> file,
+for example:
+<code class="docutils literal"><span class="pre">echo</span> <span class="pre">&quot;tmpfs</span> <span class="pre">/var/lib/php5/pool-www</span> <span class="pre">tmpfs</span> <span class="pre">defaults,noatime,mode=1777</span> <span class="pre">0</span> <span class="pre">0&quot;</span>
+<span class="pre">&gt;&gt;</span> <span class="pre">/etc/fstab</span></code>.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Memory Caching</dt>
+<dd><p class="first last">We recommend:
+- APC/APCu for local caching.
+- Redis for Transactional File Locking and distributed caching, running on a dedicated server.
+A memcache speeds up server performance, and ownCloud supports four
+memcaches; refer to <a class="reference external" href="https://doc.owncloud.com/server/9.1/admin_manual/configuration_server/caching_configuration.html">Configuring Memory Caching</a> for information on
+selecting and configuring a memcache.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Storage</dt>
+<dd><p class="first last">Use an off-the-shelf NFS solution, such as IBM Elastic Storage or RedHat
+Ceph.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="large-enterprises-and-service-providers">
+<h2>Large Enterprises and Service Providers<a class="headerlink" href="#large-enterprises-and-service-providers" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><dl class="first docutils">
+<dt>Number of users</dt>
+<dd><p class="first last">5,000 to &gt;100,000 users.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>High availabily level</dt>
+<dd><p class="first last">Every component is fully redundant and can fail without service interruption.
+Backups without service interruption</p>
+</dd>
+</dl>
+</li>
+</ul>
+<div class="section" id="id1">
+<h3>Recommended System Requirements<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>More than 4 application/web servers.</p>
+<p>A cluster of two or more database servers.</p>
+<p>Storage on an NFS server, or an object store that is S3 compatible.</p>
+<p>Cloud federation for a distributed setup over several data centers.</p>
+<p>Authentication via an existing LDAP or Active Directory server, or SAML.</p>
+<div class="figure">
+<a class="reference internal image-reference" href="../_images/deprecs-3.png"><img alt="Network diagram for large enterprise." src="../_images/deprecs-3.png" style="width: 505.8px; height: 607.8px;" /></a>
+</div>
+<ul>
+<li><dl class="first docutils">
+<dt>Components</dt>
+<dd><ul class="first last simple">
+<li>more than 4 application servers with 4 sockets and 64GB  RAM.</li>
+<li>4 DB servers with 4 sockets and 64GB RAM</li>
+<li>2 Hardware load balancer, for example BIG IP from F5</li>
+<li>NFS storage server as needed.</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Operating system</dt>
+<dd><p class="first last">Enterprise-grade Linux distribution with full support from OS vendor. We
+recommend Ubuntu 16.04 LTS. Other distributions are also supported (e.g.
+RedHat or SuSE) but they may not ship all the required dependencies in their
+official repositories and therefore it may be necessary to enable third party
+repositories for modules like APCu and Redis.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>SSL Configuration</dt>
+<dd><p class="first last">The SSL termination is done in the load balancer. A standard SSL certificate
+is needed, installed according to the specific load balancer&#8217;s documentation.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Load Balancer</dt>
+<dd><p class="first last">A redundant hardware load-balancer with heartbeat, for example <a class="reference external" href="https://f5.com/products/big-ip/">F5 Big-IP</a>.
+This runs two load balancers in front of the application servers.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Database</dt>
+<dd><p class="first last">We recommend MySQL/MariaDB, either as a Galera cluster with master-master replication or as a master-slave setup with automatic failover. (InnoDB storage engine, MyISAM is not supported, see: <a class="reference internal" href="../configuration_database/linux_database_configuration.html#db-storage-engine-label"><span>MySQL / MariaDB storage engine</span></a>)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Authentication</dt>
+<dd><p class="first last">User authentication via one or several LDAP or Active Directory
+servers, or SAML/Shibboleth. (See <a class="reference external" href="https://doc.owncloud.com/server/9.1/admin_manual/configuration_user/user_auth_ldap.html">User Authentication with LDAP</a> and
+<a class="reference external" href="https://doc.owncloud.com/server/9.1/admin_manual/enterprise_user_management/user_auth_shibboleth.html">Shibboleth Integration</a>.)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>LDAP</dt>
+<dd><p class="first last">Read-only slaves should be deployed on every application server for
+optimal scalability.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Session Management</dt>
+<dd><p class="first last">Redis should be used for the session management storage.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Caching</dt>
+<dd><p class="first last">We recommend:
+- APC/APCu for local caching.
+- Redis for Transactional File Locking and distributed caching, running on a dedicated server.
+A memcache speeds up server performance, and ownCloud supports four
+memcaches; refer to <a class="reference external" href="https://doc.owncloud.com/server/9.1/admin_manual/configuration_server/caching_configuration.html">Configuring Memory Caching</a> for information on
+selecting and configuring a memcache.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Storage</dt>
+<dd><p class="first last">An off-the-shelf NFS solution should be used. Examples are IBM Elastic
+Storage or RedHat Ceph. Optionally, an S3 compatible object store can also
+be used.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="hardware-considerations">
+<h2>Hardware Considerations<a class="headerlink" href="#hardware-considerations" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Solid-state drives (SSDs) are mandatory for optimum I/O performance.</li>
+<li>Separate hard disks for storage and database, SSDs for databases.</li>
+<li>Multiple network interfaces to distribute server synchronisation and backend
+traffic across multiple subnets.</li>
+</ul>
+<div class="section" id="single-machine-scale-up-deployment">
+<h3>Single Machine / Scale-Up Deployment<a class="headerlink" href="#single-machine-scale-up-deployment" title="Permalink to this headline">¶</a></h3>
+<p>The single-machine deployment is widely used in the community.</p>
+<p>Pros:</p>
+<ul class="simple">
+<li>Easy setup: no session storage daemon, use tmpfs and memory caching to
+enhance performance, local storage.</li>
+<li>No network latency to consider.</li>
+<li>To scale buy a bigger CPU, more memory, larger hard drive, or additional hard
+drives.</li>
+</ul>
+<p>Cons:</p>
+<ul class="simple">
+<li>No high availability options.</li>
+<li>The amount of data in ownCloud tends to grow continually. Eventually, a
+single machine will not scale; I/O performance decreases and becomes a
+bottleneck with multiple up- and downloads, even with solid-state drives.</li>
+</ul>
+</div>
+<div class="section" id="scale-out-deployment">
+<h3>Scale-Out Deployment<a class="headerlink" href="#scale-out-deployment" title="Permalink to this headline">¶</a></h3>
+<p>Provider setup:</p>
+<ul class="simple">
+<li>DNS round robin to HAProxy servers (2-n, SSL offloading, static resource caching)</li>
+<li>Distribution of traffic among web servers means less load per server (2-n)</li>
+<li>Redis for shared session storage (2-n)</li>
+<li>Database cluster with single Master, multiple slaves and proxy to split
+requests accordingly (2-n)</li>
+<li>GPFS or Ceph via phprados (2-n, 3 to be safe, Ceph 10+ nodes to see speed
+benefits under load)</li>
+</ul>
+<p>Pros:</p>
+<ul class="simple">
+<li>Components can be scaled as needed.</li>
+<li>High availability.</li>
+<li>Test upgrades can be performed more easily.</li>
+</ul>
+<p>Cons:</p>
+<ul class="simple">
+<li>More complicated to setup.</li>
+<li>Network becomes the bottleneck (10GB Ethernet recommended).</li>
+<li>Currently DB filecache table will grow rapidly, making migrations painful in
+case the table is altered.</li>
+</ul>
+</div>
+<div class="section" id="what-about-nginx">
+<h3>What About Nginx?<a class="headerlink" href="#what-about-nginx" title="Permalink to this headline">¶</a></h3>
+<p>Could be used instead of HAproxy as the load balancer.</p>
+</div>
+</div>
+<div class="section" id="software-considerations">
+<h2>Software Considerations<a class="headerlink" href="#software-considerations" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="operating-system">
+<h3>Operating System<a class="headerlink" href="#operating-system" title="Permalink to this headline">¶</a></h3>
+<p>ownCloud is dependent on distributions that offer an easy way to install the various
+components in up-to-date versions. From our experience, we strongly recommend to
+use Ubuntu 16.04 LTS, since all the required dependencies are included out of the box.
+Canonical, the parent company of Ubuntu Linux, also offers enterprise service and
+support.</p>
+<p>ownCloud has a partnership with RedHat and SUSE for customers who need commercial
+support. CentOS is the community-supported free-of-cost Red Hat Enterprise Linux
+clone. openSUSE is community-supported, and includes many of the same system
+administration tools as SUSE Linux Enterprise Server.</p>
+</div>
+<div class="section" id="web-server">
+<h3>Web server<a class="headerlink" href="#web-server" title="Permalink to this headline">¶</a></h3>
+<p>Taking Apache and Nginx as the contenders, Apache with mod_php is currently the
+best option, as Nginx does not support all features necessary for enterprise
+deployments. Mod_php is recommended instead of PHP_FPM, because in scale-out
+deployments separate PHP pools are simply not necessary.</p>
+</div>
+<div class="section" id="relational-database">
+<h3>Relational Database<a class="headerlink" href="#relational-database" title="Permalink to this headline">¶</a></h3>
+<p>More often than not the customer already has an opinion on what database to
+use. In general, the recommendation is to use what their database administrator
+is most familiar with. Taking into account what we are seeing at customer
+deployments, we recommend MySQL/MariaDB in a master-slave deployment with a
+MySQL proxy in front of them to send updates to master, and selects to the
+slave(s).</p>
+<p>What about the other DBMS?</p>
+<ul class="simple">
+<li>PostgreSQL is a good alternative to MySQL/MariaDB (alter table does not lock table, which
+makes migration less painful), although master-slave setup are very uncommon.</li>
+<li>Sqlite is adequate for simple testing, and for low-load single-user
+deployments. It is not adequate for production systems.</li>
+<li>Microsoft SQL Server is not a supported option.</li>
+<li>Oracle DB is the de facto standard at large enterprises and is fully
+supported with ownCloud Enterprise Edition only.</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>A Single Master DB is a single point of failure, because it does not scale</p>
+<p class="last">When the master fails a slave can become a new master. However, the increased
+complexity carries some risks: Multi-master has the risk of split brain, and
+deadlocks. ownCloud tries to solve the problem of deadlocks with high-level transactional
+file locking.</p>
+</div>
+</div>
+</div>
+<div class="section" id="file-storage">
+<h2>File Storage<a class="headerlink" href="#file-storage" title="Permalink to this headline">¶</a></h2>
+<p>While many customers are starting with NFS, sooner or later that requires scale-out storage. Currently the options are DRBD, GPFS or GlusterFS, or an object store protocol like S3 (supported in Enterprise Edition only) or Swift. S3 also allows access to Ceph Storage.</p>
+</div>
+<div class="section" id="session-storage">
+<h2>Session Storage<a class="headerlink" href="#session-storage" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Redis: provides persistence, nice graphical inspection tools available,
+supports ownCloud high-level file locking.</li>
+<li>If Shibboleth is a requirement you must use Memcached, and it can also be
+used to scale-out shibd session storage (see <a class="reference external" href="https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPStorageService#NativeSPStorageService-MemcacheStorageService">Memcache StorageService</a>).</li>
+</ul>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="http://www.severalnines.com/blog/become-mysql-dba-blog-series-database-high-availability">Database High Availability</a></p>
+<p><a class="reference external" href="http://blog.bitnami.com/2014/06/performance-enhacements-for-apache-and.html">Performance enhancements for Apache and PHP</a></p>
+<p><a class="reference external" href="https://www.digitalocean.com/community/tutorials/how-to-set-up-a-redis-server-as-a-session-handler-for-php-on-ubuntu-14-04">How to Set Up a Redis Server as a Session Handler for PHP on Ubuntu 14.04</a></p>
+</div>
+</div>
+
+
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="system_requirements.html" title="Previous Chapter: System Requirements"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; System Requir...</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="linux_installation.html" title="Next Chapter: Preferred Linux Installation Method"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Preferred Lin... &raquo;</span>
+    </a>
+  </li>
+</ul>
+					</div>
+				</div>
+			</div>
+  </main>  
+  </div>
+</div>
+  </body>
+</html>

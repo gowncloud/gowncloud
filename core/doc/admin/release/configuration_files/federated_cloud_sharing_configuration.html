@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Configuring Federation Sharing &mdash; ownCloud 9.1 Server Administration Manual 9.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/main.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/styles.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '9.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="ownCloud 9.1 Server Administration Manual 9.1 documentation" href="../contents.html" />
+    <link rel="up" title="File Sharing and Management" href="index.html" />
+    <link rel="next" title="Uploading big files &gt; 512MB" href="big_file_upload_configuration.html" />
+    <link rel="prev" title="File Sharing" href="file_sharing_configuration.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1d2d44">
+
+  </head>
+  <body role="document">
+
+
+<div class="wrap container not-front">
+  <div class="content row">
+  <main class="main">
+    <div class="row page-content-header">
+      <div class="col-md-5 col-md-offset-7">
+      
+        <form class="headersearch" style="margin-bottom:-3px;" action="../search.html" method="get">
+        <input type="text" value="" name="q" id="q" class="form-control" /> 
+        <button  class="btn btn-default" type="submit" id="searchsubmit">Search</button>
+        </form>
+      
+      </div>
+    </div>
+    
+			<div class="row">
+				<div class="col-md-3">
+					<div class="sidebar">
+							<div class="menu-support-container">
+								<ul id="menu-support" class="menu">
+									<ul>
+										
+<li><a href="../contents.html">Table of Contents</a></li>
+									</ul>
+                  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">ownCloud 9.1 Server Administration Manual Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">ownCloud 9.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new_admin.html">What&#8217;s New for Admins in ownCloud 9.1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_server/index.html">ownCloud Server Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_user/index.html">User Management</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">File Sharing and Management</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="file_sharing_configuration.html">File Sharing</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Configuring Federation Sharing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#sharing-with-owncloud-8-and-older">Sharing With ownCloud 8 and Older</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#creating-a-new-federation-share-9-0-only">Creating a new Federation Share (9.0+ only)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configuring-trusted-owncloud-servers">Configuring Trusted ownCloud Servers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#creating-federation-shares-via-public-link-share">Creating Federation Shares via Public Link Share</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configuration-tips">Configuration Tips</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="big_file_upload_configuration.html">Uploading big files &gt; 512MB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="collaborative_documents_configuration.html">Configuring the Collaborative Documents App</a></li>
+<li class="toctree-l2"><a class="reference internal" href="default_files_configuration.html">Providing Default Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="external_storage_configuration_gui.html">Configuring External Storage (GUI)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="external_storage_configuration.html">Configuring External Storage (Configuration File)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="external_storage/auth_mechanisms.html">External Storage Authentication mechanisms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="encryption_configuration.html">Encryption Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="files_locking_transactional.html">Transactional File Locking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="previews_configuration.html">Previews Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="file_versioning.html">Controlling File Versions and Aging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trashbin_options.html">Managing the Trashbin</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_database/index.html">Database Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_mimetypes/index.html">Mimetypes Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../maintenance/index.html">Maintenance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../issues/index.html">Issues and Troubleshooting</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_installation/index.html">Enterprise Edition Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_clients/index.html">Creating Branded ownCloud Clients (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_server_branding/index.html">Enterprise Server Branding (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_external_storage/index.html">External Storage (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_user_management/index.html">User Management (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_file_management/index.html">Enterprise File Management (Enterprise Only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_logging/index.html">Enterprise Logging Apps (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_firewall/index.html">Enterprise Firewall (Enterprise only)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../enterprise_troubleshooting.html">Enterprise Troubleshooting</a></li>
+</ul>
+
+								</ul>
+							</div>
+					</div>
+				</div>
+        
+
+				<div class="col-md-9">
+					<div class="page-content">
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="file_sharing_configuration.html" title="Previous Chapter: File Sharing"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; File Sharing</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="big_file_upload_configuration.html" title="Next Chapter: Uploading big files > 512MB"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Uploading big... &raquo;</span>
+    </a>
+  </li>
+</ul>
+						
+  <div class="section" id="configuring-federation-sharing">
+<h1>Configuring Federation Sharing<a class="headerlink" href="#configuring-federation-sharing" title="Permalink to this headline">¶</a></h1>
+<p>Federated Cloud Sharing is now managed by the Federation app (9.0+), and is
+now called Federation sharing. When you enable the Federation app you can
+easily and securely link file shares between ownCloud servers, in effect
+creating a cloud of ownClouds.</p>
+<div class="section" id="sharing-with-owncloud-8-and-older">
+<h2>Sharing With ownCloud 8 and Older<a class="headerlink" href="#sharing-with-owncloud-8-and-older" title="Permalink to this headline">¶</a></h2>
+<p>Direct Federation shares (<a class="reference internal" href="#label-direct-share-link"><span>Creating a new Federation Share (9.0+ only)</span></a>) are not supported in
+ownCloud 8 and older, so you must create Federation shares with public links
+(<a class="reference internal" href="#label-public-link-share"><span>Creating Federation Shares via Public Link Share</span></a>).</p>
+</div>
+<div class="section" id="creating-a-new-federation-share-9-0-only">
+<span id="label-direct-share-link"></span><h2>Creating a new Federation Share (9.0+ only)<a class="headerlink" href="#creating-a-new-federation-share-9-0-only" title="Permalink to this headline">¶</a></h2>
+<p>Follow these steps to create a new Federation share between two ownCloud 9.0+
+servers. This requires no action by the user on the remote server; all it takes
+is a few steps on the originating server.</p>
+<ol class="arabic simple">
+<li>Enable the Federation app.</li>
+<li>Go to your ownCloud Admin page and scroll to the Sharing
+section. Verify that <strong>Allow users on this server to send shares to other
+servers</strong> and <strong>Allow users on this server to receive shares from other
+servers</strong> are enabled.</li>
+<li>Now go to the Federation
+section. By default, <strong>Add server automatically once a federated share was
+created successfully</strong> is checked. The Federation app supports creating a
+list of trusted ownCloud servers, which allows the trusted servers to
+exchange user directories and auto-complete the names of external users when
+you create shares. If you do not want this enabled, then un-check it.</li>
+</ol>
+<div class="figure">
+<img alt="../_images/federation-0.png" src="../_images/federation-0.png" />
+</div>
+<ol class="arabic simple" start="3">
+<li>Now go to your Files page and select a folder to share. Click the share
+icon, and then enter the username and URL of the user on the remote ownCloud
+server. In this example, that is <code class="docutils literal"><span class="pre">freda&#64;https://example.com/owncloud</span></code>.
+When ownCloud verifies the link, it displays it with the <strong>(remote)</strong> label.
+Click on this label to establish the link.</li>
+</ol>
+<div class="figure">
+<img alt="../_images/federation-2.png" src="../_images/federation-2.png" />
+</div>
+<ol class="arabic simple" start="3">
+<li>When the link is successfully completed, you have a single share option,
+and that is <strong>can edit</strong>.</li>
+</ol>
+<div class="figure">
+<img alt="../_images/federation-3.png" src="../_images/federation-3.png" />
+</div>
+<p>You may disconnect the share at any time by clicking the trash can icon.</p>
+</div>
+<div class="section" id="configuring-trusted-owncloud-servers">
+<h2>Configuring Trusted ownCloud Servers<a class="headerlink" href="#configuring-trusted-owncloud-servers" title="Permalink to this headline">¶</a></h2>
+<p>You may create a list of trusted ownCloud servers for Federation sharing. This
+allows your linked ownCloud servers to share user directories, and to auto-fill
+user names in share dialogs. If <strong>Add server automatically once a federated
+share was created successfully</strong> is enabled on your Admin page, servers will be
+automatically added to your trusted list when you create new Federation shares.</p>
+<p>You may also enter ownCloud server URLs in the <strong>Add ownCloud Server</strong> field.
+The yellow light indicates a successful connection, with no user names
+exchanged. The green light indicates a successful connection with user names
+exchanged. A red light means the connection failed.</p>
+<div class="figure">
+<img alt="../_images/federation-1.png" src="../_images/federation-1.png" />
+</div>
+</div>
+<div class="section" id="creating-federation-shares-via-public-link-share">
+<span id="label-public-link-share"></span><h2>Creating Federation Shares via Public Link Share<a class="headerlink" href="#creating-federation-shares-via-public-link-share" title="Permalink to this headline">¶</a></h2>
+<p>You&#8217;ll need to use a Public Link Share to create Federation shares with
+ownCloud 8.x and older.</p>
+<p>Check the <code class="docutils literal"><span class="pre">Share</span> <span class="pre">Link</span></code> checkbox to expose more sharing options (which are
+described more fully in <a class="reference internal" href="file_sharing_configuration.html"><em>File Sharing</em></a>). You may create a
+Federation share by allowing ownCloud to create a public link for you, and then
+email it to the person you want to create the share with.</p>
+<div class="figure">
+<img alt="../_images/create_public_share-6.png" src="../_images/create_public_share-6.png" />
+</div>
+<p>You may optionally set a password and expiration date on it. When your recipient
+receives your email they must click the link, or copy it to a Web
+browser. They will see a page displaying a thumbnail of the file, with a button
+to <strong>Add to your ownCloud</strong>.</p>
+<div class="figure">
+<img alt="../_images/create_public_share-8.png" src="../_images/create_public_share-8.png" />
+</div>
+<p>Your recipient should click the <strong>Add to your ownCloud</strong> button. On the next
+screen your recipient needs to enter the URL to their ownCloud
+server, and then press the return key.</p>
+<div class="figure">
+<img alt="../_images/create_public_share-9.png" src="../_images/create_public_share-9.png" />
+</div>
+<p>Your recipient has to take one more step, and that is to confirm creating the
+federated cloud share link by clicking the <strong>Add remote share</strong> button.</p>
+<div class="figure">
+<img alt="../_images/create_public_share-10.png" src="../_images/create_public_share-10.png" />
+</div>
+<p>Un-check the <code class="docutils literal"><span class="pre">Share</span> <span class="pre">Link</span></code> checkbox to disable any federated cloud share
+created this way.</p>
+</div>
+<div class="section" id="configuration-tips">
+<h2>Configuration Tips<a class="headerlink" href="#configuration-tips" title="Permalink to this headline">¶</a></h2>
+<p>The Sharing section on your Admin page allows you to control how your users
+manage federated cloud shares:</p>
+<ul class="simple">
+<li>Check <code class="docutils literal"><span class="pre">Enforce</span> <span class="pre">password</span> <span class="pre">protection</span></code> to require passwords on link shares.</li>
+<li>Check <code class="docutils literal"><span class="pre">Set</span> <span class="pre">default</span> <span class="pre">expiration</span> <span class="pre">date</span></code> to require an expiration date on link
+shares.</li>
+<li>Check <code class="docutils literal"><span class="pre">Allow</span> <span class="pre">public</span> <span class="pre">uploads</span></code> to allow two-way file sharing.</li>
+</ul>
+<p>Your Apache Web server must have <code class="docutils literal"><span class="pre">mod_rewrite</span></code> enabled, and you must have
+<code class="docutils literal"><span class="pre">trusted_domains</span></code> correctly configured in <code class="docutils literal"><span class="pre">config.php</span></code> to allow external
+connections (see <a class="reference internal" href="../installation/installation_wizard.html"><em>Installation Wizard</em></a>). Consider also
+enabling SSL to encrypt all traffic between your servers .</p>
+<p>Your ownCloud server creates the share link from the URL that you used to log
+into the server, so make sure that you log into your server using a URL that is
+accessible to your users. For example, if you log in via its LAN IP address,
+such as <code class="docutils literal"><span class="pre">http://192.168.10.50</span></code>, then your share URL will be something like
+<code class="docutils literal"><span class="pre">http://192.168.10.50/owncloud/index.php/s/jWfCfTVztGlWTJe</span></code>, which is not
+accessible outside of your LAN. This also applies to using the server name; for
+access outside of your LAN you need to use a fully-qualified domain name such as
+<code class="docutils literal"><span class="pre">http://myserver.example.com</span></code>, rather than <code class="docutils literal"><span class="pre">http://myserver</span></code>.</p>
+</div>
+</div>
+
+
+            
+<ul class="prevnext-title list-unstyled list-inline">
+  <li class="prev">
+    <a href="file_sharing_configuration.html" title="Previous Chapter: File Sharing"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; File Sharing</span>
+    </a>
+  </li>
+  <li class="next">
+    <a href="big_file_upload_configuration.html" title="Next Chapter: Uploading big files > 512MB"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Uploading big... &raquo;</span>
+    </a>
+  </li>
+</ul>
+					</div>
+				</div>
+			</div>
+  </main>  
+  </div>
+</div>
+  </body>
+</html>
