@@ -6,10 +6,14 @@ import (
 	"net/http"
 	"os"
 
+	files "github.com/gowncloud/gowncloud/apps/files/ajax"
+
 	"golang.org/x/net/webdav"
 )
 
 func main() {
+	// make the dir for uploaded files
+	os.Mkdir("testdir", os.ModePerm)
 	server := webdav.Handler{
 		Prefix:     "/remote.php/webdav",
 		FileSystem: webdav.Dir("/dav"),
@@ -34,28 +38,7 @@ func main() {
 	http.Handle("/apps/files/js/", http.StripPrefix("/apps/files/js/", http.FileServer(http.Dir("apps/files/js"))))
 	http.Handle("/settings/", http.StripPrefix("/settings/", http.FileServer(http.Dir("settings"))))
 	http.Handle("/index.php/", http.StripPrefix("/index.php/", http.FileServer(http.Dir("."))))
-	http.HandleFunc("/index.php/apps/files/ajax/upload.php", func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("called files/ajax/upload.php")
-		w.WriteHeader(http.StatusOK)
-		//try to mock some json responses
-		body := UploadResponse{
-			Directory:         "/",
-			Etag:              "f384b2d8d0b5ce097ec3fe40dc45b799",
-			Id:                95,
-			MaxHumanFilesize:  "513 MB",
-			Mimetype:          "image/png",
-			Mtime:             1484566972000,
-			Name:              "apple-touch-icon-57x57.png",
-			Originalname:      "apple-touch-icon-57x57.png",
-			ParentId:          2,
-			Permissions:       27,
-			Size:              2499,
-			Status:            "success",
-			Sort:              "file",
-			UploadMaxFilesize: 537919488,
-		}
-		json.NewEncoder(w).Encode(body)
-	})
+	http.HandleFunc("/index.php/apps/files/ajax/upload.php", files.Upload)
 	http.HandleFunc("/index.php/apps/files/ajax/getstoragestats.php", func(w http.ResponseWriter, r *http.Request) {
 		log.Println("called storagestats")
 		//try to mock some json responses
@@ -96,21 +79,4 @@ type Data struct {
 type StorageStats struct {
 	Data   Data
 	Status string
-}
-
-type UploadResponse struct {
-	Directory         string
-	Etag              string
-	Id                int
-	MaxHumanFilesize  string
-	Mimetype          string
-	Mtime             int64
-	Name              string
-	Originalname      string
-	ParentId          int
-	Permissions       int
-	Size              int
-	Status            string
-	Sort              string `json:"type"`
-	UploadMaxFilesize int
 }
