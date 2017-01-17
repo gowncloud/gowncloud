@@ -72,7 +72,7 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 				w.WriteHeader(http.StatusInternalServerError)
 				return
 			}
-			log.Debug("copied %v bytes", written)
+			log.Debugf("copied %v bytes", written)
 
 			targetStats, err := target.Stat()
 			if err != nil {
