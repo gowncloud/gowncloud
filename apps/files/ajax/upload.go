@@ -9,6 +9,7 @@ import (
 	"time"
 
 	log "github.com/Sirupsen/logrus"
+	"github.com/gowncloud/gowncloud/core/identity"
 )
 
 type UploadResponse struct {
@@ -30,6 +31,7 @@ type UploadResponse struct {
 
 func Upload(w http.ResponseWriter, r *http.Request) {
 	log.Debug("called files/ajax/upload.php")
+	log.Println("Current logged in user:", identity.CurrentSession(r).Username)
 
 	if r.Method != "POST" {
 		log.Printf("Used the unsupported %v method", r.Method)

@@ -1,6 +1,7 @@
 package identity
 
 import (
+	"context"
 	"net/http"
 	"net/url"
 	"time"
@@ -20,6 +21,14 @@ type Session struct {
 	Username string
 	Expires  time.Time
 	Token    *jwt.Token
+}
+
+//CurrentSession get's the current session from the request context
+func CurrentSession(r *http.Request) (s Session) {
+	if rawsession := r.Context().Value("session"); rawsession != nil {
+		s = rawsession.(Session)
+	}
+	return
 }
 
 //IsExpired returns true if the session expired, false if not (or if the session is nil)
@@ -67,8 +76,9 @@ func Protect(clientID string, clientSecret string, handler http.Handler) http.Ha
 			redirectToOauthLogin(clientID, w, r)
 			return
 		}
-		//TODO: put session in the request context
-		handler.ServeHTTP(w, r)
+		//Add session to context
+		ctx := context.WithValue(r.Context(), "session", *s)
+		handler.ServeHTTP(w, r.WithContext(ctx))
 		return
 	})
 }
