@@ -69,9 +69,11 @@ func main() {
 			FileSystem: webdav.Dir("/dav"),
 			LockSystem: webdav.NewMemLS(),
 			Logger: func(r *http.Request, err error) {
-				log.Printf("WEBDAV: %v, ERROR: %v", r, err)
-				log.Println()
-				log.Printf("additional info: %v", r.Context())
+				log.Debug("WEBDAV")
+				if err != nil {
+					log.Errorf("WEBDAV: %v, ERROR: %v", r, err)
+					log.Warnf("additional info: %v", r.Context())
+				}
 			},
 		}
 		server.FileSystem.Mkdir(nil, "test", os.ModeDir)
