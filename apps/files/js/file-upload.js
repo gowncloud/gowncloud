@@ -390,12 +390,12 @@ OC.Upload = {
 					}
 
 					// end upload for whole selection on error
-					// if (data.errorThrown) {
-					// 	// trigger fileupload fail
-					// 	var fu = that.data('blueimp-fileupload') || that.data('fileupload');
-					// 	fu._trigger('fail', e, data);
-					// 	return false; //don't upload anything
-					// }
+					if (data.errorThrown) {
+						// trigger fileupload fail
+						var fu = that.data('blueimp-fileupload') || that.data('fileupload');
+						fu._trigger('fail', e, data);
+						return false; //don't upload anything
+					}
 
 					// check existing files when all is collected
 					if ( selection.uploads.length >= selection.filesToUpload ) {
