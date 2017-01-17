@@ -1610,9 +1610,10 @@
 			// first entry is the root
 			this.dirInfo = result.shift();
 
-			if (this.dirInfo.permissions) {
-				this.setDirectoryPermissions(this.dirInfo.permissions);
-			}
+			// TODO GOWNCLOUD: reactivate this when permissions are fixed
+			// if (this.dirInfo.permissions) {
+			// 	this.setDirectoryPermissions(this.dirInfo.permissions);
+			// }
 
 			result.sort(this._sortComparator);
 			this.setFiles(result);

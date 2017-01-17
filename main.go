@@ -63,10 +63,12 @@ func main() {
 
 		log.Infoln(app.Name, "version", app.Version)
 		// make the dir for uploaded files
+		// TODO: check if directory exists first. If it doesnt exist, make it
+		// TODO: use a better directory (at least not a relative path)
 		os.Mkdir("testdir", os.ModePerm)
 		server := webdav.Handler{
 			Prefix:     "/remote.php/webdav",
-			FileSystem: webdav.Dir("/dav"),
+			FileSystem: webdav.Dir("testdir"),
 			LockSystem: webdav.NewMemLS(),
 			Logger: func(r *http.Request, err error) {
 				log.Debug("WEBDAV")
@@ -76,9 +78,10 @@ func main() {
 				}
 			},
 		}
-		server.FileSystem.Mkdir(nil, "test", os.ModeDir)
-		server.FileSystem.OpenFile(nil, "test.txt", os.O_CREATE, os.ModeExclusive)
-		http.HandleFunc("/remote.php/webdav", server.ServeHTTP)
+		// TODO: Check if dav filesystem works as intended
+		// server.FileSystem.Mkdir(nil, "test", os.ModeDir)
+		// server.FileSystem.OpenFile(nil, "test/test.txt", os.O_CREATE, os.ModeAppend)
+		http.HandleFunc("/remote.php/webdav/", server.ServeHTTP)
 		http.HandleFunc("/index.php", func(w http.ResponseWriter, r *http.Request) {
 			http.ServeFile(w, r, "index.html")
 		})
