@@ -85,6 +85,11 @@ func main() {
 		http.HandleFunc("/index.php", func(w http.ResponseWriter, r *http.Request) {
 			http.ServeFile(w, r, "index.html")
 		})
+		http.HandleFunc("/logout", func(w http.ResponseWriter, r *http.Request) {
+			identity.ClearSession(w)
+			//TODO: make a decent logged out page since now you will be redirected to itsyou.online for login again
+			http.Redirect(w, r, "/", http.StatusFound)
+		})
 		http.Handle("/core/", http.StripPrefix("/core/", http.FileServer(http.Dir("core"))))
 		http.Handle("/apps/dav/", http.StripPrefix("/apps/dav/", http.FileServer(http.Dir("apps/dav"))))
 		http.Handle("/apps/federatedfilesharing/", http.StripPrefix("/apps/federatedfilesharing/", http.FileServer(http.Dir("apps/federatedfilesharing"))))
