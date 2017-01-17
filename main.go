@@ -5,9 +5,9 @@ import (
 	"os"
 
 	"github.com/codegangsta/cli"
-	"github.com/gorilla/handlers"
 	"github.com/gowncloud/gowncloud/apps/files/ajax"
 	"github.com/gowncloud/gowncloud/core/identity"
+	"github.com/gowncloud/gowncloud/core/logging"
 	"golang.org/x/net/webdav"
 
 	log "github.com/Sirupsen/logrus"
@@ -93,7 +93,7 @@ func main() {
 		http.HandleFunc("/index.php/apps/files/ajax/upload.php", files.Upload)
 
 		http.HandleFunc("/index.php/apps/files/ajax/getstoragestats.php", files.GetStorageStats)
-		if err := http.ListenAndServe(":8080", handlers.LoggingHandler(os.Stdout, identity.Protect(clientID, clientSecret, http.DefaultServeMux))); err != nil {
+		if err := http.ListenAndServe(":8080", identity.AddIdentity(logging.Handler(os.Stdout, identity.Protect(clientID, clientSecret, http.DefaultServeMux)))); err != nil {
 			log.Fatalf("server error: %v", nil)
 		}
 	}

@@ -37,6 +37,24 @@ func (s *Session) IsExpired() (expired bool) {
 	return
 }
 
+//AddIdentity add the current user session to the context, it is seperate from Protect to enable an identity aware logger to be inserted between the them
+func AddIdentity(handler http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		cookie, err := r.Cookie(cookieName)
+		if err == nil {
+			token := cookie.Value
+			s, err := verifyJWTToken(token)
+			if err == nil {
+				//Add session to context
+				ctx := context.WithValue(r.Context(), "session", *s)
+				handler.ServeHTTP(w, r.WithContext(ctx))
+				return
+			}
+		}
+		handler.ServeHTTP(w, r)
+	})
+}
+
 //Protect requires users to log using itsyou.online
 func Protect(clientID string, clientSecret string, handler http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -63,23 +81,12 @@ func Protect(clientID string, clientSecret string, handler http.Handler) http.Ha
 			http.Redirect(w, r, "/index.php", http.StatusFound)
 			return
 		}
-		cookie, err := r.Cookie(cookieName)
-		//No session
-		if err == http.ErrNoCookie {
+		s := CurrentSession(r)
+		if s.Username == "" || s.IsExpired() {
 			redirectToOauthLogin(clientID, w, r)
 			return
 		}
-		token := cookie.Value
-
-		s, err := verifyJWTToken(token)
-		if err != nil || s.IsExpired() {
-			redirectToOauthLogin(clientID, w, r)
-			return
-		}
-		//Add session to context
-		ctx := context.WithValue(r.Context(), "session", *s)
-		handler.ServeHTTP(w, r.WithContext(ctx))
-		return
+		handler.ServeHTTP(w, r)
 	})
 }
 
