@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"net/http"
 	"os"
 
@@ -91,40 +90,11 @@ func main() {
 		http.Handle("/index.php/", http.StripPrefix("/index.php/", http.FileServer(http.Dir("."))))
 		http.HandleFunc("/index.php/apps/files/ajax/upload.php", files.Upload)
 
-		http.HandleFunc("/index.php/apps/files/ajax/getstoragestats.php", func(w http.ResponseWriter, r *http.Request) {
-			log.Println("called storagestats")
-			//try to mock some json responses
-			data := &StorageStats{
-				Data: Data{
-					UploadMaxFileSize: 537919488,
-					MaxHumanFilesize:  "Upload (max. 513 MB)",
-					FreeSpace:         219945758720,
-					UsedSpacePercent:  0,
-					Owner:             "test",
-					OwnerDisplayName:  "test",
-				},
-				Status: "success",
-			}
-			json.NewEncoder(w).Encode(data)
-		})
+		http.HandleFunc("/index.php/apps/files/ajax/getstoragestats.php", files.GetStorageStats)
 		if err := http.ListenAndServe(":8080", handlers.LoggingHandler(os.Stdout, identity.Protect(clientID, clientSecret, http.DefaultServeMux))); err != nil {
 			log.Fatalf("server error: %v", nil)
 		}
 	}
 
 	app.Run(os.Args)
-}
-
-type Data struct {
-	UploadMaxFileSize int
-	MaxHumanFilesize  string
-	FreeSpace         int64
-	UsedSpacePercent  int
-	Owner             string
-	OwnerDisplayName  string
-}
-
-type StorageStats struct {
-	Data   Data
-	Status string
 }

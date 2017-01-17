@@ -3,11 +3,12 @@ package files
 import (
 	"encoding/json"
 	"io"
-	"log"
 	"math/rand"
 	"net/http"
 	"os"
 	"time"
+
+	log "github.com/Sirupsen/logrus"
 )
 
 type UploadResponse struct {
@@ -28,7 +29,7 @@ type UploadResponse struct {
 }
 
 func Upload(w http.ResponseWriter, r *http.Request) {
-	log.Printf("called files/ajax/upload.php")
+	log.Debug("called files/ajax/upload.php")
 
 	if r.Method != "POST" {
 		log.Printf("Used the unsupported %v method", r.Method)
@@ -50,38 +51,38 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 			// Open the upload file
 			upload, err := file.Open()
 			if err != nil {
-				log.Printf("failed to open upload file: %v", file.Filename)
+				log.Errorf("failed to open upload file: %v", file.Filename)
 				w.WriteHeader(http.StatusInternalServerError)
 				return
 			}
 			// Create the upload target
 			target, err := os.Create("testdir/" + file.Filename)
 			if err != nil {
-				log.Printf("failed to open target file: %v", "testdir/"+file.Filename)
+				log.Errorf("failed to open target file: %v", "testdir/"+file.Filename)
 				w.WriteHeader(http.StatusInternalServerError)
 				return
 			}
 			// Buffered copy
 			written, err := io.Copy(target, upload)
 			if err != nil {
-				log.Printf("failed to copy upload file")
+				log.Errorf("failed to copy upload file")
 				// TODO: clean up target
 				w.WriteHeader(http.StatusInternalServerError)
 				return
 			}
-			log.Printf("copied %v bytes", written)
+			log.Debug("copied %v bytes", written)
 
 			targetStats, err := target.Stat()
 			if err != nil {
-				log.Printf("failed to get stats")
+				log.Error("failed to get stats")
 				w.WriteHeader(http.StatusInternalServerError)
 				return
 			}
 			// Create the response
 			data := UploadResponse{
 				Directory:         "/",
-				Etag:              "adfafdlasdfafdsaf", // TODO: figure this out
-				Id:                rand.Int(),          // TODO: same here
+				Etag:              "adfafdlasdfafdsaf", // TODO: need database support?
+				Id:                rand.Int(),          // TODO: need database support?
 				MaxHumanFilesize:  "512MB",
 				Mimetype:          file.Header.Get("mimetype"),
 				Mtime:             int64(time.Now().Unix()) * 1000, // the upload time aka Now
