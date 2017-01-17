@@ -8,17 +8,17 @@ import (
 )
 
 type Data struct {
-	UploadMaxFileSize int
-	MaxHumanFilesize  string
-	FreeSpace         int64
-	UsedSpacePercent  int
-	Owner             string
-	OwnerDisplayName  string
+	UploadMaxFileSize int    `json:"uploadMaxFilesize"`
+	MaxHumanFilesize  string `json:"maxHumanFilesize"`
+	FreeSpace         int64  `json:"freeSpace"`
+	UsedSpacePercent  int    `json:"usedSpacePercent"`
+	Owner             string `json:"owner"`
+	OwnerDisplayName  string `json:"ownerDisplayName"`
 }
 
 type StorageStats struct {
-	Data   Data
-	Status string
+	Data   Data   `json:"data"`
+	Status string `json:"status"`
 }
 
 func GetStorageStats(w http.ResponseWriter, r *http.Request) {
