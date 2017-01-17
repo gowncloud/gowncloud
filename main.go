@@ -82,8 +82,10 @@ func main() {
 		// server.FileSystem.Mkdir(nil, "test", os.ModeDir)
 		// server.FileSystem.OpenFile(nil, "test/test.txt", os.O_CREATE, os.ModeAppend)
 		http.HandleFunc("/remote.php/webdav/", server.ServeHTTP)
+
 		http.HandleFunc("/index.php", func(w http.ResponseWriter, r *http.Request) {
-			http.ServeFile(w, r, "index.html")
+			s := identity.CurrentSession(r)
+			renderTemplate(w, "index.html", &s)
 		})
 		http.HandleFunc("/logout", func(w http.ResponseWriter, r *http.Request) {
 			identity.ClearSession(w)

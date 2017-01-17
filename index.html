@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html class="ng-csp" data-placeholder-focus="false" lang="en" >
-	<head data-user="lee" data-user-displayname="lee" data-requesttoken="cjUBXC0dejcoAVUfJRcODgodF1o4OzhjABtdHBwjU38=:Fbm+Wt2YQ7dfPndGgPA2rKSPnw633Dx72ZSGP8nSeRM=">
+	<head data-user="{{ .Username }}" data-user-displayname="{{ .Username }}" data-requesttoken="cjUBXC0dejcoAVUfJRcODgodF1o4OzhjABtdHBwjU38=:Fbm+Wt2YQ7dfPndGgPA2rKSPnw633Dx72ZSGP8nSeRM=">
 		<meta charset="utf-8">
 		<title>
 			Files - gownCloud		</title>
@@ -142,7 +142,7 @@
 				<div id="expand" tabindex="6" role="link" class="menutoggle">
 										<div class="avatardiv" style="display: none">
 											</div>
-										<span id="expandDisplayName">lee</span>
+										<span id="expandDisplayName">{{ .Username }}</span>
 					<img class="svg" alt="" src="/core/img/actions/caret.svg">
 				</div>
 				<div id="expanddiv">
@@ -596,8 +596,8 @@
 <!-- config hints for javascript -->
 <input type="hidden" name="filesApp" id="filesApp" value="1" />
 <input type="hidden" name="usedSpacePercent" id="usedSpacePercent" value="0" />
-<input type="hidden" name="owner" id="owner" value="lee" />
-<input type="hidden" name="ownerDisplayName" id="ownerDisplayName" value="lee" />
+<input type="hidden" name="owner" id="owner" value="{{ .Username }}" />
+<input type="hidden" name="ownerDisplayName" id="ownerDisplayName" value="{{ .Username }}" />
 <input type="hidden" name="fileNotFound" id="fileNotFound" value="0" />
 <input type="hidden" name="mailNotificationEnabled" id="mailNotificationEnabled" value="no" />
 <input type="hidden" name="mailPublicNotificationEnabled" id="mailPublicNotificationEnabled" value="no" />
