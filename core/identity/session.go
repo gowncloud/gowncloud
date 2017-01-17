@@ -1,4 +1,4 @@
-package oauth
+package identity
 
 import (
 	"net/http"
@@ -23,9 +23,9 @@ type Session struct {
 }
 
 //IsExpired returns true if the session expired, false if not (or if the session is nil)
-func (s *Session) IsExpired() bool {
-	//TODO
-	return false
+func (s *Session) IsExpired() (expired bool) {
+	expired = !(s != nil && time.Now().Before(s.Expires))
+	return
 }
 
 //Protect requires users to log using itsyou.online

@@ -1,4 +1,4 @@
-package oauth
+package identity
 
 import (
 	"crypto/ecdsa"

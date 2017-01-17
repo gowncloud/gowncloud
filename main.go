@@ -8,7 +8,7 @@ import (
 	"github.com/codegangsta/cli"
 	"github.com/gorilla/handlers"
 	"github.com/gowncloud/gowncloud/apps/files/ajax"
-	"github.com/gowncloud/gowncloud/core/oauth"
+	"github.com/gowncloud/gowncloud/core/identity"
 	"golang.org/x/net/webdav"
 
 	log "github.com/Sirupsen/logrus"
@@ -107,7 +107,7 @@ func main() {
 			}
 			json.NewEncoder(w).Encode(data)
 		})
-		if err := http.ListenAndServe(":8080", handlers.LoggingHandler(os.Stdout, oauth.Protect(clientID, clientSecret, http.DefaultServeMux))); err != nil {
+		if err := http.ListenAndServe(":8080", handlers.LoggingHandler(os.Stdout, identity.Protect(clientID, clientSecret, http.DefaultServeMux))); err != nil {
 			log.Fatalf("server error: %v", nil)
 		}
 	}
