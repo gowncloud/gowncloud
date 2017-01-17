@@ -114,10 +114,11 @@ func startSession(w http.ResponseWriter, s *Session) {
 
 func setCookie(code string, expires time.Time, w http.ResponseWriter) {
 	cookie := http.Cookie{
-		Name:    cookieName,
-		Value:   code,
-		Path:    "/",
-		Expires: expires,
+		Name:     cookieName,
+		Value:    code,
+		Path:     "/",
+		Expires:  expires,
+		HttpOnly: true,
 	}
 	http.SetCookie(w, &cookie)
 }
