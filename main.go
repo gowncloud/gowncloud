@@ -36,7 +36,7 @@ func main() {
 		cli.StringFlag{
 			Name:        "bind, b",
 			Usage:       "Bind address",
-			Value:       ":8443",
+			Value:       ":8080",
 			Destination: &bindAddress,
 		},
 		cli.StringFlag{
@@ -103,7 +103,7 @@ func main() {
 		http.HandleFunc("/index.php/apps/files/ajax/upload.php", files.Upload)
 
 		http.HandleFunc("/index.php/apps/files/ajax/getstoragestats.php", files.GetStorageStats)
-		if err := http.ListenAndServe(":8080", identity.AddIdentity(logging.Handler(os.Stdout, identity.Protect(clientID, clientSecret, http.DefaultServeMux)))); err != nil {
+		if err := http.ListenAndServe(bindAddress, identity.AddIdentity(logging.Handler(os.Stdout, identity.Protect(clientID, clientSecret, http.DefaultServeMux)))); err != nil {
 			log.Fatalf("server error: %v", nil)
 		}
 	}
