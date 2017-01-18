@@ -46,6 +46,10 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	dir := r.PostForm.Get("dir")
+	targetdir := "testdir" + dir
+	log.Debug("target directory: ", targetdir)
+
 	body := []UploadResponse{}
 
 	for _, fileHeaders := range r.MultipartForm.File {
@@ -58,16 +62,17 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			// Create the upload target
-			target, err := os.Create("testdir/" + file.Filename)
+			target, err := os.Create(targetdir + "/" + file.Filename)
 			if err != nil {
-				log.Errorf("failed to open target file: %v", "testdir/"+file.Filename)
+				log.Errorf("failed to open target file: %v", targetdir+file.Filename)
 				w.WriteHeader(http.StatusInternalServerError)
 				return
 			}
+			log.Debug("target file: ", target.Name())
 			// Buffered copy
 			written, err := io.Copy(target, upload)
 			if err != nil {
-				log.Errorf("failed to copy upload file")
+				log.Error("failed to copy upload file")
 				// TODO: clean up target
 				w.WriteHeader(http.StatusInternalServerError)
 				return
@@ -82,16 +87,16 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 			}
 			// Create the response
 			data := UploadResponse{
-				Directory:         "/",
-				Etag:              "adfafdlasdfafdsaf", // TODO: need database support?
+				Directory:         dir,
+				Etag:              "adfafdlasdfafdsaf", // TODO: send upload through webdav
 				Id:                rand.Int(),          // TODO: need database support?
 				MaxHumanFilesize:  "512MB",
-				Mimetype:          file.Header.Get("mimetype"),
+				Mimetype:          file.Header.Get("Content-Type"),
 				Mtime:             int64(time.Now().Unix()) * 1000, // the upload time aka Now
-				Name:              target.Name(),
+				Name:              file.Filename,
 				Originalname:      file.Filename,
 				ParentId:          2,
-				Permissions:       27,
+				Permissions:       31,
 				Size:              int(targetStats.Size()), // cast to int should be removed if we allow files bigger than 2GB
 				Status:            "success",
 				Sort:              "file",
@@ -101,6 +106,6 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(body)
 }
