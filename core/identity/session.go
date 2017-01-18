@@ -66,6 +66,7 @@ func Protect(clientID string, clientSecret string, handler http.Handler) http.Ha
 			token, err := getJWTToken(code, clientID, clientSecret, r)
 			if err != nil {
 				//TODO: handle more gracefully than this
+				log.Debugln("Error getting a jwt token:", err)
 				http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 				return
 			}
