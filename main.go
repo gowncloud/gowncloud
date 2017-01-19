@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/codegangsta/cli"
+	dav "github.com/gowncloud/gowncloud/apps/dav/middleware"
 	"github.com/gowncloud/gowncloud/apps/files/ajax"
 	"github.com/gowncloud/gowncloud/core/identity"
 	"github.com/gowncloud/gowncloud/core/logging"
@@ -81,7 +82,7 @@ func main() {
 		// TODO: Check if dav filesystem works as intended
 		// server.FileSystem.Mkdir(nil, "test", os.ModeDir)
 		// server.FileSystem.OpenFile(nil, "test/test.txt", os.O_CREATE, os.ModeAppend)
-		http.HandleFunc("/remote.php/webdav/", server.ServeHTTP)
+		http.Handle("/remote.php/webdav/", dav.GetAdapter(dav.PropFindAdapter(server.ServeHTTP)))
 
 		http.HandleFunc("/index.php", func(w http.ResponseWriter, r *http.Request) {
 			s := identity.CurrentSession(r)
