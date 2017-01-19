@@ -4,6 +4,21 @@
 	"GodepVersion": "v77",
 	"Deps": [
 		{
+			"ImportPath": "github.com/Sirupsen/logrus",
+			"Comment": "v0.11.0-35-g61e43dc",
+			"Rev": "61e43dc76f7ee59a82bdf3d71033dc12bea4c77d"
+		},
+		{
+			"ImportPath": "github.com/codegangsta/cli",
+			"Comment": "v1.19.1",
+			"Rev": "0bdeddeeb0f650497d603c4ad7b20cfe685682f6"
+		},
+		{
+			"ImportPath": "github.com/dgrijalva/jwt-go",
+			"Comment": "v3.0.0-12-ga601269",
+			"Rev": "a601269ab70c205d26370c16f7c81e9017c14e04"
+		},
+		{
 			"ImportPath": "golang.org/x/net/context",
 			"Rev": "69d4b8aa71caaaa75c3dfc11211d1be495abec7c"
 		},
@@ -14,6 +29,10 @@
 		{
 			"ImportPath": "golang.org/x/net/webdav/internal/xml",
 			"Rev": "69d4b8aa71caaaa75c3dfc11211d1be495abec7c"
+		},
+		{
+			"ImportPath": "golang.org/x/sys/unix",
+			"Rev": "d75a52659825e75fff6158388dddc6a5b04f9ba5"
 		}
 	]
 }
