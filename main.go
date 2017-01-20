@@ -5,11 +5,11 @@ import (
 	"os"
 
 	"github.com/codegangsta/cli"
-	dav "github.com/gowncloud/gowncloud/apps/dav/middleware"
+
+	"github.com/gowncloud/gowncloud/apps/dav"
 	"github.com/gowncloud/gowncloud/apps/files/ajax"
 	"github.com/gowncloud/gowncloud/core/identity"
 	"github.com/gowncloud/gowncloud/core/logging"
-	"golang.org/x/net/webdav"
 
 	log "github.com/Sirupsen/logrus"
 )
@@ -67,22 +67,11 @@ func main() {
 		// TODO: check if directory exists first. If it doesnt exist, make it
 		// TODO: use a better directory (at least not a relative path)
 		os.Mkdir("testdir", os.ModePerm)
-		server := webdav.Handler{
-			Prefix:     "/remote.php/webdav",
-			FileSystem: webdav.Dir("testdir"),
-			LockSystem: webdav.NewMemLS(),
-			Logger: func(r *http.Request, err error) {
-				log.Debug("WEBDAV")
-				if err != nil {
-					log.Errorf("WEBDAV: %v, ERROR: %v", r, err)
-					log.Warnf("additional info: %v", r.Context())
-				}
-			},
-		}
+		server := dav.NewCustomOCDav("testdir")
 		// TODO: Check if dav filesystem works as intended
 		// server.FileSystem.Mkdir(nil, "test", os.ModeDir)
 		// server.FileSystem.OpenFile(nil, "test/test.txt", os.O_CREATE, os.ModeAppend)
-		http.Handle("/remote.php/webdav/", dav.GetAdapter(dav.PropFindAdapter(server.ServeHTTP)))
+		http.Handle("/remote.php/webdav/", server.DispatchRequest())
 
 		http.HandleFunc("/index.php", func(w http.ResponseWriter, r *http.Request) {
 			s := identity.CurrentSession(r)
