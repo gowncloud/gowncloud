@@ -378,7 +378,6 @@ OC.Upload = {
 					}
 
 					// check free space
-					console.log("check free space")
 					freeSpace = $('#free_space').val();
 					if (freeSpace >= 0 && selection.totalBytes > freeSpace) {
 						data.textStatus = 'notenoughspace';

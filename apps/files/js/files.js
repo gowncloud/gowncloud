@@ -60,7 +60,6 @@
 			}
 			if (response.data !== undefined && response.data.uploadMaxFilesize !== undefined) {
 				$('#max_upload').val(response.data.uploadMaxFilesize);
-				console.log("called free space");
 				$('#free_space').val(response.data.freeSpace);
 				$('#upload.button').attr('data-original-title', response.data.maxHumanFilesize);
 				$('#usedSpacePercent').val(response.data.usedSpacePercent);
