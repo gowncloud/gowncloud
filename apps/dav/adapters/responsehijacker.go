@@ -2,6 +2,9 @@ package ocdavadapters
 
 import "net/http"
 
+// responseHijacker implements the http.ResponseWriter interface. Rather than sending
+// the data to the client, it buffers said data to allow later manipulation before
+// sending
 type responseHijacker struct {
 	writer  http.ResponseWriter
 	status  int

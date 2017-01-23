@@ -47,8 +47,10 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	}
 
 	dir := r.PostForm.Get("dir")
-	targetdir := "testdir" + dir
+	targetdir := "testdir/" + identity.CurrentSession(r).Username + dir
 	log.Debug("target directory: ", targetdir)
+	// TODO: check if exists and handle errors
+	os.Mkdir(targetdir, os.ModePerm)
 
 	body := []UploadResponse{}
 

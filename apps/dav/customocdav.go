@@ -49,8 +49,12 @@ func (dav *CustomOCDav) DispatchRequest() http.Handler {
 		// 	log.Error("could not get the session")
 		// }
 		switch r.Method {
+		case "DELETE":
+			ocdavadapters.DeleteAdapter(dav.dav.ServeHTTP, w, r)
 		case "GET":
 			ocdavadapters.GetAdapter(dav.dav.ServeHTTP, w, r)
+		case "MKCOL":
+			ocdavadapters.MkcolAdapter(dav.dav.ServeHTTP, w, r)
 		case "PROPFIND":
 			ocdavadapters.PropFindAdapter(dav.dav.ServeHTTP, w, r)
 		default:

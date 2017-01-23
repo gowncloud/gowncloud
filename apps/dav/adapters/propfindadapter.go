@@ -19,15 +19,7 @@ const (
 // the datastore
 func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Request) {
 
-	if r.Method != "PROPFIND" {
-		handler.ServeHTTP(w, r)
-		return
-	}
-
-	_, ok := r.Context().Value("session").(identity.Session)
-	if !ok {
-		log.Error("could not get the session")
-	}
+	r.URL.Path = strings.Replace(r.URL.Path, "/remote.php/webdav", "/remote.php/webdav/"+identity.CurrentSession(r).Username, 1)
 
 	log.Debug("request body: ", r.Body)
 	log.Debug("request headers: ", r.Header)
@@ -50,6 +42,14 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 	// so parse the result manually. This should be changed at a later date to just selecting
 	// the required nodes with one Xpath query
 	responses := xmldoc.FindElements("//response")
+
+	// Remove the user folder from the href nodes
+	for _, response := range responses {
+		for _, href := range response.SelectElements("href") {
+			tmp := strings.Replace(href.Text(), "/remote.php/webdav/"+identity.CurrentSession(r).Username, "/remote.php/webdav/", 1)
+			href.SetText(strings.Replace(tmp, "//", "/", 1))
+		}
+	}
 
 	// Seperate file and folder responses.
 	folderResponses := []*etree.Element{}
