@@ -2,6 +2,7 @@ package dav
 
 import (
 	"net/http"
+	"os"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/gowncloud/gowncloud/apps/dav/adapters"
@@ -44,10 +45,6 @@ func NewCustomOCDav(path string) *CustomOCDav {
 func (dav *CustomOCDav) DispatchRequest() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		log.Debug("Method: ", r.Method)
-		// session, ok := r.Context().Value("session").(identity.Session)
-		// if !ok {
-		// 	log.Error("could not get the session")
-		// }
 		switch r.Method {
 		case "DELETE":
 			ocdavadapters.DeleteAdapter(dav.dav.ServeHTTP, w, r)
@@ -61,4 +58,10 @@ func (dav *CustomOCDav) DispatchRequest() http.Handler {
 			dav.dav.ServeHTTP(w, r)
 		}
 	})
+}
+
+// MakeUserHomeDirectory creates the home directory for a user. The folder name is
+// the username, and its parent folder is the webdavroot
+func (dav *CustomOCDav) MakeUserHomeDirectory(username string) error {
+	return os.Mkdir(dav.filePathRoot+"/"+username, os.ModePerm)
 }

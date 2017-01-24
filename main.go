@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"net/url"
 	"os"
 
 	"github.com/codegangsta/cli"
@@ -12,6 +13,8 @@ import (
 	"github.com/gowncloud/gowncloud/core/logging"
 
 	log "github.com/Sirupsen/logrus"
+
+	db "github.com/gowncloud/gowncloud/database"
 )
 
 var version string
@@ -27,6 +30,7 @@ func main() {
 	var debugLogging bool
 	var bindAddress string
 	var clientID, clientSecret string
+	var dburl string
 
 	app.Flags = []cli.Flag{
 		cli.BoolFlag{
@@ -50,6 +54,11 @@ func main() {
 			Usage:       "OAuth2 client secret",
 			Destination: &clientSecret,
 		},
+		cli.StringFlag{
+			Name:        "databaseurl, db",
+			Usage:       "Database connection url",
+			Destination: &dburl,
+		},
 	}
 
 	app.Before = func(c *cli.Context) error {
@@ -63,6 +72,17 @@ func main() {
 	app.Action = func(c *cli.Context) {
 
 		log.Infoln(app.Name, "version", app.Version)
+
+		// init database connection
+		parsedDbUrl, err := url.Parse(dburl)
+		if err != nil {
+			log.Fatal("failed to parse database url: ", err)
+		}
+
+		db.Connect("postgres", parsedDbUrl.String())
+		defer db.Close()
+		db.Initialize()
+
 		// make the dir for uploaded files
 		// TODO: check if directory exists first. If it doesnt exist, make it
 		// TODO: use a better directory (at least not a relative path)
@@ -93,7 +113,9 @@ func main() {
 		http.HandleFunc("/index.php/apps/files/ajax/upload.php", files.Upload)
 
 		http.HandleFunc("/index.php/apps/files/ajax/getstoragestats.php", files.GetStorageStats)
-		if err := http.ListenAndServe(bindAddress, identity.AddIdentity(logging.Handler(os.Stdout, identity.Protect(clientID, clientSecret, http.DefaultServeMux)))); err != nil {
+		loginCallbacks := make([]identity.LoginCallback, 0)
+		loginCallbacks = append(loginCallbacks, server.MakeUserHomeDirectory)
+		if err := http.ListenAndServe(bindAddress, identity.AddIdentity(logging.Handler(os.Stdout, identity.Protect(clientID, clientSecret, http.DefaultServeMux, loginCallbacks)))); err != nil {
 			log.Fatalf("server error: %v", nil)
 		}
 	}
