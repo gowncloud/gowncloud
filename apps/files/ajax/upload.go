@@ -110,7 +110,7 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 				Originalname:      file.Filename,
 				ParentId:          2,
 				Permissions:       31,
-				Size:              int(targetStats.Size()), // cast to int should be removed if we allow files bigger than 2GB
+				Size:              int(targetStats.Size()),
 				Status:            "success",
 				Sort:              "file",
 				UploadMaxFilesize: 2 << 28,

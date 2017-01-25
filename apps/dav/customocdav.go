@@ -6,6 +6,7 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/gowncloud/gowncloud/apps/dav/adapters"
+	db "github.com/gowncloud/gowncloud/database"
 	"golang.org/x/net/webdav"
 )
 
@@ -53,7 +54,7 @@ func (dav *CustomOCDav) DispatchRequest() http.Handler {
 		case "MKCOL":
 			ocdavadapters.MkcolAdapter(dav.dav.ServeHTTP, w, r)
 		case "PROPFIND":
-			ocdavadapters.PropFindAdapter(dav.dav.ServeHTTP, w, r)
+			ocdavadapters.PropFindAdapter(dav.dav.ServeHTTP, w, r, dav.filePathRoot)
 		default:
 			dav.dav.ServeHTTP(w, r)
 		}
@@ -63,5 +64,10 @@ func (dav *CustomOCDav) DispatchRequest() http.Handler {
 // MakeUserHomeDirectory creates the home directory for a user. The folder name is
 // the username, and its parent folder is the webdavroot
 func (dav *CustomOCDav) MakeUserHomeDirectory(username string) error {
+	_, err := db.SaveNode(username, username, true)
+	if err != nil {
+		log.Errorf("Failed to make home directory for user %v: %v", username, err)
+		return err
+	}
 	return os.Mkdir(dav.filePathRoot+"/"+username, os.ModePerm)
 }
