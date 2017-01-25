@@ -39,7 +39,7 @@ func Connect(driver, databaseurl string) {
 		time.Sleep(5 * time.Second)
 	}
 
-	log.Info("connected to database")
+	log.Info("Connected to database")
 }
 
 func Initialize() {
@@ -52,7 +52,7 @@ func Initialize() {
 		return
 	}
 
-	log.Info("initializing database")
+	log.Info("Initializing database")
 	_, err := db.Exec("CREATE DATABASE IF NOT EXISTS gowncloud")
 	if err != nil {
 		log.Fatal("Failed to create gowncloud database: ", err)
@@ -61,6 +61,7 @@ func Initialize() {
 	initSettings()
 
 	initUsers()
+	initNodes()
 
 	initialized = true
 	log.Info("Database initialized")

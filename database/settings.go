@@ -33,7 +33,7 @@ func initSettings() {
 		makeDefaultSettings()
 	}
 
-	log.Debug("initialized 'settings' table")
+	log.Debug("Initialized 'settings' table")
 }
 
 func GetDefaultAllowedSpace() int {

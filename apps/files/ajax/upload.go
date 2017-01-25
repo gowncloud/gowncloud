@@ -3,13 +3,13 @@ package files
 import (
 	"encoding/json"
 	"io"
-	"math/rand"
 	"net/http"
 	"os"
 	"time"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/gowncloud/gowncloud/core/identity"
+	db "github.com/gowncloud/gowncloud/database"
 )
 
 type UploadResponse struct {
@@ -30,8 +30,8 @@ type UploadResponse struct {
 }
 
 func Upload(w http.ResponseWriter, r *http.Request) {
-	log.Debug("called files/ajax/upload.php")
-	log.Println("Current logged in user:", identity.CurrentSession(r).Username)
+	username := identity.CurrentSession(r).Username
+	log.Println("Current logged in user:", username)
 
 	if r.Method != "POST" {
 		log.Printf("Used the unsupported %v method", r.Method)
@@ -47,7 +47,7 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	}
 
 	dir := r.PostForm.Get("dir")
-	targetdir := "testdir/" + identity.CurrentSession(r).Username + dir
+	targetdir := "testdir/" + username + dir
 	log.Debug("target directory: ", targetdir)
 	// TODO: check if exists and handle errors
 	os.Mkdir(targetdir, os.ModePerm)
@@ -59,14 +59,14 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 			// Open the upload file
 			upload, err := file.Open()
 			if err != nil {
-				log.Errorf("failed to open upload file: %v", file.Filename)
+				log.Errorf("Failed to open upload file: %v", file.Filename)
 				w.WriteHeader(http.StatusInternalServerError)
 				return
 			}
 			// Create the upload target
 			target, err := os.Create(targetdir + "/" + file.Filename)
 			if err != nil {
-				log.Errorf("failed to open target file: %v", targetdir+file.Filename)
+				log.Errorf("Failed to open target file: %v", targetdir+"/"+file.Filename)
 				w.WriteHeader(http.StatusInternalServerError)
 				return
 			}
@@ -74,7 +74,7 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 			// Buffered copy
 			written, err := io.Copy(target, upload)
 			if err != nil {
-				log.Error("failed to copy upload file")
+				log.Error("Failed to copy upload file")
 				// TODO: clean up target
 				w.WriteHeader(http.StatusInternalServerError)
 				return
@@ -83,7 +83,18 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 
 			targetStats, err := target.Stat()
 			if err != nil {
-				log.Error("failed to get stats")
+				log.Error("Failed to get stats")
+				w.WriteHeader(http.StatusInternalServerError)
+				return
+			}
+			dbFileName := username
+			if dir != "/" {
+				dbFileName += dir
+			}
+			dbFileName += "/" + file.Filename
+			node, err := db.SaveNode(dbFileName, username, false)
+			if err != nil {
+				log.Error("Failed to save node in database")
 				w.WriteHeader(http.StatusInternalServerError)
 				return
 			}
@@ -91,7 +102,7 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 			data := UploadResponse{
 				Directory:         dir,
 				Etag:              "adfafdlasdfafdsaf", // TODO: send upload through webdav
-				Id:                rand.Int(),          // TODO: need database support?
+				Id:                node.ID,             // TODO: need database support?
 				MaxHumanFilesize:  "512MB",
 				Mimetype:          file.Header.Get("Content-Type"),
 				Mtime:             int64(time.Now().Unix()) * 1000, // the upload time aka Now
@@ -102,7 +113,7 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 				Size:              int(targetStats.Size()), // cast to int should be removed if we allow files bigger than 2GB
 				Status:            "success",
 				Sort:              "file",
-				UploadMaxFilesize: 2 << 29,
+				UploadMaxFilesize: 2 << 28,
 			}
 			body = append(body, data)
 		}
