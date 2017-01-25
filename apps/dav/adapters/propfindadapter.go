@@ -21,8 +21,6 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 
 	r.URL.Path = strings.Replace(r.URL.Path, "/remote.php/webdav", "/remote.php/webdav/"+identity.CurrentSession(r).Username, 1)
 
-	log.Debug("request body: ", r.Body)
-	log.Debug("request headers: ", r.Header)
 	rh := newResponseHijacker(w)
 	handler.ServeHTTP(rh, r)
 
