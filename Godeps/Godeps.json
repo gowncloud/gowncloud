@@ -9,6 +9,10 @@
 			"Rev": "61e43dc76f7ee59a82bdf3d71033dc12bea4c77d"
 		},
 		{
+			"ImportPath": "github.com/beevik/etree",
+			"Rev": "4cd0dd976db869f817248477718071a28e978df0"
+		},
+		{
 			"ImportPath": "github.com/codegangsta/cli",
 			"Comment": "v1.19.1",
 			"Rev": "0bdeddeeb0f650497d603c4ad7b20cfe685682f6"
@@ -17,6 +21,32 @@
 			"ImportPath": "github.com/dgrijalva/jwt-go",
 			"Comment": "v3.0.0-12-ga601269",
 			"Rev": "a601269ab70c205d26370c16f7c81e9017c14e04"
+		},
+		{
+			"ImportPath": "github.com/disintegration/imaging",
+			"Rev": "243d2d8673c1225a6afceeb9b3b4423d485dc8df"
+		},
+		{
+			"ImportPath": "github.com/lib/pq",
+			"Comment": "go1.0-cutoff-141-g8df6253",
+			"Rev": "8df6253d1317616f36b0c3740eb30c239a7372cb"
+		},
+		{
+			"ImportPath": "github.com/lib/pq/oid",
+			"Comment": "go1.0-cutoff-141-g8df6253",
+			"Rev": "8df6253d1317616f36b0c3740eb30c239a7372cb"
+		},
+		{
+			"ImportPath": "golang.org/x/image/bmp",
+			"Rev": "83686c547965220f8b5d75e83ddc67d73420a89f"
+		},
+		{
+			"ImportPath": "golang.org/x/image/tiff",
+			"Rev": "83686c547965220f8b5d75e83ddc67d73420a89f"
+		},
+		{
+			"ImportPath": "golang.org/x/image/tiff/lzw",
+			"Rev": "83686c547965220f8b5d75e83ddc67d73420a89f"
 		},
 		{
 			"ImportPath": "golang.org/x/net/context",
