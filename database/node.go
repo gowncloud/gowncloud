@@ -70,3 +70,17 @@ func DeleteNode(path string) error {
 	}
 	return nil
 }
+
+// NodeExists checks if a node for the given path exists in the database. returns
+// true a node is found, false otherwise. If an error occurs, false is returned
+// together with an error
+func NodeExists(path string) (bool, error) {
+	row := db.QueryRow("SELECT EXISTS (SELECT 1 FROM gowncloud.nodes WHERE path = $1)", path)
+	var exists bool
+	err := row.Scan(&exists)
+	if err != nil && err != sql.ErrNoRows {
+		log.Error("Failed to get node from database")
+		return false, ErrDB
+	}
+	return exists, nil
+}
