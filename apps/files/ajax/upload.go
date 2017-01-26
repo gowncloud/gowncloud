@@ -227,9 +227,14 @@ func uploadDirectory(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 
+			dirName := dir
+			if dirName != "/" {
+				dirName += "/"
+			}
+			dirName += fileDirectory
 			// Create the response
 			data := UploadResponse{
-				Directory:         dir + "/" + fileDirectory,
+				Directory:         dirName,
 				Etag:              "adfafdlasdfafdsaf", // TODO: send upload through webdav
 				Id:                node.ID,
 				MaxHumanFilesize:  "512MB",
