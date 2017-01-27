@@ -69,5 +69,5 @@ func (dav *CustomOCDav) MakeUserHomeDirectory(username string) error {
 		log.Errorf("Failed to make home directory for user %v: %v", username, err)
 		return err
 	}
-	return os.Mkdir(dav.filePathRoot+"/"+username, os.ModePerm)
+	return os.Mkdir(dav.filePathRoot+username, os.ModePerm)
 }

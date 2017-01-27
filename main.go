@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strings"
 
 	"github.com/codegangsta/cli"
 
@@ -31,6 +32,7 @@ func main() {
 	var bindAddress string
 	var clientID, clientSecret string
 	var dburl string
+	var davroot string
 
 	app.Flags = []cli.Flag{
 		cli.BoolFlag{
@@ -59,6 +61,11 @@ func main() {
 			Usage:       "Database connection url",
 			Destination: &dburl,
 		},
+		cli.StringFlag{
+			Name:        "dav-directory, dir",
+			Usage:       "Dav root directory",
+			Destination: &davroot,
+		},
 	}
 
 	app.Before = func(c *cli.Context) error {
@@ -83,14 +90,32 @@ func main() {
 		defer db.Close()
 		db.Initialize()
 
-		// make the dir for uploaded files
-		// TODO: check if directory exists first. If it doesnt exist, make it
-		// TODO: use a better directory (at least not a relative path)
-		os.Mkdir("testdir", os.ModePerm)
-		server := dav.NewCustomOCDav("testdir")
-		// TODO: Check if dav filesystem works as intended
-		// server.FileSystem.Mkdir(nil, "test", os.ModeDir)
-		// server.FileSystem.OpenFile(nil, "test/test.txt", os.O_CREATE, os.ModeAppend)
+		// If the data-directory flag isn't set, use the previous or default directory
+		if davroot == "" {
+			davroot = db.GetSetting(db.DAV_ROOT)
+		}
+
+		// If the data-directory flag is set, but the user didn't end with a '/', append it
+		// to maintain consistency
+		if !strings.HasSuffix(davroot, "/") {
+			davroot += "/"
+		}
+
+		// If the data-directory flag specifies another directory than the previously
+		// used one or the default directory on first run, update the database to pointer
+		// to this new directory
+		if db.GetSetting(db.DAV_ROOT) != davroot {
+			db.UpdateSetting(db.DAV_ROOT, davroot)
+		}
+
+		// make the dav root dir
+		os.MkdirAll(davroot, os.ModePerm)
+		if err != nil {
+			log.Fatal("Failed to create dav root directory")
+		}
+
+		server := dav.NewCustomOCDav(davroot)
+
 		http.Handle("/remote.php/webdav/", server.DispatchRequest())
 
 		http.HandleFunc("/index.php", func(w http.ResponseWriter, r *http.Request) {

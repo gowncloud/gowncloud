@@ -1,3 +1,4 @@
 gowncloud
 *.php
 testdir
+gowncloud-data

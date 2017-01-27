@@ -55,7 +55,7 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	}
 
 	dir := r.PostForm.Get("dir")
-	targetdir := "testdir/" + username
+	targetdir := db.GetSetting(db.DAV_ROOT) + username
 	if dir != "/" {
 		targetdir += dir
 	}
@@ -165,7 +165,7 @@ func uploadDirectory(w http.ResponseWriter, r *http.Request) {
 
 	for i := len(nodesToCreate) - 1; i >= 0; i-- {
 		nodePath := nodesToCreate[i]
-		err := os.Mkdir("testdir/"+nodePath, os.ModePerm)
+		err := os.Mkdir(db.GetSetting(db.DAV_ROOT)+nodePath, os.ModePerm)
 		if err != nil {
 			log.Error("Failed to create directory")
 			w.WriteHeader(http.StatusInternalServerError)
@@ -179,7 +179,7 @@ func uploadDirectory(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	targetdir := "testdir/" + fullDirectory
+	targetdir := db.GetSetting(db.DAV_ROOT) + fullDirectory
 	log.Debug("target directory: ", targetdir)
 
 	body := []UploadResponse{}

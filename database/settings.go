@@ -1,60 +1,98 @@
 package db
 
-import (
-	"database/sql"
+import log "github.com/Sirupsen/logrus"
 
-	log "github.com/Sirupsen/logrus"
+var (
+	// DEFAULT_ALLOWED_SPACE is the default allowed space, assigned to every new user
+	DEFAULT_ALLOWED_SPACE = "defaultallowedspace"
+	// DAV_ROOT is the root directory of the dav server. This value should be stored
+	// without any trailing '/'
+	DAV_ROOT = "davroot"
 )
 
-// globalsettings represents the global program settings from the database
-type globalsettings struct {
-	// defaultAllowedSpace is the default storage space allowed for a user
-	// the 0 value means there is no limit
-	defaultAllowedSpace int
-}
-
-// settings represents the global settings of the program
-var settings *globalsettings
+var settings map[string]string
 
 // initSettings initializes the settings table
 func initSettings() {
-	settings = &globalsettings{}
+	settings = make(map[string]string)
 	_, err := db.Exec("CREATE TABLE IF NOT EXISTS gowncloud.settings (" +
-		"defaultallowedspace INT " +
+		"key STRING NOT NULL UNIQUE," +
+		"value STRING NOT NULL" +
 		")")
 	if err != nil {
 		log.Fatal("Failed to create table 'settings': ", err)
 	}
 
-	row := db.QueryRow("SELECT * FROM gowncloud.settings")
-	err = row.Scan(&settings)
-	if err == sql.ErrNoRows {
+	rows, err := db.Query("SELECT * FROM gowncloud.settings")
+	if err != nil {
+		log.Error("Failed to get settings from the database")
+		return
+	}
+	defer rows.Close()
+	if rows == nil {
 		log.Warn("No settings found")
 		makeDefaultSettings()
+		return
+	}
+	for rows.Next() {
+		var key, value string
+		err = rows.Scan(&key, &value)
+		if err != nil {
+			log.Error("Error while reading settings")
+			return
+		}
+		settings[key] = value
+	}
+	err = rows.Err()
+	if err != nil {
+		log.Error("Error while reading the settings rows")
 	}
 
 	log.Debug("Initialized 'settings' table")
 }
 
-func GetDefaultAllowedSpace() int {
-	return settings.defaultAllowedSpace
+// GetSetting returns the value for key key from the database
+func GetSetting(key string) string {
+	return settings[key]
 }
 
-// updateSettings stores the updated settings in the database table
-func updateSettings() {
-	// TODO: implement
+// UpdateSetting stores the updated setting in the database table
+func UpdateSetting(key, value string) error {
+	log.Debugf("Update key %v to value %v", key, value)
+	if settings[key] == "" {
+		log.Error("Trying to update unexisting key")
+		return ErrDB
+	}
+	settings[key] = value
+	result, err := db.Exec("UPDATE gowncloud.settings SET value = $1 WHERE key = $2", value, key)
+	if err != nil {
+		log.Errorf("Error updating key %v", key)
+		return ErrDB
+	}
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		log.Error("Error while updating key")
+	}
+	if rowsAffected != 1 {
+		log.Error("Failed to update key")
+		return ErrDB
+	}
+	return nil
 }
 
 // makeDefaultSettings generates the default settings and stores them in the database.
 func makeDefaultSettings() {
 	log.Warn("Generating default settings")
 
-	settings.defaultAllowedSpace = 0
+	settings[DEFAULT_ALLOWED_SPACE] = "0"
+	settings[DAV_ROOT] = "gowncloud-data"
 
-	_, err := db.Exec("INSERT INTO gowncloud.settings (defaultallowedspace) VALUES ($1)",
-		settings.defaultAllowedSpace)
-
-	if err != nil {
-		log.Warn(err)
+	for key, value := range settings {
+		_, err := db.Exec("INSERT INTO gowncloud.settings (key, value) VALUES ($1, $2)",
+			key, value)
+		if err != nil {
+			log.Error("Error while storing the settings in the database")
+		}
 	}
+
 }

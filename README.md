@@ -21,3 +21,10 @@ Development is done with [cockroachdb](https://github.com/cockroachdb/cockroach)
 This database uses the postgres driver, making them freely interchangeable.
 
 navigate to `localhost:8080/index.php`
+
+## Optional parameters:
+
+`--dav-directory`: allows the user to specify the path to the root directory of the webdav server.
+All files uploaded to gowncloud will be stored here. The directory (tree) will be created
+by gowncloud as required. To avoid conflicts, the path should point to an unexisting
+or completely empty directory. Synonym: `--dir`

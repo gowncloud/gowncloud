@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+	"strconv"
 
 	log "github.com/Sirupsen/logrus"
 )
@@ -31,8 +32,12 @@ func initUsers() {
 // an error will be returned.
 func CreateUser(username string) (*User, error) {
 	user := &User{}
-	_, err := db.Exec("INSERT INTO gowncloud.users (username, allowedspace) VALUES ($1, $2)",
-		username, settings.defaultAllowedSpace)
+	defaultSpace, err := strconv.Atoi(GetSetting(DEFAULT_ALLOWED_SPACE))
+	if err != nil {
+		log.Error("Could not read default allowed space from settings")
+	}
+	_, err = db.Exec("INSERT INTO gowncloud.users (username, allowedspace) VALUES ($1, $2)",
+		username, defaultSpace)
 	if err != nil {
 		log.Error("Failed to insert new user in database: ", err)
 		return nil, ErrDB

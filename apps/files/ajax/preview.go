@@ -9,6 +9,7 @@ import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/disintegration/imaging"
 	"github.com/gowncloud/gowncloud/core/identity"
+	db "github.com/gowncloud/gowncloud/database"
 )
 
 // GetPreview generates a preview for an image file and serves it to the client
@@ -31,7 +32,7 @@ func GetPreview(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	file := "testdir/" + username + filePath
+	file := db.GetSetting(db.DAV_ROOT) + "/" + username + filePath
 
 	var preview *image.NRGBA
 	img, err := imaging.Open(file)

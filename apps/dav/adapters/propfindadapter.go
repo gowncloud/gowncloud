@@ -159,7 +159,7 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 				fileIdString := strconv.Itoa(dir.ID)
 				fileId.SetText(fileIdString)
 				// Set size
-				byteSize, err := getDirSize(root + "/" + dir.Path)
+				byteSize, err := getDirSize(root + dir.Path)
 				if err != nil {
 					log.Error("Failed to calculate directory size: ", err)
 					w.WriteHeader(http.StatusInternalServerError)
