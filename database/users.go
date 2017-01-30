@@ -18,7 +18,7 @@ type User struct {
 func initUsers() {
 	_, err := db.Exec("CREATE TABLE IF NOT EXISTS gowncloud.users (" +
 		"id SERIAL UNIQUE, " +
-		"username STRING NOT NULL UNIQUE, " +
+		"username STRING PRIMARY KEY, " +
 		"allowedspace INT" +
 		")")
 	if err != nil {

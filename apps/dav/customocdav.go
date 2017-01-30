@@ -54,7 +54,7 @@ func (dav *CustomOCDav) DispatchRequest() http.Handler {
 		case "MKCOL":
 			ocdavadapters.MkcolAdapter(dav.dav.ServeHTTP, w, r)
 		case "PROPFIND":
-			ocdavadapters.PropFindAdapter(dav.dav.ServeHTTP, w, r, dav.filePathRoot)
+			ensureHomeDirectoryMiddleware(ocdavadapters.PropFindAdapter, dav.dav.ServeHTTP, w, r)
 		default:
 			dav.dav.ServeHTTP(w, r)
 		}
@@ -62,12 +62,18 @@ func (dav *CustomOCDav) DispatchRequest() http.Handler {
 }
 
 // MakeUserHomeDirectory creates the home directory for a user. The folder name is
-// the username, and its parent folder is the webdavroot
-func (dav *CustomOCDav) MakeUserHomeDirectory(username string) error {
-	_, err := db.SaveNode(username, username, true)
+// the username, and its parent folder is the webdavroot. It also creates the user
+// in the database
+func MakeUserHomeDirectory(username string) error {
+	_, err := db.CreateUser(username)
+	if err != nil {
+		log.Errorf("Failed to create user %v: %v", username, err)
+		return err
+	}
+	_, err = db.SaveNode(username, username, true)
 	if err != nil {
 		log.Errorf("Failed to make home directory for user %v: %v", username, err)
 		return err
 	}
-	return os.Mkdir(dav.filePathRoot+username, os.ModePerm)
+	return os.Mkdir(db.GetSetting(db.DAV_ROOT)+username, os.ModePerm)
 }

@@ -18,7 +18,7 @@ type Node struct {
 func initNodes() {
 	_, err := db.Exec("CREATE TABLE IF NOT EXISTS gowncloud.nodes (" +
 		"id SERIAL UNIQUE, " +
-		"owner STRING NOT NULL, " + //all nodes should have an owner
+		"owner STRING REFERENCES gowncloud.users, " + //all nodes should have an owner
 		"path STRING NOT NULL UNIQUE, " +
 		"isdir BOOL NOT NULL" +
 		")")

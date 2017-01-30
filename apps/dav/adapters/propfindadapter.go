@@ -22,7 +22,7 @@ const (
 // PropFindAdapter is the adapter for the PROPFIND method. It intercepts the response
 // from the dav server, and then tries to modify it by adding responses stored in
 // the datastore
-func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Request, root string) {
+func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Request) {
 
 	username := identity.CurrentSession(r).Username
 	r.URL.Path = strings.Replace(r.URL.Path, "/remote.php/webdav", "/remote.php/webdav/"+username, 1)
@@ -159,7 +159,7 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 				fileIdString := strconv.Itoa(dir.ID)
 				fileId.SetText(fileIdString)
 				// Set size
-				byteSize, err := getDirSize(root + dir.Path)
+				byteSize, err := getDirSize(db.GetSetting(db.DAV_ROOT) + dir.Path)
 				if err != nil {
 					log.Error("Failed to calculate directory size: ", err)
 					w.WriteHeader(http.StatusInternalServerError)

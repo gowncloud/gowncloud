@@ -9,7 +9,6 @@ import (
 	"github.com/dgrijalva/jwt-go"
 
 	log "github.com/Sirupsen/logrus"
-	db "github.com/gowncloud/gowncloud/database"
 )
 
 const (
@@ -23,9 +22,6 @@ type Session struct {
 	Expires  time.Time
 	Token    *jwt.Token
 }
-
-// LoginCallback are functions to be invoked during login
-type LoginCallback func(username string) error
 
 //CurrentSession get's the current session from the request context
 func CurrentSession(r *http.Request) (s Session) {
@@ -60,7 +56,7 @@ func AddIdentity(handler http.Handler) http.Handler {
 }
 
 //Protect requires users to log using itsyou.online
-func Protect(clientID string, clientSecret string, handler http.Handler, firstLoginCallbacks []LoginCallback) http.Handler {
+func Protect(clientID string, clientSecret string, handler http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		//If this is the callback from itsyou.online
@@ -79,30 +75,6 @@ func Protect(clientID string, clientSecret string, handler http.Handler, firstLo
 				log.Debugln("Error processing jwt token:", err, "- TOKEN: ", token)
 				http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 				return
-			}
-
-			// Check if this is a new user and handle first time login setup
-			user, err := db.GetUser(s.Username)
-			if err != nil {
-				log.Error("Failed to get user: ", err)
-				w.WriteHeader(http.StatusInternalServerError)
-			}
-			if user == nil {
-				_, err = db.CreateUser(s.Username)
-				if err != nil {
-					log.Error("Failed to create user: ", err)
-					w.WriteHeader(http.StatusInternalServerError)
-					return
-				}
-				for _, loginCallback := range firstLoginCallbacks {
-					err := loginCallback(s.Username)
-					if err != nil {
-						log.Error("failed login callback: ", err)
-						w.WriteHeader(http.StatusInternalServerError)
-						return
-					}
-				}
-				log.Debug("Created new user")
 			}
 
 			startSession(w, s)

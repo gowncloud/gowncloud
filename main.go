@@ -140,9 +140,7 @@ func main() {
 		http.HandleFunc("/index.php/apps/files/ajax/getstoragestats.php", files.GetStorageStats)
 		http.HandleFunc("/index.php/core/preview.png", files.GetPreview)
 
-		loginCallbacks := make([]identity.LoginCallback, 0)
-		loginCallbacks = append(loginCallbacks, server.MakeUserHomeDirectory)
-		if err := http.ListenAndServe(bindAddress, identity.AddIdentity(logging.Handler(os.Stdout, identity.Protect(clientID, clientSecret, http.DefaultServeMux, loginCallbacks)))); err != nil {
+		if err := http.ListenAndServe(bindAddress, identity.AddIdentity(logging.Handler(os.Stdout, identity.Protect(clientID, clientSecret, http.DefaultServeMux)))); err != nil {
 			log.Fatalf("server error: %v", nil)
 		}
 	}

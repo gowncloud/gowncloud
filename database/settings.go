@@ -30,10 +30,10 @@ func initSettings() {
 	}
 	defer rows.Close()
 	if rows == nil {
-		log.Warn("No settings found")
-		makeDefaultSettings()
+		log.Error("Could not load settings")
 		return
 	}
+	rowCount := 0
 	for rows.Next() {
 		var key, value string
 		err = rows.Scan(&key, &value)
@@ -42,6 +42,12 @@ func initSettings() {
 			return
 		}
 		settings[key] = value
+		rowCount++
+	}
+	if rowCount == 0 {
+		log.Warn("No settings found")
+		makeDefaultSettings()
+		return
 	}
 	err = rows.Err()
 	if err != nil {
@@ -94,5 +100,5 @@ func makeDefaultSettings() {
 			log.Error("Error while storing the settings in the database")
 		}
 	}
-
+	log.Debug("Initialized 'settings' table with default values")
 }
