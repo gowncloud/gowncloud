@@ -105,7 +105,7 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 			if status.Text() == STATUS_OK {
 				// Patch attributes
 				permissions := prop.CreateElement("OC:permissions")
-				permissions.SetText("RDNVCK") // This should set all permissions
+				permissions.SetText("RDNVW") // This should set all permissions
 				// Set fileid
 				fileId := prop.CreateElement("OC:fileid")
 				fileIdString := strconv.Itoa(file.ID)
