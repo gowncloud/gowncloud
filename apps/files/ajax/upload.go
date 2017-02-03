@@ -55,13 +55,45 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	}
 
 	dir := r.PostForm.Get("dir")
-	targetdir := db.GetSetting(db.DAV_ROOT) + username
+	targetdir := username
 	if dir != "/" {
 		targetdir += dir
 	}
 	log.Debug("target directory: ", targetdir)
-	// TODO: check if exists and handle errors
-	os.Mkdir(targetdir, os.ModePerm)
+
+	exists, err := db.NodeExists(targetdir)
+	if err != nil {
+		log.Error("Failed to check if node exists")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	if !exists {
+		nodePath := targetdir[strings.Index(targetdir, "/")+1:]
+		var sharedNodes []*db.Node
+		sharedNodes, err = findShareRoot(nodePath, username)
+		if err != nil {
+			log.Error("Error while searching for shared nodes")
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		if len(sharedNodes) == 0 {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+		// Log collisions
+		if len(sharedNodes) > 1 {
+			log.Warn("Shared folder collision")
+		}
+
+		targetNode := sharedNodes[0]
+		targetdir = targetNode.Path[:strings.LastIndex(targetNode.Path, "/")] + targetdir[strings.Index(targetdir, "/"):]
+		targetdir = db.GetSetting(db.DAV_ROOT) + targetdir
+
+	} else {
+
+		targetdir = db.GetSetting(db.DAV_ROOT) + targetdir
+
+	}
 
 	body := []UploadResponse{}
 
@@ -98,12 +130,8 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 				w.WriteHeader(http.StatusInternalServerError)
 				return
 			}
-			dbFileName := username
-			if dir != "/" {
-				dbFileName += dir
-			}
-			dbFileName += "/" + file.Filename
-			node, err := db.SaveNode(dbFileName, username, false, file.Header.Get("Content-Type"))
+			dbFileName := strings.TrimPrefix(target.Name(), db.GetSetting(db.DAV_ROOT))
+			node, err := db.SaveNode(dbFileName, dbFileName[:strings.Index(dbFileName, "/")], false, file.Header.Get("Content-Type"))
 			if err != nil {
 				log.Error("Failed to save node in database")
 				w.WriteHeader(http.StatusInternalServerError)
@@ -147,6 +175,47 @@ func uploadDirectory(w http.ResponseWriter, r *http.Request) {
 	}
 	fullDirectory += "/" + fileDirectory
 
+	log.Debug("target directory: ", fullDirectory)
+
+	// small hack to fix uploads to user home directory
+	exists := true
+	var err error
+	if dir != "/" {
+		exists, err = parentExists(fullDirectory)
+		if err != nil {
+			log.Error("Failed to check if node exists")
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+	}
+
+	if !exists {
+		nodePath := fullDirectory[strings.Index(fullDirectory, "/")+1:]
+		var sharedNodes []*db.Node
+		sharedNodes, err = findShareRoot(nodePath, username)
+		if err != nil {
+			log.Error("Error while searching for shared nodes")
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		if len(sharedNodes) == 0 {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+		// Log collisions
+		if len(sharedNodes) > 1 {
+			log.Warn("Shared folder collision")
+		}
+
+		targetNode := sharedNodes[0]
+		fullDirectory = targetNode.Path[:strings.LastIndex(targetNode.Path, "/")] + fullDirectory[strings.Index(fullDirectory, "/"):]
+
+	} else {
+
+		// fullDirectory = db.GetSetting(db.DAV_ROOT) + fullDirectory
+
+	}
+
 	var nodesToCreate []string
 	tmpDir := fullDirectory
 	for {
@@ -171,7 +240,7 @@ func uploadDirectory(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
-		_, err = db.SaveNode(nodePath, username, true, "dir")
+		_, err = db.SaveNode(nodePath, nodePath[:strings.Index(nodePath, "/")], true, "dir")
 		if err != nil {
 			log.Error("Failed to save directory info")
 			w.WriteHeader(http.StatusInternalServerError)
@@ -195,7 +264,7 @@ func uploadDirectory(w http.ResponseWriter, r *http.Request) {
 			}
 
 			dbFileName := fullDirectory + "/" + file.Filename
-			node, err := db.SaveNode(dbFileName, username, false, file.Header.Get("Content-Type"))
+			node, err := db.SaveNode(dbFileName, dbFileName[:strings.Index(dbFileName, "/")], false, file.Header.Get("Content-Type"))
 			if err != nil {
 				log.Error("Failed to save node in database")
 				w.WriteHeader(http.StatusInternalServerError)
@@ -255,4 +324,55 @@ func uploadDirectory(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(body)
+}
+
+// findShareRoot parses a path and tries to find a share
+func findShareRoot(href string, username string) ([]*db.Node, error) {
+	path := strings.TrimLeft(href, "/remote.php/webdav/")
+	nodes, err := db.GetSharedNamedNodesToUser(path, username)
+	if err != nil {
+		return nil, err
+	}
+	if len(nodes) > 0 {
+		return nodes, nil
+	}
+	seperatorIndex := strings.Index(path, "/")
+	for len(nodes) == 0 && seperatorIndex >= 0 {
+		path = path[:seperatorIndex]
+		seperatorIndex = strings.Index(path, "/")
+		nodes, err = db.GetSharedNamedNodesToUser(path, username)
+		if err != nil {
+			return nil, err
+		}
+		if len(nodes) > 0 {
+			break
+		}
+	}
+	return nodes, nil
+}
+
+// parentExists checks if the parent of a node exists
+func parentExists(path string) (bool, error) {
+	exists, err := db.NodeExists(path)
+	if err != nil {
+		log.Error("Failed to check if node exists")
+		return false, err
+	}
+	lastSeperatorIndex := strings.LastIndex(path, "/")
+	for lastSeperatorIndex >= 0 && !exists {
+		path = path[:lastSeperatorIndex]
+		log.Info(path)
+		exists, err = db.NodeExists(path)
+		if err != nil {
+			log.Error("Failed to check if node exists")
+			return false, err
+		}
+		lastSeperatorIndex = strings.LastIndex(path, "/")
+		if exists && lastSeperatorIndex < 0 {
+			// We found the user home directory. Set exists to false, callers should
+			// already have checked if the upload is going to this directory
+			exists = false
+		}
+	}
+	return exists, nil
 }
