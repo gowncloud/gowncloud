@@ -5,6 +5,7 @@ import (
 	"image"
 	"net/http"
 	"strconv"
+	"strings"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/disintegration/imaging"
@@ -32,7 +33,41 @@ func GetPreview(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	file := db.GetSetting(db.DAV_ROOT) + "/" + username + filePath
+	nodePath := username + filePath
+	log.Warn(nodePath)
+	exists, err := db.NodeExists(nodePath)
+	if err != nil {
+		log.Error("Failed to check if node exists")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	if !exists {
+		nodePath = nodePath[strings.Index(nodePath, "/")+1:]
+		var sharedNodes []*db.Node
+		sharedNodes, err = findShareRoot(nodePath, username)
+		if err != nil {
+			log.Error("Error while searching for shared nodes")
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		if len(sharedNodes) == 0 {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+		// Log collisions
+		if len(sharedNodes) > 1 {
+			log.Warn("Shared folder collision")
+		}
+
+		target := sharedNodes[0]
+		filePath = target.Path[:strings.LastIndex(target.Path, "/")] + filePath
+
+	} else {
+
+		filePath = username + filePath
+	}
+
+	file := db.GetSetting(db.DAV_ROOT) + filePath
 
 	var preview *image.NRGBA
 	img, err := imaging.Open(file)
