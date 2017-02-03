@@ -27,6 +27,11 @@
 			"Rev": "243d2d8673c1225a6afceeb9b3b4423d485dc8df"
 		},
 		{
+			"ImportPath": "github.com/gorilla/mux",
+			"Comment": "v1.3.0",
+			"Rev": "392c28fe23e1c45ddba891b0320b3b5df220beea"
+		},
+		{
 			"ImportPath": "github.com/lib/pq",
 			"Comment": "go1.0-cutoff-141-g8df6253",
 			"Rev": "8df6253d1317616f36b0c3740eb30c239a7372cb"
