@@ -60,8 +60,11 @@ func Initialize() {
 	// init settings first because they might be required to provide default values
 	initSettings()
 
+	// init tables without foreign keys
 	initUsers()
 	initNodes()
+	// init tables with foreign keys to tables without foreign keys
+	initMemberShares()
 
 	initialized = true
 	log.Info("Database initialized")

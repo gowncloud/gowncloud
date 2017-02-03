@@ -5,8 +5,7 @@ import log "github.com/Sirupsen/logrus"
 var (
 	// DEFAULT_ALLOWED_SPACE is the default allowed space, assigned to every new user
 	DEFAULT_ALLOWED_SPACE = "defaultallowedspace"
-	// DAV_ROOT is the root directory of the dav server. This value should be stored
-	// without any trailing '/'
+	// DAV_ROOT is the root directory of the dav server.
 	DAV_ROOT = "davroot"
 )
 
@@ -28,11 +27,11 @@ func initSettings() {
 		log.Error("Failed to get settings from the database")
 		return
 	}
-	defer rows.Close()
 	if rows == nil {
 		log.Error("Could not load settings")
 		return
 	}
+	defer rows.Close()
 	rowCount := 0
 	for rows.Next() {
 		var key, value string

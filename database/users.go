@@ -10,8 +10,8 @@ import (
 // User represents a user object as stored in the database
 type User struct {
 	id           int
-	username     string
-	allowedspace int // allowed storage space for this user in GB
+	Username     string
+	Allowedspace int // allowed storage space for this user in GB
 }
 
 // initUsers initializes the users table
@@ -45,7 +45,7 @@ func CreateUser(username string) (*User, error) {
 
 	// retrieve the user from the database to get the ID
 	row := db.QueryRow("SELECT * FROM gowncloud.users WHERE username = $1", username)
-	err = row.Scan(&user.id, &user.username, &user.allowedspace)
+	err = row.Scan(&user.id, &user.Username, &user.Allowedspace)
 	if err != nil {
 		log.Panic("Failed to get user from database: ", err)
 		return nil, ErrDB
@@ -60,7 +60,7 @@ func CreateUser(username string) (*User, error) {
 func GetUser(username string) (*User, error) {
 	user := &User{}
 	row := db.QueryRow("SELECT * FROM gowncloud.users WHERE username = $1", username)
-	err := row.Scan(&user.id, &user.username, &user.allowedspace)
+	err := row.Scan(&user.id, &user.Username, &user.Allowedspace)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, nil
@@ -69,4 +69,35 @@ func GetUser(username string) (*User, error) {
 		return nil, ErrDB
 	}
 	return user, nil
+}
+
+// SearchUserNames searches the users table for users where the username starts
+// with the searchstring
+func SearchUserNames(search string) ([]string, error) {
+	usernames := make([]string, 0)
+	rows, err := db.Query("SELECT username FROM gowncloud.users WHERE username LIKE $1 || '%'", search)
+	if err != nil {
+		log.Error("Failed to search for usernames starting with ", search)
+		return nil, ErrDB
+	}
+	if rows == nil {
+		log.Error("Failed to get usernames")
+		return nil, ErrDB
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var username string
+		err = rows.Scan(&username)
+		if err != nil {
+			log.Error("Error while reading usernames")
+			return nil, ErrDB
+		}
+		usernames = append(usernames, username)
+	}
+	err = rows.Err()
+	if err != nil {
+		log.Error("Error while reading the usernames rows")
+		return nil, ErrDB
+	}
+	return usernames, nil
 }

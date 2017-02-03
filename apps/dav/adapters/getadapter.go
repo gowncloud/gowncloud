@@ -4,14 +4,54 @@ import (
 	"net/http"
 	"strings"
 
+	log "github.com/Sirupsen/logrus"
 	"github.com/gowncloud/gowncloud/core/identity"
+	db "github.com/gowncloud/gowncloud/database"
 )
 
 // GetAdapter is the adapter for the GET method. It adds the correct header to the
 // response so the file can be downloaded by the client
 func GetAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Request) {
 
-	r.URL.Path = strings.Replace(r.URL.Path, "/remote.php/webdav", "/remote.php/webdav/"+identity.CurrentSession(r).Username, 1)
+	user := identity.CurrentSession(r).Username
+
+	nodePath := strings.Replace(r.URL.Path, "/remote.php/webdav", user, 1)
+	exists, err := db.NodeExists(nodePath)
+	if err != nil {
+		log.Error("Failed to check if node exists")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	if !exists {
+		nodePath = nodePath[strings.Index(nodePath, "/")+1:]
+		var sharedNodes []*db.Node
+		sharedNodes, err = findShareRoot(nodePath, user)
+		if err != nil {
+			log.Error("Error while searching for shared nodes")
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		if len(sharedNodes) == 0 {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+		// Log collisions
+		if len(sharedNodes) > 1 {
+			log.Warn("Shared folder collision")
+		}
+
+		target := sharedNodes[0]
+		originalPath := r.URL.Path
+		finalPath := target.Path[:strings.LastIndex(target.Path, "/")] + strings.TrimPrefix(originalPath, "/remote.php/webdav")
+		r.URL.Path = "/remote.php/webdav/" + finalPath
+
+	} else {
+
+		r.URL.Path = strings.Replace(r.URL.Path,
+			"/remote.php/webdav", "/remote.php/webdav/"+user,
+			1)
+
+	}
 
 	fullname := r.URL.RequestURI()
 	filename := fullname[strings.LastIndex(fullname, "/")+1:]

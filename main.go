@@ -8,8 +8,10 @@ import (
 
 	"github.com/codegangsta/cli"
 
+	"github.com/gorilla/mux"
 	"github.com/gowncloud/gowncloud/apps/dav"
 	"github.com/gowncloud/gowncloud/apps/files/ajax"
+	files_sharing "github.com/gowncloud/gowncloud/apps/files_sharing/api"
 	"github.com/gowncloud/gowncloud/core/identity"
 	"github.com/gowncloud/gowncloud/core/logging"
 
@@ -102,7 +104,7 @@ func main() {
 		}
 
 		// If the data-directory flag specifies another directory than the previously
-		// used one or the default directory on first run, update the database to pointer
+		// used one or the default directory on first run, update the database to point
 		// to this new directory
 		if db.GetSetting(db.DAV_ROOT) != davroot {
 			db.UpdateSetting(db.DAV_ROOT, davroot)
@@ -122,6 +124,14 @@ func main() {
 			s := identity.CurrentSession(r)
 			renderTemplate(w, "index.html", &s)
 		})
+		r := mux.NewRouter()
+		r.HandleFunc("/ocs/v2.php/apps/files_sharing/api/v1/shares", files_sharing.ShareInfo).Methods("GET")
+		r.HandleFunc("/ocs/v2.php/apps/files_sharing/api/v1/shares", files_sharing.CreateShare).Methods("POST")
+		r.HandleFunc("/ocs/v2.php/apps/files_sharing/api/v1/shares/{shareid}", files_sharing.DeleteShare).Methods("DELETE")
+		http.Handle("/ocs/v2.php/apps/files_sharing/api/v1/shares", r)
+		// FIXME: small hack for now to enale the shareid variable in the url for share deletes
+		http.Handle("/ocs/v2.php/apps/files_sharing/api/v1/shares/", r)
+		http.HandleFunc("/ocs/v1.php/apps/files_sharing/api/v1/sharees", files_sharing.Sharees)
 		http.HandleFunc("/logout", func(w http.ResponseWriter, r *http.Request) {
 			identity.ClearSession(w)
 			//TODO: make a decent logged out page since now you will be redirected to itsyou.online for login again
@@ -134,6 +144,7 @@ func main() {
 		http.Handle("/apps/files/img/", http.StripPrefix("/apps/files/img/", http.FileServer(http.Dir("apps/files/img"))))
 		http.Handle("/apps/files/js/", http.StripPrefix("/apps/files/js/", http.FileServer(http.Dir("apps/files/js"))))
 		http.Handle("/settings/", http.StripPrefix("/settings/", http.FileServer(http.Dir("settings"))))
+		http.Handle("/apps/files_sharing/", http.StripPrefix("/apps/files_sharing/", http.FileServer(http.Dir("apps/files_sharing"))))
 		http.Handle("/index.php/", http.StripPrefix("/index.php/", http.FileServer(http.Dir("."))))
 		http.HandleFunc("/index.php/apps/files/ajax/upload.php", files.Upload)
 

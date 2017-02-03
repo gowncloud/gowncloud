@@ -31,6 +31,8 @@ func NewCustomOCDav(path string) *CustomOCDav {
 			Logger: func(r *http.Request, err error) {
 				log.Debug("Internal WEBDAV")
 				if err != nil {
+					log.Error("Method: ", r.Method)
+					log.Error("Path: ", r.URL.Path)
 					log.Errorf("WEBDAV ERROR: %v", err)
 				}
 			},
@@ -70,7 +72,7 @@ func MakeUserHomeDirectory(username string) error {
 		log.Errorf("Failed to create user %v: %v", username, err)
 		return err
 	}
-	_, err = db.SaveNode(username, username, true)
+	_, err = db.SaveNode(username, username, true, "dir")
 	if err != nil {
 		log.Errorf("Failed to make home directory for user %v: %v", username, err)
 		return err

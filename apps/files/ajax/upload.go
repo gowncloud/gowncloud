@@ -103,7 +103,7 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 				dbFileName += dir
 			}
 			dbFileName += "/" + file.Filename
-			node, err := db.SaveNode(dbFileName, username, false)
+			node, err := db.SaveNode(dbFileName, username, false, file.Header.Get("Content-Type"))
 			if err != nil {
 				log.Error("Failed to save node in database")
 				w.WriteHeader(http.StatusInternalServerError)
@@ -171,7 +171,7 @@ func uploadDirectory(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
-		_, err = db.SaveNode(nodePath, username, true)
+		_, err = db.SaveNode(nodePath, username, true, "dir")
 		if err != nil {
 			log.Error("Failed to save directory info")
 			w.WriteHeader(http.StatusInternalServerError)
@@ -195,7 +195,7 @@ func uploadDirectory(w http.ResponseWriter, r *http.Request) {
 			}
 
 			dbFileName := fullDirectory + "/" + file.Filename
-			node, err := db.SaveNode(dbFileName, username, false)
+			node, err := db.SaveNode(dbFileName, username, false, file.Header.Get("Content-Type"))
 			if err != nil {
 				log.Error("Failed to save node in database")
 				w.WriteHeader(http.StatusInternalServerError)
