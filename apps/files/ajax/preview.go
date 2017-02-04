@@ -34,7 +34,6 @@ func GetPreview(w http.ResponseWriter, r *http.Request) {
 	}
 
 	nodePath := username + filePath
-	log.Warn(nodePath)
 	exists, err := db.NodeExists(nodePath)
 	if err != nil {
 		log.Error("Failed to check if node exists")
