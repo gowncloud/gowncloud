@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"net/url"
+	"strings"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -18,9 +19,10 @@ const (
 
 //Session is the information about a logged in user
 type Session struct {
-	Username string
-	Expires  time.Time
-	Token    *jwt.Token
+	Username      string
+	Expires       time.Time
+	Token         *jwt.Token
+	Organizations []string
 }
 
 //CurrentSession get's the current session from the request context
@@ -70,10 +72,37 @@ func Protect(clientID string, clientSecret string, handler http.Handler) http.Ha
 				http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 				return
 			}
+
+			// If the user isnt a member of clientID, itsYou.Online seems to return the following token at the moment
+			if token == "Unauthorized\n" {
+				log.Debug("Rejected login due to invalid jwt")
+				rejectString := "Only members of " + clientID + " have access to this gowncloud server"
+				w.WriteHeader(http.StatusUnauthorized)
+				w.Write([]byte(rejectString))
+				return
+			}
+
 			s, err := verifyJWTToken(token, clientID)
 			if err != nil {
 				log.Debugln("Error processing jwt token:", err, "- TOKEN: ", token)
 				http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+				return
+			}
+
+			// Check if the user is in the organization defined by clientID or any of its suborganizations
+			authorized := false
+			for _, org := range s.Organizations {
+				if strings.HasPrefix(org, clientID) {
+					authorized = true
+					break
+				}
+			}
+
+			if !authorized {
+				// TODO: provide a nice page to tell the user they have been rejected
+				rejectString := "Only members of " + clientID + " have access to this gowncloud server"
+				w.WriteHeader(http.StatusUnauthorized)
+				w.Write([]byte(rejectString))
 				return
 			}
 
@@ -100,6 +129,7 @@ func redirectToOauthLogin(clientID string, w http.ResponseWriter, r *http.Reques
 	//TODO: make this request dependent
 	q.Add("redirect_uri", "http://"+r.Host+"/oauth/callback")
 	q.Add("response_type", "code")
+	q.Add("scope", "user:memberof:"+clientID)
 	u.RawQuery = q.Encode()
 	http.Redirect(w, r, u.String(), http.StatusFound)
 }

@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -49,17 +50,37 @@ func verifyJWTToken(tokenStr string, clientId string) (*Session, error) {
 	}
 
 	// check the authorized party
-	if claims["azp"] != clientId {
+	if claims["azp"].(string) != clientId {
 		return nil, fmt.Errorf("We are not the authorized party - invalid token")
 	}
 
 	// check usernames
 	username := claims["username"].(string)
 
+	// parse scope claim
+	scopes := make([]string, 0, 0)
+	rawclaims, ok := claims["scope"].([]interface{})
+	if !ok {
+		return nil, fmt.Errorf("Error parsing scopes")
+	}
+	// and store the organizations the user has access to
+	orgs := []string{}
+	for _, rawclaim := range rawclaims {
+		scope, ok := rawclaim.(string)
+		if !ok {
+			return nil, fmt.Errorf("Error parsing scope")
+		}
+		scopes = append(scopes, scope)
+		if strings.HasPrefix(scope, "user:memberof:") {
+			orgs = append(orgs, strings.TrimPrefix(scope, "user:memberof:"))
+		}
+	}
+
 	return &Session{
-		Username: username,
-		Expires:  time.Now().Add(time.Second * time.Duration(int64(claims["exp"].(float64)))),
-		Token:    token,
+		Username:      username,
+		Expires:       time.Now().Add(time.Second * time.Duration(int64(claims["exp"].(float64)))),
+		Token:         token,
+		Organizations: orgs,
 	}, nil
 }
 
@@ -77,6 +98,7 @@ func getJWTToken(code string, clientID string, clientSecret string, r *http.Requ
 	//TODO: make this request dependent
 	q.Add("redirect_uri", "http://localhost:8080/oauth/callback")
 	q.Add("response_type", "id_token")
+	q.Add("scope", "user:memberof:"+clientID)
 	q.Add("state", "STATE")
 	req.URL.RawQuery = q.Encode()
 	// do request
