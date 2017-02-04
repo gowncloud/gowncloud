@@ -151,7 +151,7 @@ func main() {
 		http.HandleFunc("/index.php/apps/files/ajax/getstoragestats.php", files.GetStorageStats)
 		http.HandleFunc("/index.php/core/preview.png", files.GetPreview)
 
-		if err := http.ListenAndServe(bindAddress, identity.AddIdentity(logging.Handler(os.Stdout, identity.Protect(clientID, clientSecret, http.DefaultServeMux)))); err != nil {
+		if err := http.ListenAndServe(bindAddress, identity.AddIdentity(logging.Handler(os.Stdout, identity.Protect(clientID, clientSecret, http.DefaultServeMux)), clientID)); err != nil {
 			log.Fatalf("server error: %v", err)
 		}
 	}

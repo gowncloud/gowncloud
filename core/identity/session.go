@@ -38,12 +38,12 @@ func (s *Session) IsExpired() (expired bool) {
 }
 
 //AddIdentity add the current user session to the context, it is seperate from Protect to enable an identity aware logger to be inserted between the them
-func AddIdentity(handler http.Handler) http.Handler {
+func AddIdentity(handler http.Handler, clientID string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		cookie, err := r.Cookie(cookieName)
 		if err == nil {
 			token := cookie.Value
-			s, err := verifyJWTToken(token)
+			s, err := verifyJWTToken(token, clientID)
 			if err == nil {
 				//Add session to context
 				ctx := context.WithValue(r.Context(), "session", *s)
@@ -70,7 +70,7 @@ func Protect(clientID string, clientSecret string, handler http.Handler) http.Ha
 				http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 				return
 			}
-			s, err := verifyJWTToken(token)
+			s, err := verifyJWTToken(token, clientID)
 			if err != nil {
 				log.Debugln("Error processing jwt token:", err, "- TOKEN: ", token)
 				http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)

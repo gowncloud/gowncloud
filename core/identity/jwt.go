@@ -30,7 +30,7 @@ func init() {
 	}
 }
 
-func verifyJWTToken(tokenStr string) (*Session, error) {
+func verifyJWTToken(tokenStr string, clientId string) (*Session, error) {
 	// verify token
 	token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
 		if token.Method != jwt.SigningMethodES384 {
@@ -46,6 +46,11 @@ func verifyJWTToken(tokenStr string) (*Session, error) {
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !(ok && token.Valid) {
 		return nil, fmt.Errorf("invalid token")
+	}
+
+	// check the authorized party
+	if claims["azp"] != clientId {
+		return nil, fmt.Errorf("We are not the authorized party - invalid token")
 	}
 
 	// check usernames
