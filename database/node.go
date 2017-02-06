@@ -141,3 +141,22 @@ func GetSharedNamedNodesToUser(nodeName, sharee string) ([]*Node, error) {
 	}
 	return nodes, nil
 }
+
+// MoveNode updates the nodes path in the database.
+func MoveNode(originalPath string, targetPath string) error {
+	result, err := db.Exec("UPDATE gowncloud.nodes SET path = $1 WHERE path = $2", targetPath, originalPath)
+	if err != nil {
+		log.Errorf("Error updating path %v", originalPath)
+		return ErrDB
+	}
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		log.Error("Error while updating path")
+	}
+	if rowsAffected != 1 {
+		log.Error("Failed to update path")
+		return ErrDB
+	}
+
+	return nil
+}

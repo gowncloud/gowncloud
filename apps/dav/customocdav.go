@@ -51,14 +51,21 @@ func (dav *CustomOCDav) DispatchRequest() http.Handler {
 		switch r.Method {
 		case "DELETE":
 			ocdavadapters.DeleteAdapter(dav.dav.ServeHTTP, w, r)
+			break
 		case "GET":
 			ocdavadapters.GetAdapter(dav.dav.ServeHTTP, w, r)
+			break
 		case "MKCOL":
 			ocdavadapters.MkcolAdapter(dav.dav.ServeHTTP, w, r)
+			break
+		case "MOVE":
+			ocdavadapters.MoveAdapter(dav.dav.ServeHTTP, w, r)
 		case "PROPFIND":
 			ensureHomeDirectoryMiddleware(ocdavadapters.PropFindAdapter, dav.dav.ServeHTTP, w, r)
+			break
 		default:
 			dav.dav.ServeHTTP(w, r)
+			break
 		}
 	})
 }
