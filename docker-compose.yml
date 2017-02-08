@@ -3,6 +3,6 @@ version: '3'
 services:
   db:
     image: cockroachdb/cockroach
-    command: ["start"]
+    command: ["start","--insecure"]
     ports:
       - "26257:26257"

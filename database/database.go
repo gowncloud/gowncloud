@@ -35,7 +35,7 @@ func Connect(driver, databaseurl string) {
 		if err == nil {
 			break
 		}
-		log.Error("Failed to open database, retry in 5 seconds")
+		log.Errorln("Failed to open database,", err, "- retry in 5 seconds")
 		time.Sleep(5 * time.Second)
 	}
 
