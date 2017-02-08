@@ -50,12 +50,12 @@ func main() {
 		},
 		cli.StringFlag{
 			Name:        "clientid, c",
-			Usage:       "OAuth2 clientid",
+			Usage:       "OAuth2 clientid (required)",
 			Destination: &clientID,
 		},
 		cli.StringFlag{
 			Name:        "clientsecret, s",
-			Usage:       "OAuth2 client secret",
+			Usage:       "OAuth2 client secret (required)",
 			Destination: &clientSecret,
 		},
 		cli.StringFlag{
@@ -79,6 +79,11 @@ func main() {
 	}
 
 	app.Action = func(c *cli.Context) {
+
+		if clientID == "" || clientSecret == "" {
+			cli.ShowAppHelp(c)
+			return
+		}
 
 		log.Infoln(app.Name, "version", app.Version)
 
