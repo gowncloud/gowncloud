@@ -33,13 +33,13 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 	// Sinse home directories can't be shared, we don't need to check if we are going
 	// into a shared folder
 	if !isHomeDir {
-		targetNode, err := db.GetNode(strings.Replace(r.URL.Path, "/remote.php/webdav", username, 1))
+		targetNode, err := db.GetNode(strings.Replace(r.URL.Path, "/remote.php/webdav", username+"/files", 1))
 		if err != nil {
 			log.Error("Error while searching for target node")
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
-		// If o node was found, look for shared nodes
+		// If no node was found, look for shared nodes
 		if targetNode == nil {
 			log.Debug("Looking for shares")
 			// sharedNodes, err := db.GetSharedNamedNodesToUser(strings.TrimLeft(r.URL.Path, "/remote.php/webdav/"), username)
@@ -62,7 +62,7 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 		}
 	}
 
-	r.URL.Path = strings.Replace(r.URL.Path, "/remote.php/webdav", "/remote.php/webdav/"+username, 1)
+	r.URL.Path = strings.Replace(r.URL.Path, "/remote.php/webdav", "/remote.php/webdav/"+username+"/files", 1)
 
 	rh := newResponseHijacker(w)
 	handler.ServeHTTP(rh, r)
@@ -87,7 +87,7 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 	// Remove the user folder from the href nodes
 	for _, response := range responses {
 		for _, href := range response.SelectElements("href") {
-			tmp := strings.Replace(href.Text(), "/remote.php/webdav/"+username, "/remote.php/webdav/", 1)
+			tmp := strings.Replace(href.Text(), "/remote.php/webdav/"+username+"/files", "/remote.php/webdav/", 1)
 			href.SetText(strings.Replace(tmp, "//", "/", 1))
 		}
 	}
@@ -613,7 +613,7 @@ func getDirSize(path string) (int64, error) {
 
 // getNodeFromHref unescapes the href and returns the associated node
 func getNodeFromHref(href string, username string) (*db.Node, error) {
-	path := strings.TrimSuffix(strings.Replace(href, "/remote.php/webdav", username, 1), "/")
+	path := strings.TrimSuffix(strings.Replace(href, "/remote.php/webdav", username+"/files", 1), "/")
 	// Monkey business to prevent '+' from being decoded
 	pathPieces := strings.Split(path, "+")
 

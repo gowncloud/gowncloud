@@ -33,7 +33,7 @@ func GetPreview(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	nodePath := username + filePath
+	nodePath := username + "/files" + filePath
 	exists, err := db.NodeExists(nodePath)
 	if err != nil {
 		log.Error("Failed to check if node exists")
@@ -41,7 +41,11 @@ func GetPreview(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if !exists {
+		nodePath = strings.TrimPrefix(nodePath, username+"/files")
 		nodePath = nodePath[strings.Index(nodePath, "/")+1:]
+		if nodePath == "" {
+			nodePath = username + "/files"
+		}
 		var sharedNodes []*db.Node
 		sharedNodes, err = findShareRoot(nodePath, username)
 		if err != nil {
@@ -63,7 +67,7 @@ func GetPreview(w http.ResponseWriter, r *http.Request) {
 
 	} else {
 
-		filePath = username + filePath
+		filePath = username + "/files" + filePath
 	}
 
 	file := db.GetSetting(db.DAV_ROOT) + filePath

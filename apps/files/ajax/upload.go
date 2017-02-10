@@ -55,7 +55,7 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	}
 
 	dir := r.PostForm.Get("dir")
-	targetdir := username
+	targetdir := username + "/files"
 	if dir != "/" {
 		targetdir += dir
 	}
@@ -68,7 +68,11 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if !exists {
-		nodePath := targetdir[strings.Index(targetdir, "/")+1:]
+		nodePath := strings.TrimPrefix(targetdir, username+"/files")
+		nodePath = nodePath[strings.Index(nodePath, "/")+1:]
+		if nodePath == "" {
+			nodePath = username + "/files"
+		}
 		var sharedNodes []*db.Node
 		sharedNodes, err = findShareRoot(nodePath, username)
 		if err != nil {
@@ -86,7 +90,8 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 		}
 
 		targetNode := sharedNodes[0]
-		targetdir = targetNode.Path[:strings.LastIndex(targetNode.Path, "/")] + targetdir[strings.Index(targetdir, "/"):]
+		targetdir = targetNode.Path[:strings.LastIndex(targetNode.Path, "/")] + strings.TrimPrefix(targetdir, username+"/files")
+
 		targetdir = db.GetSetting(db.DAV_ROOT) + targetdir
 
 	} else {
@@ -169,7 +174,7 @@ func uploadDirectory(w http.ResponseWriter, r *http.Request) {
 
 	fileDirectory := strings.TrimSuffix(r.PostForm.Get("file_directory"), "/")
 	dir := r.PostForm.Get("dir")
-	fullDirectory := username
+	fullDirectory := username + "/files"
 	if dir != "/" {
 		fullDirectory += dir
 	}
@@ -181,7 +186,7 @@ func uploadDirectory(w http.ResponseWriter, r *http.Request) {
 	exists := true
 	var err error
 	if dir != "/" {
-		exists, err = parentExists(fullDirectory)
+		exists, err = parentExists(fullDirectory, username)
 		if err != nil {
 			log.Error("Failed to check if node exists")
 			w.WriteHeader(http.StatusInternalServerError)
@@ -190,7 +195,11 @@ func uploadDirectory(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !exists {
-		nodePath := fullDirectory[strings.Index(fullDirectory, "/")+1:]
+		nodePath := strings.TrimPrefix(fullDirectory, username+"/files")
+		nodePath = nodePath[strings.Index(nodePath, "/")+1:]
+		if nodePath == "" {
+			nodePath = username + "/files"
+		}
 		var sharedNodes []*db.Node
 		sharedNodes, err = findShareRoot(nodePath, username)
 		if err != nil {
@@ -208,11 +217,7 @@ func uploadDirectory(w http.ResponseWriter, r *http.Request) {
 		}
 
 		targetNode := sharedNodes[0]
-		fullDirectory = targetNode.Path[:strings.LastIndex(targetNode.Path, "/")] + fullDirectory[strings.Index(fullDirectory, "/"):]
-
-	} else {
-
-		// fullDirectory = db.GetSetting(db.DAV_ROOT) + fullDirectory
+		fullDirectory = targetNode.Path[:strings.LastIndex(targetNode.Path, "/")] + strings.TrimPrefix(fullDirectory, username+"/files")
 
 	}
 
@@ -352,7 +357,7 @@ func findShareRoot(href string, username string) ([]*db.Node, error) {
 }
 
 // parentExists checks if the parent of a node exists
-func parentExists(path string) (bool, error) {
+func parentExists(path string, username string) (bool, error) {
 	exists, err := db.NodeExists(path)
 	if err != nil {
 		log.Error("Failed to check if node exists")
@@ -361,7 +366,9 @@ func parentExists(path string) (bool, error) {
 	lastSeperatorIndex := strings.LastIndex(path, "/")
 	for lastSeperatorIndex >= 0 && !exists {
 		path = path[:lastSeperatorIndex]
-		log.Info(path)
+		if path == username+"/files" {
+			return false, nil
+		}
 		exists, err = db.NodeExists(path)
 		if err != nil {
 			log.Error("Failed to check if node exists")

@@ -15,7 +15,7 @@ func MkcolAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Reque
 	user := identity.CurrentSession(r).Username
 	nodeOwner := user
 
-	parentNodePath := strings.Replace(r.URL.Path, "/remote.php/webdav", user, 1)
+	parentNodePath := strings.Replace(r.URL.Path, "/remote.php/webdav", user+"/files", 1)
 	parentNodePath = parentNodePath[:strings.LastIndex(parentNodePath, "/")]
 	exists, err := db.NodeExists(parentNodePath)
 	if err != nil {
@@ -24,7 +24,11 @@ func MkcolAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Reque
 		return
 	}
 	if !exists {
+		parentNodePath = strings.TrimPrefix(parentNodePath, user+"/files")
 		parentNodePath = parentNodePath[strings.Index(parentNodePath, "/")+1:]
+		if parentNodePath == "" {
+			parentNodePath = user + "/files"
+		}
 		var sharedNodes []*db.Node
 		sharedNodes, err = findShareRoot(parentNodePath, user)
 		if err != nil {
@@ -52,7 +56,7 @@ func MkcolAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Reque
 	} else {
 
 		r.URL.Path = strings.Replace(r.URL.Path,
-			"/remote.php/webdav", "/remote.php/webdav/"+user,
+			"/remote.php/webdav", "/remote.php/webdav/"+user+"/files",
 			1)
 
 	}

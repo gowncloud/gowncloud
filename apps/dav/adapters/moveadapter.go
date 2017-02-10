@@ -23,8 +23,8 @@ func MoveAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	nodePath := strings.Replace(r.URL.Path, "/remote.php/webdav", user, 1)
-	destinationNodePath := strings.Replace(destinationUrl.Path, "/remote.php/webdav", user, 1)
+	nodePath := strings.Replace(r.URL.Path, "/remote.php/webdav", user+"/files", 1)
+	destinationNodePath := strings.Replace(destinationUrl.Path, "/remote.php/webdav", user+"/files", 1)
 	exists, err := db.NodeExists(nodePath)
 	if err != nil {
 		log.Error("Failed to check if node exists")
@@ -32,8 +32,16 @@ func MoveAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Reques
 		return
 	}
 	if !exists {
+		nodePath = strings.TrimPrefix(nodePath, user+"/files")
 		nodePath = nodePath[strings.Index(nodePath, "/")+1:]
+		if nodePath == "" {
+			nodePath = user + "/files"
+		}
+		destinationNodePath = strings.TrimPrefix(destinationNodePath, user+"/files")
 		destinationNodePath = destinationNodePath[strings.Index(destinationNodePath, "/")+1:]
+		if destinationNodePath == "" {
+			destinationNodePath = user + "/files"
+		}
 		var sharedNodes []*db.Node
 		sharedNodes, err = findShareRoot(nodePath, user)
 		if err != nil {
@@ -62,11 +70,11 @@ func MoveAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Reques
 	} else {
 
 		r.URL.Path = strings.Replace(r.URL.Path,
-			"/remote.php/webdav", "/remote.php/webdav/"+user,
+			"/remote.php/webdav", "/remote.php/webdav/"+user+"/files",
 			1)
 
 		destinationUrl.Path = strings.Replace(destinationUrl.Path,
-			"/remote.php/webdav", "/remote.php/webdav/"+user,
+			"/remote.php/webdav", "/remote.php/webdav/"+user+"/files",
 			1)
 
 	}

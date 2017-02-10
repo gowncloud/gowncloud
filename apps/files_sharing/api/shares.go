@@ -107,7 +107,7 @@ func ShareInfo(w http.ResponseWriter, r *http.Request) {
 
 	// TODO: investigate reshares
 	if sharedWithMe != "true" {
-		shares, err := db.GetSharesByNodePath(identity.CurrentSession(r).Username + r.FormValue("path"))
+		shares, err := db.GetSharesByNodePath(identity.CurrentSession(r).Username + "/files" + r.FormValue("path"))
 
 		if err != nil {
 			log.Error("Failed to get shares")
@@ -148,7 +148,7 @@ func CreateShare(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	shareNode, err := db.GetNode(identity.CurrentSession(r).Username + r.FormValue("path"))
+	shareNode, err := db.GetNode(identity.CurrentSession(r).Username + "/files" + r.FormValue("path"))
 	if err != nil {
 		log.Error("Failed to get node from DB")
 		w.WriteHeader(http.StatusInternalServerError)
@@ -191,8 +191,7 @@ func CreateShare(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(&response)
 }
 
-// Shares is the endpoint for the /ocs/v1.php/apps/files_sharing/api/v1/shares
-// endpoint
+// Shares is the endpoint the /ocs/v1.php/apps/files_sharing/api/v1/shares
 func Sharees(w http.ResponseWriter, r *http.Request) {
 	search := r.URL.Query().Get("search")
 

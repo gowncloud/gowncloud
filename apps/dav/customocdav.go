@@ -81,8 +81,33 @@ func MakeUserHomeDirectory(username string) error {
 	}
 	_, err = db.SaveNode(username, username, true, "dir")
 	if err != nil {
-		log.Errorf("Failed to make home directory for user %v: %v", username, err)
+		log.Errorf("Failed to make base directory for user %v: %v", username, err)
 		return err
 	}
-	return os.Mkdir(db.GetSetting(db.DAV_ROOT)+username, os.ModePerm)
+	err = os.Mkdir(db.GetSetting(db.DAV_ROOT)+username, os.ModePerm)
+	if err != nil {
+		log.Errorf("Failed to make base directory for user %v: %v", username, err)
+		return err
+	}
+	_, err = db.SaveNode(username+"/files", username, true, "dir")
+	if err != nil {
+		log.Errorf("Failed to make files directory for user %v: %v", username, err)
+		return err
+	}
+	err = os.Mkdir(db.GetSetting(db.DAV_ROOT)+username+"/files", os.ModePerm)
+	if err != nil {
+		log.Errorf("Failed to make files directory for user %v: %v", username, err)
+		return err
+	}
+	_, err = db.SaveNode(username+"/files_trash", username, true, "dir")
+	if err != nil {
+		log.Errorf("Failed to make trash directory for user %v: %v", username, err)
+		return err
+	}
+	err = os.Mkdir(db.GetSetting(db.DAV_ROOT)+username+"/files_trash", os.ModePerm)
+	if err != nil {
+		log.Errorf("Failed to make trash directory for user %v: %v", username, err)
+		return err
+	}
+	return nil
 }

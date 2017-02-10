@@ -14,7 +14,7 @@ func DeleteAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Requ
 
 	user := identity.CurrentSession(r).Username
 
-	nodePath := strings.Replace(r.URL.Path, "/remote.php/webdav", user, 1)
+	nodePath := strings.Replace(r.URL.Path, "/remote.php/webdav", user+"/files", 1)
 	exists, err := db.NodeExists(nodePath)
 	if err != nil {
 		log.Error("Failed to check if node exists")
@@ -22,7 +22,11 @@ func DeleteAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Requ
 		return
 	}
 	if !exists {
+		nodePath = strings.TrimPrefix(nodePath, user+"/files")
 		nodePath = nodePath[strings.Index(nodePath, "/")+1:]
+		if nodePath == "" {
+			nodePath = user + "/files"
+		}
 		var sharedNodes []*db.Node
 		sharedNodes, err = findShareRoot(nodePath, user)
 		if err != nil {
@@ -60,7 +64,7 @@ func DeleteAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Requ
 	} else {
 
 		r.URL.Path = strings.Replace(r.URL.Path,
-			"/remote.php/webdav", "/remote.php/webdav/"+user,
+			"/remote.php/webdav", "/remote.php/webdav/"+user+"/files",
 			1)
 
 	}
