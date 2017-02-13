@@ -17,10 +17,21 @@ const (
 	callbackPath = "/oauth/callback"
 )
 
+//SessionKind defines the way a call is authenticated (by cookie/authorization header/...)
+type SessionKind int
+
+const (
+	//SessionByCookie the call is authenticated in a cookie
+	SessionByCookie SessionKind = iota
+	//SessionByHeader the call is authenticated using the `Authorization` header
+	SessionByHeader
+)
+
 //Session is the information about a logged in user
 type Session struct {
 	Username      string
 	Expires       time.Time
+	Kind          SessionKind
 	Token         *jwt.Token
 	Organizations []string
 }
@@ -39,13 +50,28 @@ func (s *Session) IsExpired() (expired bool) {
 	return
 }
 
-//AddIdentity add the current user session to the context, it is seperate from Protect to enable an identity aware logger to be inserted between the them
+//AddIdentity adds the current user session to the context, it is seperate from Protect to enable an identity aware logger to be inserted between the them
+// If an `Authorization` header is present, it needs to contain a valid bearer jwt or an http unauthorized is returned
 func AddIdentity(handler http.Handler, clientID string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		cookie, err := r.Cookie(cookieName)
-		if err == nil {
-			token := cookie.Value
+		sessionKind := SessionByCookie
+
+		//Check if a valid jwt is present in the `Authorization` header
+		authorizationHeader := r.Header.Get("Authorization")
+		token := strings.TrimSpace(strings.TrimPrefix(strings.TrimSpace(authorizationHeader), "bearer"))
+		if token != "" {
+			sessionKind = SessionByHeader
+		} else {
+			//Check if a jwt is present in a cookie (normally an interactive session through a browser)
+			cookie, err := r.Cookie(cookieName)
+			if err == nil {
+				token = cookie.Value
+			}
+		}
+
+		if token != "" {
 			s, err := verifyJWTToken(token, clientID)
+			s.Kind = sessionKind
 			if err == nil {
 				//Add session to context
 				ctx := context.WithValue(r.Context(), "session", *s)
@@ -114,6 +140,10 @@ func Protect(clientID string, clientSecret string, handler http.Handler) http.Ha
 		}
 		s := CurrentSession(r)
 		if s.Username == "" || s.IsExpired() {
+			if s.Kind == SessionByHeader {
+				http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+				return
+			}
 			redirectToOauthLogin(clientID, w, r)
 			return
 		}

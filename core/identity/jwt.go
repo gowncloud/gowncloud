@@ -49,9 +49,21 @@ func verifyJWTToken(tokenStr string, clientId string) (*Session, error) {
 		return nil, fmt.Errorf("invalid token")
 	}
 
-	// check the authorized party
-	if claims["azp"].(string) != clientId {
-		return nil, fmt.Errorf("We are not the authorized party - invalid token")
+	var authorizedAudience bool
+	// check if we are the authorized party
+	authorizedAudience = claims["azp"].(string) == clientId
+
+	if !authorizedAudience {
+		//Check if we are the intended audience
+		for _, audienceclaim := range claims["aud"].([]interface{}) {
+			if authorizedAudience = audienceclaim.(string) == clientId; authorizedAudience {
+				break
+			}
+		}
+	}
+
+	if !authorizedAudience {
+		return nil, fmt.Errorf("We are not the authorized party or an intended audience - invalid token")
 	}
 
 	// check usernames
