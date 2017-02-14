@@ -68,18 +68,18 @@ func AddIdentity(handler http.Handler, clientID string) http.Handler {
 				token = cookie.Value
 			}
 		}
-
+		var s *Session
 		if token != "" {
-			s, err := verifyJWTToken(token, clientID)
-			s.Kind = sessionKind
-			if err == nil {
-				//Add session to context
-				ctx := context.WithValue(r.Context(), "session", *s)
-				handler.ServeHTTP(w, r.WithContext(ctx))
-				return
-			}
+			s, _ = verifyJWTToken(token, clientID)
 		}
-		handler.ServeHTTP(w, r)
+		if s == nil {
+			s = &Session{}
+		}
+		s.Kind = sessionKind
+
+		//Add session to context
+		ctx := context.WithValue(r.Context(), "session", *s)
+		handler.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
 
