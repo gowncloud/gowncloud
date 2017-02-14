@@ -116,7 +116,7 @@ func main() {
 		}
 
 		// make the dav root dir
-		os.MkdirAll(davroot, os.ModePerm)
+		err = os.MkdirAll(davroot, os.ModePerm)
 		if err != nil {
 			log.Fatal("Failed to create dav root directory")
 		}
