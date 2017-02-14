@@ -245,7 +245,7 @@ func uploadDirectory(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
-		_, err = db.SaveNode(nodePath, nodePath[:strings.Index(nodePath, "/")], true, "dir")
+		_, err = db.SaveNode(nodePath, nodePath[:strings.Index(nodePath, "/")], true, "httpd/unix-directory")
 		if err != nil {
 			log.Error("Failed to save directory info")
 			w.WriteHeader(http.StatusInternalServerError)

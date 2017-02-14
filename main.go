@@ -12,6 +12,7 @@ import (
 	"github.com/gowncloud/gowncloud/apps/dav"
 	"github.com/gowncloud/gowncloud/apps/files/ajax"
 	files_sharing "github.com/gowncloud/gowncloud/apps/files_sharing/api"
+	trash "github.com/gowncloud/gowncloud/apps/files_trashbin/ajax"
 	"github.com/gowncloud/gowncloud/core/identity"
 	"github.com/gowncloud/gowncloud/core/logging"
 
@@ -148,6 +149,9 @@ func main() {
 		http.Handle("/apps/files/css/", http.StripPrefix("/apps/files/css/", http.FileServer(http.Dir("apps/files/css"))))
 		http.Handle("/apps/files/img/", http.StripPrefix("/apps/files/img/", http.FileServer(http.Dir("apps/files/img"))))
 		http.Handle("/apps/files/js/", http.StripPrefix("/apps/files/js/", http.FileServer(http.Dir("apps/files/js"))))
+		http.Handle("/apps/files_trashbin/css/", http.StripPrefix("/apps/files_trashbin/css/", http.FileServer(http.Dir("apps/files_trashbin/css"))))
+		http.Handle("/apps/files_trashbin/img/", http.StripPrefix("/apps/files_trashbin/img/", http.FileServer(http.Dir("apps/files_trashbin/img"))))
+		http.Handle("/apps/files_trashbin/js/", http.StripPrefix("/apps/files_trashbin/js/", http.FileServer(http.Dir("apps/files_trashbin/js"))))
 		http.Handle("/settings/", http.StripPrefix("/settings/", http.FileServer(http.Dir("settings"))))
 		http.Handle("/apps/files_sharing/", http.StripPrefix("/apps/files_sharing/", http.FileServer(http.Dir("apps/files_sharing"))))
 		http.Handle("/index.php/", http.StripPrefix("/index.php/", http.FileServer(http.Dir("."))))
@@ -155,6 +159,9 @@ func main() {
 
 		http.HandleFunc("/index.php/apps/files/ajax/getstoragestats.php", files.GetStorageStats)
 		http.HandleFunc("/index.php/core/preview.png", files.GetPreview)
+
+		http.HandleFunc("/index.php/apps/files_trashbin/ajax/list.php", trash.GetTrash)
+		http.HandleFunc("/index.php/apps/files_trashbin/ajax/delete.php", trash.DeleteTrash)
 
 		log.Infoln("Start listening on", bindAddress)
 		if err := http.ListenAndServe(bindAddress, identity.AddIdentity(logging.Handler(os.Stdout, identity.Protect(clientID, clientSecret, http.DefaultServeMux)), clientID)); err != nil {

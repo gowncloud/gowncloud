@@ -79,7 +79,7 @@ func MakeUserHomeDirectory(username string) error {
 		log.Errorf("Failed to create user %v: %v", username, err)
 		return err
 	}
-	_, err = db.SaveNode(username, username, true, "dir")
+	_, err = db.SaveNode(username, username, true, "httpd/unix-directory")
 	if err != nil {
 		log.Errorf("Failed to make base directory for user %v: %v", username, err)
 		return err
@@ -89,7 +89,7 @@ func MakeUserHomeDirectory(username string) error {
 		log.Errorf("Failed to make base directory for user %v: %v", username, err)
 		return err
 	}
-	_, err = db.SaveNode(username+"/files", username, true, "dir")
+	_, err = db.SaveNode(username+"/files", username, true, "httpd/unix-directory")
 	if err != nil {
 		log.Errorf("Failed to make files directory for user %v: %v", username, err)
 		return err
@@ -99,7 +99,7 @@ func MakeUserHomeDirectory(username string) error {
 		log.Errorf("Failed to make files directory for user %v: %v", username, err)
 		return err
 	}
-	_, err = db.SaveNode(username+"/files_trash", username, true, "dir")
+	_, err = db.SaveNode(username+"/files_trash", username, true, "httpd/unix-directory")
 	if err != nil {
 		log.Errorf("Failed to make trash directory for user %v: %v", username, err)
 		return err

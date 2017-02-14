@@ -61,7 +61,7 @@ func MkcolAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Reque
 
 	}
 
-	_, err = db.SaveNode(strings.Replace(r.URL.Path, "/remote.php/webdav/", "", 1), nodeOwner, true, "dir")
+	_, err = db.SaveNode(strings.Replace(r.URL.Path, "/remote.php/webdav/", "", 1), nodeOwner, true, "httpd/unix-directory")
 	if err != nil {
 		log.Error("Failed to save node")
 		w.WriteHeader(http.StatusInternalServerError)

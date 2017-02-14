@@ -13,6 +13,7 @@ type Node struct {
 	Path     string
 	Isdir    bool
 	MimeType string
+	Deleted  bool
 }
 
 // initNodes initializes the nodes table
@@ -22,7 +23,8 @@ func initNodes() {
 		"owner STRING REFERENCES gowncloud.users, " + //all nodes should have an owner
 		"path STRING NOT NULL UNIQUE, " +
 		"isdir BOOL NOT NULL," +
-		"mimetype STRING NOT NULL " +
+		"mimetype STRING NOT NULL, " +
+		"deleted BOOL NOT NULL " +
 		")")
 	if err != nil {
 		log.Fatal("Failed to create table 'nodes': ", err)
@@ -36,7 +38,7 @@ func initNodes() {
 func GetNode(path string) (*Node, error) {
 	node := &Node{}
 	row := db.QueryRow("SELECT * FROM gowncloud.nodes WHERE path = $1", path)
-	err := row.Scan(&node.ID, &node.Owner, &node.Path, &node.Isdir, &node.MimeType)
+	err := row.Scan(&node.ID, &node.Owner, &node.Path, &node.Isdir, &node.MimeType, &node.Deleted)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			log.Debug("Node not found in database for path: ", path)
@@ -50,8 +52,8 @@ func GetNode(path string) (*Node, error) {
 
 // SaveNode saves a new node in the database
 func SaveNode(path, owner string, isdir bool, mimetype string) (*Node, error) {
-	_, err := db.Exec("INSERT INTO gowncloud.nodes (owner, path, isdir, mimetype) VALUES ($1, $2, $3, $4)",
-		owner, path, isdir, mimetype)
+	_, err := db.Exec("INSERT INTO gowncloud.nodes (owner, path, isdir, mimetype, deleted) "+
+		"VALUES ($1, $2, $3, $4, false)", owner, path, isdir, mimetype)
 	if err != nil {
 		log.Error("Error while saving node: ", err)
 		return nil, ErrDB
@@ -65,12 +67,21 @@ func SaveNode(path, owner string, isdir bool, mimetype string) (*Node, error) {
 // no error is returned, the client can be sure no more node with the given path
 // is present in the database when this function returns.
 func DeleteNode(path string) error {
+	// Delete the shares on the node if there are any
 	_, err := db.Exec("DELETE FROM gowncloud.membershares WHERE nodeid in ("+
 		"SELECT nodeid FROM gowncloud.nodes WHERE path = $1)", path)
 	if err != nil {
 		log.Error("Failed to delete share on node: ", err)
 		return ErrDB
 	}
+
+	// Delete the trash REFERENCES
+	_, err = db.Exec("DELETE FROM gowncloud.trashnodes WHERE nodeid in ("+
+		"SELECT nodeid FROM gowncloud.nodes WHERE path LIKE $1 || '%')", path)
+	if err != nil {
+		log.Error("Failed to delete trash reference on node: ", err)
+	}
+
 	_, err = db.Exec("DELETE FROM gowncloud.nodes WHERE path LIKE $1 || '%'", path)
 	if err != nil {
 		log.Error("Failed to delete node: ", err)
@@ -98,7 +109,7 @@ func GetSharedNode(shareId int) (*Node, error) {
 	row := db.QueryRow("SELECT * FROM gowncloud.nodes WHERE nodeid in ("+
 		"SELECT nodeid FROM gowncloud.membershares WHERE shareid = $1)", shareId)
 	node := &Node{}
-	err := row.Scan(&node.ID, &node.Owner, &node.Path, &node.Isdir, &node.MimeType)
+	err := row.Scan(&node.ID, &node.Owner, &node.Path, &node.Isdir, &node.MimeType, &node.Deleted)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			log.Debug("Node not found in database for shareId ", shareId)
@@ -127,7 +138,7 @@ func GetSharedNamedNodesToUser(nodeName, sharee string) ([]*Node, error) {
 	defer rows.Close()
 	for rows.Next() {
 		node := &Node{}
-		err = rows.Scan(&node.ID, &node.Owner, &node.Path, &node.Isdir, &node.MimeType)
+		err = rows.Scan(&node.ID, &node.Owner, &node.Path, &node.Isdir, &node.MimeType, &node.Deleted)
 		if err != nil {
 			log.Error("Error while reading shares")
 			return nil, ErrDB
@@ -146,7 +157,7 @@ func GetSharedNamedNodesToUser(nodeName, sharee string) ([]*Node, error) {
 func MoveNode(originalPath string, targetPath string) error {
 	result, err := db.Exec("UPDATE gowncloud.nodes SET path = $1 WHERE path = $2", targetPath, originalPath)
 	if err != nil {
-		log.Errorf("Error updating path %v", originalPath)
+		log.Errorf("Error updating path %v: %v", originalPath, err)
 		return ErrDB
 	}
 	rowsAffected, err := result.RowsAffected()
