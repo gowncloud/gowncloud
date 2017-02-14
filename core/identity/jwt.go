@@ -108,7 +108,7 @@ func getJWTToken(code string, clientID string, clientSecret string, r *http.Requ
 	q.Add("client_secret", clientSecret)
 	q.Add("code", code)
 	//TODO: make this request dependent
-	q.Add("redirect_uri", "http://localhost:8080/oauth/callback")
+	q.Add("redirect_uri", "http://"+r.Host+"/oauth/callback")
 	q.Add("response_type", "id_token")
 	q.Add("scope", "user:memberof:"+clientID)
 	q.Add("state", "STATE")
