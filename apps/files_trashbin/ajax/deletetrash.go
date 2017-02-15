@@ -34,48 +34,13 @@ func DeleteTrash(w http.ResponseWriter, r *http.Request) {
 	allFiles := fd.Get("allfiles")
 	dir := fd.Get("dir")
 	rawfiles := fd.Get("files")
-	rawfiles = strings.TrimSuffix(strings.TrimPrefix(rawfiles, "["), "]")
+	username := identity.CurrentSession(r).Username
 
-	files := strings.Split(rawfiles, ",")
-
-	dirParts := strings.Split(dir, "/")
-	// UI seems to append some random .d[UNIXTIMESTRING] to the first "real" part
-	// Because dir always has a leading slash, the first actual part (part 0) is empty
-	if strings.Contains(dirParts[1], ".") {
-		dirParts[1] = dirParts[1][:strings.LastIndex(dirParts[1], ".")]
-	}
-	dir = strings.Join(dirParts, "/")
-
-	basePath := identity.CurrentSession(r).Username + TRASH_DIR + dir
-
-	// ensure basePath ends with a '/' character
-	if !strings.HasSuffix(dir, "/") {
-		basePath += "/"
-	}
-
-	if allFiles == "true" {
-		entries, err := ioutil.ReadDir(db.GetSetting(db.DAV_ROOT) + basePath)
-		if err != nil {
-			log.Error("Failed to get contents of trash directory: ", err)
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-		for _, entry := range entries {
-			files = append(files, entry.Name())
-		}
-	}
-
-	filePaths := make([]string, 0)
-	for _, file := range files {
-		if file == "" {
-			// Don't remove the base directory
-			continue
-		}
-		file = strings.TrimPrefix(strings.TrimSuffix(file, "\""), "\"")
-		if dir == "/" && allFiles != "true" {
-			file = file[:strings.LastIndex(file, ".")]
-		}
-		filePaths = append(filePaths, basePath+file)
+	filePaths, files, err := generateFileList(rawfiles, dir, username, allFiles)
+	if err != nil {
+		log.Error("Failed to generate file paths: ", err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
 	}
 
 	nodeResponses := make([]nodeResponse, 0)
@@ -123,4 +88,50 @@ func DeleteTrash(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(resp)
 
+}
+
+func generateFileList(rawfiles, dir, username, allFiles string) ([]string, []string, error) {
+	rawfiles = strings.TrimSuffix(strings.TrimPrefix(rawfiles, "["), "]")
+
+	files := strings.Split(rawfiles, ",")
+
+	dirParts := strings.Split(dir, "/")
+	// UI seems to append some random .d[UNIXTIMESTRING] to the first "real" part
+	// Because dir always has a leading slash, the first actual part (part 0) is empty
+	if strings.Contains(dirParts[1], ".") {
+		dirParts[1] = dirParts[1][:strings.LastIndex(dirParts[1], ".")]
+	}
+	dir = strings.Join(dirParts, "/")
+
+	basePath := username + TRASH_DIR + dir
+
+	// ensure basePath ends with a '/' character
+	if !strings.HasSuffix(dir, "/") {
+		basePath += "/"
+	}
+
+	if allFiles == "true" {
+		entries, err := ioutil.ReadDir(db.GetSetting(db.DAV_ROOT) + basePath)
+		if err != nil {
+			return nil, nil, err
+		}
+		for _, entry := range entries {
+			files = append(files, entry.Name())
+		}
+	}
+
+	filePaths := make([]string, 0)
+	for _, file := range files {
+		if file == "" {
+			// Ignore the base directory
+			continue
+		}
+		file = strings.TrimPrefix(strings.TrimSuffix(file, "\""), "\"")
+		if dir == "/" && allFiles != "true" {
+			file = file[:strings.LastIndex(file, ".")]
+		}
+		filePaths = append(filePaths, basePath+file)
+	}
+
+	return filePaths, files, nil
 }

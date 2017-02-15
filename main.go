@@ -162,6 +162,7 @@ func main() {
 
 		http.HandleFunc("/index.php/apps/files_trashbin/ajax/list.php", trash.GetTrash)
 		http.HandleFunc("/index.php/apps/files_trashbin/ajax/delete.php", trash.DeleteTrash)
+		http.HandleFunc("/index.php/apps/files_trashbin/ajax/undelete.php", trash.UndeleteTrash)
 
 		log.Infoln("Start listening on", bindAddress)
 		if err := http.ListenAndServe(bindAddress, identity.AddIdentity(logging.Handler(os.Stdout, identity.Protect(clientID, clientSecret, http.DefaultServeMux)), clientID)); err != nil {

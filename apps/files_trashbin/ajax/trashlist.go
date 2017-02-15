@@ -12,6 +12,7 @@ import (
 )
 
 const TRASH_DIR = "/files_trash"
+const FILES_DIR = "/files"
 
 type response struct {
 	Data   data   `json:"data"`

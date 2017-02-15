@@ -44,7 +44,8 @@ func CreateTrashNode(nodeId int, owner string, path string, isDir bool) (*TrashN
 // nil is returned without error.
 func GetTrashNode(path string) (*TrashNode, error) {
 	tn := &TrashNode{}
-	row := db.QueryRow("SELECT * FROM gowncloud.trashnodes WHERE path = $1", path)
+	row := db.QueryRow("SELECT * FROM gowncloud.trashnodes WHERE nodeid in ("+
+		"SELECT nodeid FROM gowncloud.nodes WHERE path = $1)", path)
 	err := row.Scan(&tn.NodeId, &tn.Owner, &tn.Path, &tn.IsDir)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -55,4 +56,13 @@ func GetTrashNode(path string) (*TrashNode, error) {
 		return nil, ErrDB
 	}
 	return tn, nil
+}
+
+func DeleteTrashNode(path string) error {
+	_, err := db.Exec("DELETE FROM gowncloud.trashnodes WHERE path = $1", path)
+	if err != nil {
+		log.Error("Error while deleting trashnode: ", err)
+		return ErrDB
+	}
+	return nil
 }
