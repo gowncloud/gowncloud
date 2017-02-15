@@ -63,6 +63,8 @@ func (dav *CustomOCDav) DispatchRequest() http.Handler {
 		case "PROPFIND":
 			ensureHomeDirectoryMiddleware(ocdavadapters.PropFindAdapter, dav.dav.ServeHTTP, w, r)
 			break
+		case "PUT":
+			ocdavadapters.PutAdapter(dav.dav.ServeHTTP, w, r)
 		default:
 			dav.dav.ServeHTTP(w, r)
 			break
