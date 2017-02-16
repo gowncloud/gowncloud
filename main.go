@@ -165,6 +165,10 @@ func main() {
 		defaultMux.Handle("/index.php/", http.StripPrefix("/index.php/", http.FileServer(http.Dir("."))))
 		defaultMux.HandleFunc("/index.php/apps/files/ajax/upload.php", files.Upload)
 
+		defaultMux.HandleFunc("/index.php/apps/files/api/v1/files/", files.Favorite)
+
+		defaultMux.HandleFunc("/index.php/apps/files/api/v1/tags/_$!<Favorite>!$_/files", files.ListFavorites)
+
 		defaultMux.HandleFunc("/index.php/apps/files/ajax/getstoragestats.php", files.GetStorageStats)
 		defaultMux.HandleFunc("/index.php/core/preview.png", files.GetPreview)
 

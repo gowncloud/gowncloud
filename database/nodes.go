@@ -82,6 +82,13 @@ func DeleteNode(path string) error {
 		log.Error("Failed to delete trash reference on node: ", err)
 	}
 
+	// Delete favorites references
+	_, err = db.Exec("DELETE FROM gowncloud.favorites WHERE nodeid in ("+
+		"SELECT nodeid FROM gowncloud.nodes WHERE path LIKE $1 || '%')", path)
+	if err != nil {
+		log.Error("Failed to delete trash reference on node: ", err)
+	}
+
 	_, err = db.Exec("DELETE FROM gowncloud.nodes WHERE path LIKE $1 || '%'", path)
 	if err != nil {
 		log.Error("Failed to delete node: ", err)

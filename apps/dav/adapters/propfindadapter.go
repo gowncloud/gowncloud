@@ -57,7 +57,7 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 			if len(sharedNodes) > 1 {
 				log.Warn("Shared folder collision")
 			}
-			propFindSharedDirectory(handler, w, r, sharedNodes[0])
+			propFindSharedDirectory(handler, w, r, sharedNodes[0], username)
 			return
 		}
 	}
@@ -141,6 +141,12 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
+		isFavorited, err := db.IsFavoriteByNodeid(file.ID, username)
+		if err != nil {
+			log.Error("Error checking is node is a favorite")
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
 		propstats := fileResponse.SelectElements("propstat")
 		for _, propstat := range propstats {
 			prop := propstat.SelectElement("prop")
@@ -157,6 +163,10 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 					shareTypes := prop.CreateElement("OC:share-types")
 					shareType := shareTypes.CreateElement("OC:share-type")
 					shareType.SetText("0")
+				}
+				if isFavorited {
+					favorite := prop.CreateElement("OC:favorite")
+					favorite.SetText("1")
 				}
 				continue
 			}
@@ -182,6 +192,15 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 				w.WriteHeader(http.StatusInternalServerError)
 				return
 			}
+			if isFavorited {
+				favorite := prop.SelectElement("favorite")
+				removedChild := prop.RemoveChild(favorite)
+				if removedChild == nil {
+					log.Error("Failed to patch favorite")
+					w.WriteHeader(http.StatusInternalServerError)
+					return
+				}
+			}
 		}
 	}
 
@@ -203,6 +222,12 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 		shares, err := db.GetSharesByNodeId(dir.ID)
 		if err != nil {
 			log.Error("Error getting possible shares from database")
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		isFavorited, err := db.IsFavoriteByNodeid(dir.ID, username)
+		if err != nil {
+			log.Error("Error checking is node is a favorite")
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
@@ -233,6 +258,10 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 					shareTypes := prop.CreateElement("OC:share-types")
 					shareType := shareTypes.CreateElement("OC:share-type")
 					shareType.SetText("0")
+				}
+				if isFavorited {
+					favorite := prop.CreateElement("OC:favorite")
+					favorite.SetText("1")
 				}
 				continue
 			}
@@ -265,6 +294,15 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 				w.WriteHeader(http.StatusInternalServerError)
 				return
 			}
+			if isFavorited {
+				favorite := prop.SelectElement("favorite")
+				removedChild := prop.RemoveChild(favorite)
+				if removedChild == nil {
+					log.Error("Failed to patch favorite")
+					w.WriteHeader(http.StatusInternalServerError)
+					return
+				}
+			}
 		}
 	}
 
@@ -282,6 +320,12 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 			sharedNode, err := db.GetSharedNode(share.ShareID)
 			if err != nil {
 				log.Error("Failed to get node from share")
+				w.WriteHeader(http.StatusInternalServerError)
+				return
+			}
+			isFavorited, err := db.IsFavoriteByNodeid(sharedNode.ID, username)
+			if err != nil {
+				log.Error("Error checking is node is a favorite")
 				w.WriteHeader(http.StatusInternalServerError)
 				return
 			}
@@ -338,6 +382,11 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 
 								prop.CreateElement("OC:share-types")
 
+								if isFavorited {
+									favorite := prop.CreateElement("OC:favorite")
+									favorite.SetText("1")
+								}
+
 								continue
 							}
 							fileId := prop.CreateElement("OC:fileid")
@@ -373,7 +422,7 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 // propFindSharedDirectory returns a modified propfind response to allow users
 // to enter shared directories.
 // FIXME: lots of code copied from PropFindAdapter, needs merge
-func propFindSharedDirectory(handler http.HandlerFunc, w http.ResponseWriter, r *http.Request, target *db.Node) {
+func propFindSharedDirectory(handler http.HandlerFunc, w http.ResponseWriter, r *http.Request, target *db.Node, username string) {
 
 	targetRoot := "/" + target.Path[:strings.LastIndex(target.Path, "/")]
 
@@ -462,6 +511,12 @@ func propFindSharedDirectory(handler http.HandlerFunc, w http.ResponseWriter, r 
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
+		isFavorited, err := db.IsFavoriteByNodeid(file.ID, username)
+		if err != nil {
+			log.Error("Error checking is node is a favorite")
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
 		propstats := fileResponse.SelectElements("propstat")
 		for _, propstat := range propstats {
 			prop := propstat.SelectElement("prop")
@@ -478,6 +533,10 @@ func propFindSharedDirectory(handler http.HandlerFunc, w http.ResponseWriter, r 
 					shareTypes := prop.CreateElement("OC:share-types")
 					shareType := shareTypes.CreateElement("OC:share-type")
 					shareType.SetText("0")
+				}
+				if isFavorited {
+					favorite := prop.CreateElement("OC:favorite")
+					favorite.SetText("1")
 				}
 				continue
 			}
@@ -503,6 +562,15 @@ func propFindSharedDirectory(handler http.HandlerFunc, w http.ResponseWriter, r 
 				w.WriteHeader(http.StatusInternalServerError)
 				return
 			}
+			if isFavorited {
+				favorite := prop.SelectElement("favorite")
+				removedChild := prop.RemoveChild(favorite)
+				if removedChild == nil {
+					log.Error("Failed to patch favorite")
+					w.WriteHeader(http.StatusInternalServerError)
+					return
+				}
+			}
 		}
 	}
 
@@ -525,6 +593,12 @@ func propFindSharedDirectory(handler http.HandlerFunc, w http.ResponseWriter, r 
 		shares, err := db.GetSharesByNodeId(dir.ID)
 		if err != nil {
 			log.Error("Error getting possible shares from database")
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		isFavorited, err := db.IsFavoriteByNodeid(dir.ID, username)
+		if err != nil {
+			log.Error("Error checking is node is a favorite")
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
@@ -556,6 +630,10 @@ func propFindSharedDirectory(handler http.HandlerFunc, w http.ResponseWriter, r 
 					shareType := shareTypes.CreateElement("OC:share-type")
 					shareType.SetText("0")
 				}
+				if isFavorited {
+					favorite := prop.CreateElement("OC:favorite")
+					favorite.SetText("1")
+				}
 				continue
 			}
 			// Remove attributes we patchted from the not found section
@@ -586,6 +664,15 @@ func propFindSharedDirectory(handler http.HandlerFunc, w http.ResponseWriter, r 
 				log.Error("Failed to patch share-types")
 				w.WriteHeader(http.StatusInternalServerError)
 				return
+			}
+			if isFavorited {
+				favorite := prop.SelectElement("favorite")
+				removedChild := prop.RemoveChild(favorite)
+				if removedChild == nil {
+					log.Error("Failed to patch favorite")
+					w.WriteHeader(http.StatusInternalServerError)
+					return
+				}
 			}
 		}
 	}

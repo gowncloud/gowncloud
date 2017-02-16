@@ -66,6 +66,7 @@ func Initialize() {
 	// init tables with foreign keys to tables without foreign keys
 	initMemberShares()
 	initTrashNodes()
+	initFavorites()
 
 	initialized = true
 	log.Info("Database initialized")
