@@ -163,6 +163,9 @@ func main() {
 		defaultMux.Handle("/settings/", http.StripPrefix("/settings/", http.FileServer(http.Dir("settings"))))
 		defaultMux.Handle("/apps/files_sharing/", http.StripPrefix("/apps/files_sharing/", http.FileServer(http.Dir("apps/files_sharing"))))
 		defaultMux.Handle("/index.php/", http.StripPrefix("/index.php/", http.FileServer(http.Dir("."))))
+
+		defaultMux.Handle("/apps/files_videoplayer/", http.StripPrefix("/apps/files_videoplayer/", http.FileServer(http.Dir("apps/files_videoplayer"))))
+
 		defaultMux.HandleFunc("/index.php/apps/files/ajax/upload.php", files.Upload)
 
 		defaultMux.HandleFunc("/index.php/apps/files/api/v1/files/", files.Favorite)
