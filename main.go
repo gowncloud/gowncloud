@@ -13,6 +13,7 @@ import (
 	"github.com/gowncloud/gowncloud/apps/files/ajax"
 	files_sharing "github.com/gowncloud/gowncloud/apps/files_sharing/api"
 	trash "github.com/gowncloud/gowncloud/apps/files_trashbin/ajax"
+	"github.com/gowncloud/gowncloud/core"
 	"github.com/gowncloud/gowncloud/core/identity"
 	"github.com/gowncloud/gowncloud/core/logging"
 
@@ -116,6 +117,11 @@ func main() {
 			db.UpdateSetting(db.DAV_ROOT, davroot)
 		}
 
+		// Update the versionstring in the database if it changed
+		if db.GetSetting(db.VERSION) != version {
+			db.UpdateSetting(db.VERSION, version)
+		}
+
 		// make the dav root dir
 		err = os.MkdirAll(davroot, os.ModePerm)
 		if err != nil {
@@ -163,6 +169,8 @@ func main() {
 		http.HandleFunc("/index.php/apps/files_trashbin/ajax/list.php", trash.GetTrash)
 		http.HandleFunc("/index.php/apps/files_trashbin/ajax/delete.php", trash.DeleteTrash)
 		http.HandleFunc("/index.php/apps/files_trashbin/ajax/undelete.php", trash.UndeleteTrash)
+
+		http.HandleFunc("/status.php", core.Status)
 
 		log.Infoln("Start listening on", bindAddress)
 		if err := http.ListenAndServe(bindAddress, identity.AddIdentity(logging.Handler(os.Stdout, identity.Protect(clientID, clientSecret, http.DefaultServeMux)), clientID)); err != nil {

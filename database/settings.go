@@ -7,6 +7,8 @@ var (
 	DEFAULT_ALLOWED_SPACE = "defaultallowedspace"
 	// DAV_ROOT is the root directory of the dav server.
 	DAV_ROOT = "davroot"
+	// VERSION is the current version of the apps
+	VERSION = "version"
 )
 
 var settings map[string]string
@@ -91,6 +93,7 @@ func makeDefaultSettings() {
 
 	settings[DEFAULT_ALLOWED_SPACE] = "0"
 	settings[DAV_ROOT] = "gowncloud-data"
+	settings[VERSION] = ""
 
 	for key, value := range settings {
 		_, err := db.Exec("INSERT INTO gowncloud.settings (key, value) VALUES ($1, $2)",
