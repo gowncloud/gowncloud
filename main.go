@@ -26,7 +26,7 @@ var version string
 
 func main() {
 	if version == "" {
-		version = "Dev"
+		version = "0.0-Dev"
 	}
 	app := cli.NewApp()
 	app.Name = "gowncloud"
@@ -128,11 +128,13 @@ func main() {
 			log.Fatal("Failed to create dav root directory")
 		}
 
+		defaultMux := http.NewServeMux()
+
 		server := dav.NewCustomOCDav(davroot)
 
-		http.Handle("/remote.php/webdav/", server.DispatchRequest())
+		defaultMux.Handle("/remote.php/webdav/", server.DispatchRequest())
 
-		http.HandleFunc("/index.php", func(w http.ResponseWriter, r *http.Request) {
+		defaultMux.HandleFunc("/index.php", func(w http.ResponseWriter, r *http.Request) {
 			s := identity.CurrentSession(r)
 			renderTemplate(w, "index.html", &s)
 		})
@@ -140,40 +142,42 @@ func main() {
 		r.HandleFunc("/ocs/v2.php/apps/files_sharing/api/v1/shares", files_sharing.ShareInfo).Methods("GET")
 		r.HandleFunc("/ocs/v2.php/apps/files_sharing/api/v1/shares", files_sharing.CreateShare).Methods("POST")
 		r.HandleFunc("/ocs/v2.php/apps/files_sharing/api/v1/shares/{shareid}", files_sharing.DeleteShare).Methods("DELETE")
-		http.Handle("/ocs/v2.php/apps/files_sharing/api/v1/shares", r)
+		defaultMux.Handle("/ocs/v2.php/apps/files_sharing/api/v1/shares", r)
 		// FIXME: small hack for now to enale the shareid variable in the url for share deletes
-		http.Handle("/ocs/v2.php/apps/files_sharing/api/v1/shares/", r)
-		http.HandleFunc("/ocs/v1.php/apps/files_sharing/api/v1/sharees", files_sharing.Sharees)
-		http.HandleFunc("/logout", func(w http.ResponseWriter, r *http.Request) {
+		defaultMux.Handle("/ocs/v2.php/apps/files_sharing/api/v1/shares/", r)
+		defaultMux.HandleFunc("/ocs/v1.php/apps/files_sharing/api/v1/sharees", files_sharing.Sharees)
+		defaultMux.HandleFunc("/logout", func(w http.ResponseWriter, r *http.Request) {
 			identity.ClearSession(w)
 			//TODO: make a decent logged out page since now you will be redirected to itsyou.online for login again
 			http.Redirect(w, r, "/", http.StatusFound)
 		})
-		http.Handle("/core/", http.StripPrefix("/core/", http.FileServer(http.Dir("core"))))
-		http.Handle("/apps/dav/", http.StripPrefix("/apps/dav/", http.FileServer(http.Dir("apps/dav"))))
-		http.Handle("/apps/federatedfilesharing/", http.StripPrefix("/apps/federatedfilesharing/", http.FileServer(http.Dir("apps/federatedfilesharing"))))
-		http.Handle("/apps/files/css/", http.StripPrefix("/apps/files/css/", http.FileServer(http.Dir("apps/files/css"))))
-		http.Handle("/apps/files/img/", http.StripPrefix("/apps/files/img/", http.FileServer(http.Dir("apps/files/img"))))
-		http.Handle("/apps/files/js/", http.StripPrefix("/apps/files/js/", http.FileServer(http.Dir("apps/files/js"))))
-		http.Handle("/apps/files_trashbin/css/", http.StripPrefix("/apps/files_trashbin/css/", http.FileServer(http.Dir("apps/files_trashbin/css"))))
-		http.Handle("/apps/files_trashbin/img/", http.StripPrefix("/apps/files_trashbin/img/", http.FileServer(http.Dir("apps/files_trashbin/img"))))
-		http.Handle("/apps/files_trashbin/js/", http.StripPrefix("/apps/files_trashbin/js/", http.FileServer(http.Dir("apps/files_trashbin/js"))))
-		http.Handle("/settings/", http.StripPrefix("/settings/", http.FileServer(http.Dir("settings"))))
-		http.Handle("/apps/files_sharing/", http.StripPrefix("/apps/files_sharing/", http.FileServer(http.Dir("apps/files_sharing"))))
-		http.Handle("/index.php/", http.StripPrefix("/index.php/", http.FileServer(http.Dir("."))))
-		http.HandleFunc("/index.php/apps/files/ajax/upload.php", files.Upload)
+		defaultMux.Handle("/core/", http.StripPrefix("/core/", http.FileServer(http.Dir("core"))))
+		defaultMux.Handle("/apps/dav/", http.StripPrefix("/apps/dav/", http.FileServer(http.Dir("apps/dav"))))
+		defaultMux.Handle("/apps/federatedfilesharing/", http.StripPrefix("/apps/federatedfilesharing/", http.FileServer(http.Dir("apps/federatedfilesharing"))))
+		defaultMux.Handle("/apps/files/css/", http.StripPrefix("/apps/files/css/", http.FileServer(http.Dir("apps/files/css"))))
+		defaultMux.Handle("/apps/files/img/", http.StripPrefix("/apps/files/img/", http.FileServer(http.Dir("apps/files/img"))))
+		defaultMux.Handle("/apps/files/js/", http.StripPrefix("/apps/files/js/", http.FileServer(http.Dir("apps/files/js"))))
+		defaultMux.Handle("/apps/files_trashbin/css/", http.StripPrefix("/apps/files_trashbin/css/", http.FileServer(http.Dir("apps/files_trashbin/css"))))
+		defaultMux.Handle("/apps/files_trashbin/img/", http.StripPrefix("/apps/files_trashbin/img/", http.FileServer(http.Dir("apps/files_trashbin/img"))))
+		defaultMux.Handle("/apps/files_trashbin/js/", http.StripPrefix("/apps/files_trashbin/js/", http.FileServer(http.Dir("apps/files_trashbin/js"))))
+		defaultMux.Handle("/settings/", http.StripPrefix("/settings/", http.FileServer(http.Dir("settings"))))
+		defaultMux.Handle("/apps/files_sharing/", http.StripPrefix("/apps/files_sharing/", http.FileServer(http.Dir("apps/files_sharing"))))
+		defaultMux.Handle("/index.php/", http.StripPrefix("/index.php/", http.FileServer(http.Dir("."))))
+		defaultMux.HandleFunc("/index.php/apps/files/ajax/upload.php", files.Upload)
 
-		http.HandleFunc("/index.php/apps/files/ajax/getstoragestats.php", files.GetStorageStats)
-		http.HandleFunc("/index.php/core/preview.png", files.GetPreview)
+		defaultMux.HandleFunc("/index.php/apps/files/ajax/getstoragestats.php", files.GetStorageStats)
+		defaultMux.HandleFunc("/index.php/core/preview.png", files.GetPreview)
 
-		http.HandleFunc("/index.php/apps/files_trashbin/ajax/list.php", trash.GetTrash)
-		http.HandleFunc("/index.php/apps/files_trashbin/ajax/delete.php", trash.DeleteTrash)
-		http.HandleFunc("/index.php/apps/files_trashbin/ajax/undelete.php", trash.UndeleteTrash)
+		defaultMux.HandleFunc("/index.php/apps/files_trashbin/ajax/list.php", trash.GetTrash)
+		defaultMux.HandleFunc("/index.php/apps/files_trashbin/ajax/delete.php", trash.DeleteTrash)
+		defaultMux.HandleFunc("/index.php/apps/files_trashbin/ajax/undelete.php", trash.UndeleteTrash)
 
-		http.HandleFunc("/status.php", core.Status)
+		rootMux := http.NewServeMux()
+		rootMux.Handle("/", identity.AddIdentity(logging.Handler(os.Stdout, identity.Protect(clientID, clientSecret, defaultMux)), clientID))
+		rootMux.Handle("/status.php", logging.Handler(os.Stdout, http.HandlerFunc(core.Status)))
 
 		log.Infoln("Start listening on", bindAddress)
-		if err := http.ListenAndServe(bindAddress, identity.AddIdentity(logging.Handler(os.Stdout, identity.Protect(clientID, clientSecret, http.DefaultServeMux)), clientID)); err != nil {
+		if err := http.ListenAndServe(bindAddress, rootMux); err != nil {
 			log.Fatalf("server error: %v", err)
 		}
 	}
