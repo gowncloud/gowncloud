@@ -93,7 +93,7 @@ func makeDefaultSettings() {
 
 	settings[DEFAULT_ALLOWED_SPACE] = "0"
 	settings[DAV_ROOT] = "gowncloud-data"
-	settings[VERSION] = ""
+	settings[VERSION] = "?"
 
 	for key, value := range settings {
 		_, err := db.Exec("INSERT INTO gowncloud.settings (key, value) VALUES ($1, $2)",
