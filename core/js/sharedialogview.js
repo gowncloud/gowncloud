@@ -24,7 +24,6 @@
 		'</div>' +
 		'{{/if}}' +
 		'<div class="shareeListView subView"></div>' +
-		'<div class="linkShareView subView"></div>' +
 		'<div class="expirationView subView"></div>' +
 		'<div class="mailView subView"></div>' +
 		'<div class="loading hidden" style="height: 50px"></div>';
