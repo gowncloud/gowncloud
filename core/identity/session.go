@@ -58,7 +58,7 @@ func AddIdentity(handler http.Handler, clientID string) http.Handler {
 
 		//Check if a valid jwt is present in the `Authorization` header
 		authorizationHeader := r.Header.Get("Authorization")
-		token := strings.TrimSpace(strings.TrimPrefix(strings.TrimSpace(authorizationHeader), "bearer"))
+		token := strings.TrimSpace(strings.TrimPrefix(strings.TrimPrefix(strings.TrimSpace(authorizationHeader), "bearer"), "Bearer"))
 		if token != "" {
 			sessionKind = SessionByHeader
 		} else {
