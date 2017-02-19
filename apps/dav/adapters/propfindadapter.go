@@ -1,6 +1,9 @@
 package ocdavadapters
 
 import (
+	"bytes"
+	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
@@ -19,6 +22,25 @@ const (
 	STATUS_NOTFOUND = "HTTP/1.1 404 Not Found"
 )
 
+// patchFunction is the signature of any function that patches an element from the propfind response.
+// A patchFunction should remove the element from the not found section, and add it
+// with the appropriate value to the found section
+type patchFunction func(foundProps *etree.Element, notFoundProps *etree.Element, node *db.Node, shared []*db.MemberShare, user string) error
+
+// patchMap maps the possible requested tags to their correct function to add
+// said tags. To add a new tag, a function should be written that matches the
+// patchFunction signature, and be registered here. This way additional tags can be
+// implemented without changing any of the propfind function. Also we can check
+// and only patch the requested properties.
+var patchMap map[string]patchFunction = map[string]patchFunction{
+	"fileid":             patchFileId,
+	"permissions":        patchPermissions,
+	"share-types":        patchShareTypes,
+	"favorite":           patchFavorite,
+	"size":               patchSize,
+	"owner-display-name": patchOwnerDisplayName,
+}
+
 // PropFindAdapter is the adapter for the PROPFIND method. It intercepts the response
 // from the dav server, and then tries to modify it by adding responses stored in
 // the datastore
@@ -29,6 +51,9 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 	// Check the request path. If it points to the home direcotry we need to
 	// include the shares later on
 	isHomeDir := r.URL.Path == "/remote.php/webdav/"
+
+	var inSharedNode bool
+	var targetRoot string
 
 	// Sinse home directories can't be shared, we don't need to check if we are going
 	// into a shared folder
@@ -42,7 +67,7 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 		// If no node was found, look for shared nodes
 		if targetNode == nil {
 			log.Debug("Looking for shares")
-			// sharedNodes, err := db.GetSharedNamedNodesToUser(strings.TrimLeft(r.URL.Path, "/remote.php/webdav/"), username)
+
 			sharedNodes, err := findShareRoot(r.URL.Path, username)
 			if err != nil {
 				log.Error("Error while searching for shared nodes")
@@ -57,18 +82,50 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 			if len(sharedNodes) > 1 {
 				log.Warn("Shared folder collision")
 			}
-			propFindSharedDirectory(handler, w, r, sharedNodes[0], username)
-			return
+
+			inSharedNode = true
+
+			target := sharedNodes[0]
+
+			targetRoot = "/" + target.Path[:strings.LastIndex(target.Path, "/")]
+			originalPath := r.URL.Path
+			finalPath := target.Path[:strings.LastIndex(target.Path, "/")] + strings.TrimPrefix(originalPath, "/remote.php/webdav")
+			r.URL.Path = "/remote.php/webdav/" + finalPath
 		}
 	}
 
-	r.URL.Path = strings.Replace(r.URL.Path, "/remote.php/webdav", "/remote.php/webdav/"+username+"/files", 1)
+	if !inSharedNode {
+		r.URL.Path = strings.Replace(r.URL.Path, "/remote.php/webdav", "/remote.php/webdav/"+username+"/files", 1)
+	}
+
+	inputDoc := etree.NewDocument()
+
+	// First buffer the request body, then duplicate it so we can pass it on
+	bodyBytes, _ := ioutil.ReadAll(r.Body)
+	newBody := ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
+
+	r.Body = newBody
+	err := inputDoc.ReadFromBytes(bodyBytes)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Error(err)
+		return
+	}
+
+	// Get all the requested props
+	// TODO: get the all header
+	requestedProps := make([]string, 0)
+	for _, prop := range inputDoc.FindElements("//prop") {
+		for _, tbf := range prop.ChildElements() {
+			requestedProps = append(requestedProps, tbf.Tag)
+		}
+	}
 
 	rh := newResponseHijacker(w)
 	handler.ServeHTTP(rh, r)
 
 	xmldoc := etree.NewDocument()
-	err := xmldoc.ReadFromBytes(rh.body)
+	err = xmldoc.ReadFromBytes(rh.body)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		log.Error(err)
@@ -79,228 +136,64 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 	multistatus := xmldoc.SelectElement("multistatus")
 	multistatus.CreateAttr("xmlns:OC", "http://owncloud.org/ns")
 
-	// TODO: right now selecting based on grandchildren being present is not supported
-	// so parse the result manually. This should be changed at a later date to just selecting
-	// the required nodes with one Xpath query
 	responses := xmldoc.FindElements("//response")
 
-	// Remove the user folder from the href nodes
+	// Collect all the errors for debug reasons
+	patchErrors := make([]error, 0)
+
+	// Remove the user folder from the href nodes and patch the responses
 	for _, response := range responses {
-		for _, href := range response.SelectElements("href") {
-			tmp := strings.Replace(href.Text(), "/remote.php/webdav/"+username+"/files", "/remote.php/webdav/", 1)
-			href.SetText(strings.Replace(tmp, "//", "/", 1))
+		href := response.SelectElement("href")
+		if href == nil {
+			log.Error("Response doesn't have an href tag")
+			continue
 		}
-	}
 
-	// Seperate file and folder responses.
-	folderResponses := []*etree.Element{}
-	fileResponses := []*etree.Element{}
-	for _, response := range responses {
-		propstats := response.SelectElements("propstat")
-		for _, propstat := range propstats {
-			props := propstat.SelectElements("prop")
-			for _, prop := range props {
-				resourcetypes := prop.SelectElements("resourcetype")
-				for _, resourcetype := range resourcetypes {
-					collection := resourcetype.SelectElements("collection")
-					if len(collection) != 0 {
-						folderResponses = append(folderResponses, response)
-						continue
-					}
-					fileResponses = append(fileResponses, response)
-				}
-			}
+		var hrefString, nodePath string
+		if inSharedNode {
+			nodePath = href.Text()
+			hrefString = strings.Replace(href.Text(), targetRoot, "", 1)
+		} else {
+			hrefString = strings.Replace(href.Text(), "/remote.php/webdav/"+username+"/files", "/remote.php/webdav/", 1)
+			hrefString = strings.Replace(hrefString, "//", "/", 1)
+			nodePath = hrefString
 		}
-	}
+		href.SetText(hrefString)
 
-	if len(folderResponses)+len(fileResponses) != len(responses) {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Errorf("Total nodes (%v) doesn't match the amount of files (%v) and folders (%v)",
-			len(responses), len(fileResponses), len(folderResponses))
-		return
-	}
-
-	// Patch response for files.
-	log.Debug("patch file responses")
-	for _, fileResponse := range fileResponses {
-
-		file, err := getNodeFromHref(fileResponse.SelectElement("href").Text(), username)
+		foundProps, notFoundProps, err := getPropStats(response)
 		if err != nil {
-			log.Error("Error getting file from database")
-			w.WriteHeader(http.StatusInternalServerError)
-			return
+			log.Warn("Error while getting props: ", err)
+			// Don't patch this response if there is an error but contine with the other responses
+			continue
 		}
-		if file == nil {
-			log.Error("Failed to get file from database")
-			w.WriteHeader(http.StatusNotFound)
-			return
+		if notFoundProps == nil {
+			log.Debug("No not found props, nothing to do here")
+			continue
 		}
-		shares, err := db.GetSharesByNodeId(file.ID)
+		var node *db.Node
+		if inSharedNode {
+			node, err = getSharedNodeFromHref(nodePath)
+		} else {
+			node, err = getNodeFromHref(nodePath, username)
+		}
+		if err != nil {
+			log.Error("Error getting node from database")
+			continue
+		}
+		if node == nil {
+			log.Error("Failed to get node from database")
+			continue
+		}
+		shares, err := db.GetSharesByNodeId(node.ID)
 		if err != nil {
 			log.Error("Error getting possible shares from database")
-			w.WriteHeader(http.StatusInternalServerError)
-			return
+			continue
 		}
-		isFavorited, err := db.IsFavoriteByNodeid(file.ID, username)
-		if err != nil {
-			log.Error("Error checking is node is a favorite")
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-		propstats := fileResponse.SelectElements("propstat")
-		for _, propstat := range propstats {
-			prop := propstat.SelectElement("prop")
-			status := propstat.SelectElement("status")
-			if status.Text() == STATUS_OK {
-				// Patch attributes
-				permissions := prop.CreateElement("OC:permissions")
-				permissions.SetText("RDNVW") // This should set all permissions
-				// Set fileid
-				fileId := prop.CreateElement("OC:fileid")
-				fileIdString := strconv.Itoa(file.ID)
-				fileId.SetText(fileIdString)
-				if len(shares) != 0 {
-					shareTypes := prop.CreateElement("OC:share-types")
-					shareType := shareTypes.CreateElement("OC:share-type")
-					shareType.SetText("0")
-				}
-				if isFavorited {
-					favorite := prop.CreateElement("OC:favorite")
-					favorite.SetText("1")
-				}
-				continue
-			}
-			// Remove attributes we patchted from the not found section
-			permissions := prop.SelectElement("permissions")
-			removedChild := prop.RemoveChild(permissions)
-			if removedChild == nil {
-				log.Error("Failed to patch permissions")
-				w.WriteHeader(http.StatusInternalServerError)
-				return
-			}
-			fileId := prop.SelectElement("fileid")
-			removedChild = prop.RemoveChild(fileId)
-			if removedChild == nil {
-				log.Error("Failed to patch fileid")
-				w.WriteHeader(http.StatusInternalServerError)
-				return
-			}
-			shareTypes := prop.SelectElement("share-types")
-			removedChild = prop.RemoveChild(shareTypes)
-			if removedChild == nil {
-				log.Error("Failed to patch share-types")
-				w.WriteHeader(http.StatusInternalServerError)
-				return
-			}
-			if isFavorited {
-				favorite := prop.SelectElement("favorite")
-				removedChild := prop.RemoveChild(favorite)
-				if removedChild == nil {
-					log.Error("Failed to patch favorite")
-					w.WriteHeader(http.StatusInternalServerError)
-					return
-				}
-			}
-		}
-	}
-
-	// Patch response for folders.
-	log.Debug("patch folder responses")
-	for _, folderResponse := range folderResponses {
-
-		dir, err := getNodeFromHref(folderResponse.SelectElement("href").Text(), username)
-		if err != nil {
-			log.Error("Error getting directory from database")
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-		if dir == nil {
-			log.Error("Failed to get directory from database")
-			w.WriteHeader(http.StatusNotFound)
-			return
-		}
-		shares, err := db.GetSharesByNodeId(dir.ID)
-		if err != nil {
-			log.Error("Error getting possible shares from database")
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-		isFavorited, err := db.IsFavoriteByNodeid(dir.ID, username)
-		if err != nil {
-			log.Error("Error checking is node is a favorite")
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-		propstats := folderResponse.SelectElements("propstat")
-		for _, propstat := range propstats {
-			prop := propstat.SelectElement("prop")
-			status := propstat.SelectElement("status")
-			if status.Text() == STATUS_OK {
-				// Patch attributes
-				// Set permissions
-				permissions := prop.CreateElement("OC:permissions")
-				permissions.SetText("RDNVCK") // This should set all permissions
-				// Set fileid
-				fileId := prop.CreateElement("OC:fileid")
-				fileIdString := strconv.Itoa(dir.ID)
-				fileId.SetText(fileIdString)
-				// Set size
-				byteSize, err := getDirSize(db.GetSetting(db.DAV_ROOT) + dir.Path)
+		for _, requestedProp := range requestedProps {
+			if patchMap[requestedProp] != nil {
+				err = patchMap[requestedProp](foundProps, notFoundProps, node, shares, username)
 				if err != nil {
-					log.Error("Failed to calculate directory size: ", err)
-					w.WriteHeader(http.StatusInternalServerError)
-					return
-				}
-				size := prop.CreateElement("OC:size")
-				sizeString := strconv.FormatInt(byteSize, 10)
-				size.SetText(sizeString)
-				if len(shares) != 0 {
-					shareTypes := prop.CreateElement("OC:share-types")
-					shareType := shareTypes.CreateElement("OC:share-type")
-					shareType.SetText("0")
-				}
-				if isFavorited {
-					favorite := prop.CreateElement("OC:favorite")
-					favorite.SetText("1")
-				}
-				continue
-			}
-			// Remove attributes we patchted from the not found section
-			permissions := prop.SelectElement("permissions")
-			removedChild := prop.RemoveChild(permissions)
-			if removedChild == nil {
-				log.Error("Failed to patch permissions")
-				w.WriteHeader(http.StatusInternalServerError)
-				return
-			}
-			fileId := prop.SelectElement("fileid")
-			removedChild = prop.RemoveChild(fileId)
-			if removedChild == nil {
-				log.Error("Failed to patch fileid")
-				w.WriteHeader(http.StatusInternalServerError)
-				return
-			}
-			size := prop.SelectElement("size")
-			removedChild = prop.RemoveChild(size)
-			if removedChild == nil {
-				log.Error("Failed to patch size")
-				w.WriteHeader(http.StatusInternalServerError)
-				return
-			}
-			shareTypes := prop.SelectElement("share-types")
-			removedChild = prop.RemoveChild(shareTypes)
-			if removedChild == nil {
-				log.Error("Failed to patch share-types")
-				w.WriteHeader(http.StatusInternalServerError)
-				return
-			}
-			if isFavorited {
-				favorite := prop.SelectElement("favorite")
-				removedChild := prop.RemoveChild(favorite)
-				if removedChild == nil {
-					log.Error("Failed to patch favorite")
-					w.WriteHeader(http.StatusInternalServerError)
-					return
+					patchErrors = append(patchErrors, err)
 				}
 			}
 		}
@@ -323,17 +216,16 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 				w.WriteHeader(http.StatusInternalServerError)
 				return
 			}
-			isFavorited, err := db.IsFavoriteByNodeid(sharedNode.ID, username)
-			if err != nil {
-				log.Error("Error checking is node is a favorite")
-				w.WriteHeader(http.StatusInternalServerError)
-				return
-			}
+
 			rhj := newResponseHijacker(w)
 			// Set 'Depth' header to 0 since we only care for the shared node, and not the
 			// children of said node
 			r.Header.Set("Depth", "0")
 			r.URL.Path = "/remote.php/webdav/" + sharedNode.Path
+
+			bodyBuffered := bytes.NewBuffer(bodyBytes)
+			r.Body = ioutil.NopCloser(bodyBuffered)
+
 			handler.ServeHTTP(rhj, r)
 			if rhj.status != http.StatusMultiStatus {
 				log.Error("PROPFIND on shared node failed")
@@ -351,339 +243,204 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 			newresponses := responsexmldoc.FindElements("//response")
 
 			for _, response := range newresponses {
+				var hrefString string
 				for _, href := range response.SelectElements("href") {
-					href.SetText("/remote.php/webdav/" + href.Text()[strings.LastIndex(href.Text(), "/")+1:])
+					hrefString = "/remote.php/webdav/" + href.Text()[strings.LastIndex(href.Text(), "/")+1:]
+					href.SetText(hrefString)
 				}
 
-				for _, propstat := range response.SelectElements("propstat") {
-					status := propstat.SelectElement("status")
-					if status.Text() == STATUS_OK {
-						for _, prop := range propstat.SelectElements("prop") {
-							if sharedNode.Isdir {
-								byteSize, err := getDirSize(db.GetSetting(db.DAV_ROOT) + sharedNode.Path)
-								if err != nil {
-									log.Error("Failed to calculate directory size: ", err)
-									w.WriteHeader(http.StatusInternalServerError)
-									return
-								}
-								size := prop.CreateElement("OC:size")
-								sizeString := strconv.FormatInt(byteSize, 10)
-								size.SetText(sizeString)
-
-								fileId := prop.CreateElement("OC:fileid")
-								fileIdString := strconv.Itoa(sharedNode.ID)
-								fileId.SetText(fileIdString)
-
-								permissions := prop.CreateElement("OC:permissions")
-								permissions.SetText("SRDNVCK")
-
-								owner := prop.CreateElement("OC:owner-display-name")
-								owner.SetText(sharedNode.Owner)
-
-								prop.CreateElement("OC:share-types")
-
-								if isFavorited {
-									favorite := prop.CreateElement("OC:favorite")
-									favorite.SetText("1")
-								}
-
-								continue
-							}
-							fileId := prop.CreateElement("OC:fileid")
-							fileIdString := strconv.Itoa(sharedNode.ID)
-							fileId.SetText(fileIdString)
-
-							permissions := prop.CreateElement("OC:permissions")
-							permissions.SetText("SRDNVW")
-
-							owner := prop.CreateElement("OC:owner-display-name")
-							owner.SetText(sharedNode.Owner)
-
-							prop.CreateElement("OC:share-types")
+				foundProps, notFoundProps, err := getPropStats(response)
+				if err != nil {
+					log.Warn("Error while getting props: ", err)
+					// Don't patch this response if there is an error but contine with the other responses
+					continue
+				}
+				if notFoundProps == nil {
+					log.Debug("No not found props, nothing to do here")
+					continue
+				}
+				s := []*db.MemberShare{
+					0: share,
+				}
+				for _, requestedProp := range requestedProps {
+					if patchMap[requestedProp] != nil {
+						err = patchMap[requestedProp](foundProps, notFoundProps, sharedNode, s, username)
+						if err != nil {
+							patchErrors = append(patchErrors, err)
 						}
 					}
 				}
 
 				multistatus.AddChild(response)
 			}
-
 		}
-
 	}
 
 	for key, valuemap := range rh.headers {
 		w.Header().Set(key, strings.Join(valuemap, " "))
+	}
+
+	log.Debugf("Propfind patching finished with %v errors", len(patchErrors))
+	for i, e := range patchErrors {
+		log.Debug("Error %v: %v", i, e)
 	}
 
 	w.WriteHeader(rh.status)
 	xmldoc.WriteTo(w)
 }
 
-// propFindSharedDirectory returns a modified propfind response to allow users
-// to enter shared directories.
-// FIXME: lots of code copied from PropFindAdapter, needs merge
-func propFindSharedDirectory(handler http.HandlerFunc, w http.ResponseWriter, r *http.Request, target *db.Node, username string) {
+func patchFileId(foundProps *etree.Element, notFoundProps *etree.Element, node *db.Node, shared []*db.MemberShare, user string) error {
+	fileIdNotFound := notFoundProps.SelectElement("fileid")
+	if fileIdNotFound == nil {
+		return fmt.Errorf("Failed to get the fileid prop from the not found section")
+	}
+	fileId := foundProps.CreateElement("OC:fileid")
+	fileIdString := strconv.Itoa(node.ID)
+	fileId.SetText(fileIdString)
 
-	targetRoot := "/" + target.Path[:strings.LastIndex(target.Path, "/")]
+	removedChild := notFoundProps.RemoveChild(fileIdNotFound)
+	if removedChild == nil {
+		log.Warn("Failed to patch fileid")
+		return fmt.Errorf("Failed to patch fileid")
+	}
+	return nil
+}
 
-	originalPath := r.URL.Path
+func patchPermissions(foundProps *etree.Element, notFoundProps *etree.Element, node *db.Node, shared []*db.MemberShare, user string) error {
+	permissionString := "RDNVW"
+	if node.Isdir {
+		permissionString = "RDNVCK"
+	}
+	if node.Owner != user {
+		permissionString = "S" + permissionString
+	}
+	permissionsNotFound := notFoundProps.SelectElement("permissions")
+	if permissionsNotFound == nil {
+		return fmt.Errorf("Failed to get the permissions prop from the not found section")
+	}
+	permissions := foundProps.CreateElement("OC:permissions")
+	permissions.SetText(permissionString)
 
-	finalPath := target.Path[:strings.LastIndex(target.Path, "/")] + strings.TrimPrefix(originalPath, "/remote.php/webdav")
+	removedChild := notFoundProps.RemoveChild(permissionsNotFound)
+	if removedChild == nil {
+		log.Warn("Failed to patch permissions")
+		return fmt.Errorf("Failed to patch permissions")
+	}
+	return nil
+}
 
-	r.URL.Path = "/remote.php/webdav/" + finalPath
+func patchShareTypes(foundProps *etree.Element, notFoundProps *etree.Element, node *db.Node, shared []*db.MemberShare, user string) error {
+	if !(len(shared) > 0) {
+		return nil
+	}
+	notFoundShareTypes := notFoundProps.SelectElement("share-types")
+	if notFoundShareTypes == nil {
+		return fmt.Errorf("Failed to get share-types prop from the not found section")
+	}
+	shareTypes := foundProps.CreateElement("OC:share-types")
+	shareType := shareTypes.CreateElement("OC:share-type")
+	shareType.SetText("0")
 
-	rh := newResponseHijacker(w)
-	handler.ServeHTTP(rh, r)
+	removedChild := notFoundProps.RemoveChild(notFoundShareTypes)
+	if removedChild == nil {
+		log.Warn("Failed to patch share types")
+		return fmt.Errorf("Failed to patch share types")
+	}
+	return nil
+}
 
-	xmldoc := etree.NewDocument()
-	err := xmldoc.ReadFromBytes(rh.body)
+func patchFavorite(foundProps *etree.Element, notFoundProps *etree.Element, node *db.Node, shared []*db.MemberShare, user string) error {
+	isFavorite, err := db.IsFavoriteByNodeid(node.ID, user)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Error(err)
+		log.Error("Failed to check if node is favorite: ", err)
+		return fmt.Errorf("Database error")
+	}
+	favoriteString := "1"
+	if !isFavorite {
+		favoriteString = "0"
+	}
+	notFoundFavorite := notFoundProps.SelectElement("favorite")
+	if notFoundFavorite == nil {
+		return fmt.Errorf("Failed to get favorite prop from the not found section")
+	}
+	favorite := foundProps.CreateElement("OC:favorite")
+	favorite.SetText(favoriteString)
+
+	removedChild := notFoundProps.RemoveChild(notFoundFavorite)
+	if removedChild == nil {
+		log.Warn("Failed to patch favorite")
+		return fmt.Errorf("Failed to patch favorite")
+	}
+	return nil
+}
+
+func patchSize(foundProps *etree.Element, notFoundProps *etree.Element, node *db.Node, shared []*db.MemberShare, user string) error {
+	notFoundSize := notFoundProps.SelectElement("size")
+	if notFoundSize == nil {
+		return fmt.Errorf("Failed to get size prop from the not found section")
+	}
+	byteSize, err := getDirSize(db.GetSetting(db.DAV_ROOT) + node.Path)
+	if err != nil {
+		log.Error("Failed to calculate directory size: ", err)
+		return fmt.Errorf("Failed to calculate directory size: %v", err)
+	}
+	sizeString := strconv.FormatInt(byteSize, 10)
+	size := foundProps.CreateElement("OC:size")
+	size.SetText(sizeString)
+
+	removedChild := notFoundProps.RemoveChild(notFoundSize)
+	if removedChild == nil {
+		log.Warn("Failed to patch size")
+		return fmt.Errorf("Failed to patch size")
+	}
+	return nil
+}
+
+func patchOwnerDisplayName(foundProps *etree.Element, notFoundProps *etree.Element, node *db.Node, shared []*db.MemberShare, user string) error {
+	notFoundOwnerDisplayName := notFoundProps.SelectElement("owner-display-name")
+	if notFoundOwnerDisplayName == nil {
+		return fmt.Errorf("Failed to get owner display name prop from not found section")
+	}
+	ownerDisplayName := foundProps.CreateElement("OC:owner-display-name")
+	ownerDisplayName.SetText(node.Owner)
+
+	removedChild := notFoundProps.RemoveChild(notFoundOwnerDisplayName)
+	if removedChild == nil {
+		log.Warn("Failed to patch owner display name")
+		return fmt.Errorf("Failed to patch owner display name")
+	}
+	return nil
+}
+
+func getPropStats(response *etree.Element) (foundProps, notFoundProps *etree.Element, err error) {
+	propstats := response.SelectElements("propstat")
+	var foundPstat, notFoundPstat *etree.Element
+	for _, pstat := range propstats {
+		if pstat.SelectElement("status").Text() == STATUS_NOTFOUND {
+			notFoundPstat = pstat
+			continue
+		}
+		foundPstat = pstat
+	}
+	if notFoundPstat == nil {
+		log.Debug("notFoundPstat = nil")
 		return
 	}
-
-	// Specify the OC namespace, else the parser and UI will whine
-	multistatus := xmldoc.SelectElement("multistatus")
-	multistatus.CreateAttr("xmlns:OC", "http://owncloud.org/ns")
-
-	// TODO: right now selecting based on grandchildren being present is not supported
-	// so parse the result manually. This should be changed at a later date to just selecting
-	// the required nodes with one Xpath query
-	responses := xmldoc.FindElements("//response")
-
-	responseMap := make(map[*etree.Element]string)
-
-	// Patch to shared path
-	for _, response := range responses {
-		for _, href := range response.SelectElements("href") {
-			responseMap[response] = href.Text()
-			href.SetText(strings.Replace(href.Text(), targetRoot, "", 1))
-		}
-	}
-
-	// Seperate file and folder responses.
-	folderResponses := []*etree.Element{}
-	fileResponses := []*etree.Element{}
-	for _, response := range responses {
-		propstats := response.SelectElements("propstat")
-		for _, propstat := range propstats {
-			props := propstat.SelectElements("prop")
-			for _, prop := range props {
-				resourcetypes := prop.SelectElements("resourcetype")
-				for _, resourcetype := range resourcetypes {
-					collection := resourcetype.SelectElements("collection")
-					if len(collection) != 0 {
-						folderResponses = append(folderResponses, response)
-						continue
-					}
-					fileResponses = append(fileResponses, response)
-				}
-			}
-		}
-	}
-
-	if len(folderResponses)+len(fileResponses) != len(responses) {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Errorf("Total nodes (%v) doesn't match the amount of files (%v) and folders (%v)",
-			len(responses), len(fileResponses), len(folderResponses))
+	if foundPstat == nil {
+		log.Debug("foundPstat = nil")
 		return
 	}
-
-	// Patch response for files.
-	log.Debug("patch file responses")
-	for _, fileResponse := range fileResponses {
-
-		file, err := getSharedNodeFromHref(responseMap[fileResponse])
-		if err != nil {
-			log.Error("Error getting file from database")
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-		if file == nil {
-			log.Error("Failed to get file from database")
-			w.WriteHeader(http.StatusNotFound)
-			return
-		}
-		shares, err := db.GetSharesByNodeId(file.ID)
-		if err != nil {
-			log.Error("Error getting possible shares from database")
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-		isFavorited, err := db.IsFavoriteByNodeid(file.ID, username)
-		if err != nil {
-			log.Error("Error checking is node is a favorite")
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-		propstats := fileResponse.SelectElements("propstat")
-		for _, propstat := range propstats {
-			prop := propstat.SelectElement("prop")
-			status := propstat.SelectElement("status")
-			if status.Text() == STATUS_OK {
-				// Patch attributes
-				permissions := prop.CreateElement("OC:permissions")
-				permissions.SetText("RDNVW") // This should set all permissions
-				// Set fileid
-				fileId := prop.CreateElement("OC:fileid")
-				fileIdString := strconv.Itoa(file.ID)
-				fileId.SetText(fileIdString)
-				if len(shares) != 0 {
-					shareTypes := prop.CreateElement("OC:share-types")
-					shareType := shareTypes.CreateElement("OC:share-type")
-					shareType.SetText("0")
-				}
-				if isFavorited {
-					favorite := prop.CreateElement("OC:favorite")
-					favorite.SetText("1")
-				}
-				continue
-			}
-			// Remove attributes we patchted from the not found section
-			permissions := prop.SelectElement("permissions")
-			removedChild := prop.RemoveChild(permissions)
-			if removedChild == nil {
-				log.Error("Failed to patch permissions")
-				w.WriteHeader(http.StatusInternalServerError)
-				return
-			}
-			fileId := prop.SelectElement("fileid")
-			removedChild = prop.RemoveChild(fileId)
-			if removedChild == nil {
-				log.Error("Failed to patch fileid")
-				w.WriteHeader(http.StatusInternalServerError)
-				return
-			}
-			shareTypes := prop.SelectElement("share-types")
-			removedChild = prop.RemoveChild(shareTypes)
-			if removedChild == nil {
-				log.Error("Failed to patch share-types")
-				w.WriteHeader(http.StatusInternalServerError)
-				return
-			}
-			if isFavorited {
-				favorite := prop.SelectElement("favorite")
-				removedChild := prop.RemoveChild(favorite)
-				if removedChild == nil {
-					log.Error("Failed to patch favorite")
-					w.WriteHeader(http.StatusInternalServerError)
-					return
-				}
-			}
-		}
+	notFoundProps = notFoundPstat.SelectElement("prop")
+	if notFoundProps == nil {
+		err = fmt.Errorf("Could not find not found props")
+		return
 	}
-
-	// Patch response for folders.
-	log.Debug("patch folder responses")
-	for _, folderResponse := range folderResponses {
-
-		//dir, err := db.GetNode(strings.Trim(responseMap[folderResponse], "/remote.php/webdav/"))
-		dir, err := getSharedNodeFromHref(responseMap[folderResponse])
-		if err != nil {
-			log.Error("Error getting directory from database")
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-		if dir == nil {
-			log.Error("Failed to get directory from database")
-			w.WriteHeader(http.StatusNotFound)
-			return
-		}
-		shares, err := db.GetSharesByNodeId(dir.ID)
-		if err != nil {
-			log.Error("Error getting possible shares from database")
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-		isFavorited, err := db.IsFavoriteByNodeid(dir.ID, username)
-		if err != nil {
-			log.Error("Error checking is node is a favorite")
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-		propstats := folderResponse.SelectElements("propstat")
-		for _, propstat := range propstats {
-			prop := propstat.SelectElement("prop")
-			status := propstat.SelectElement("status")
-			if status.Text() == STATUS_OK {
-				// Patch attributes
-				// Set permissions
-				permissions := prop.CreateElement("OC:permissions")
-				permissions.SetText("RDNVCK") // This should set all permissions
-				// Set fileid
-				fileId := prop.CreateElement("OC:fileid")
-				fileIdString := strconv.Itoa(dir.ID)
-				fileId.SetText(fileIdString)
-				// Set size
-				byteSize, err := getDirSize(db.GetSetting(db.DAV_ROOT) + dir.Path)
-				if err != nil {
-					log.Error("Failed to calculate directory size: ", err)
-					w.WriteHeader(http.StatusInternalServerError)
-					return
-				}
-				size := prop.CreateElement("OC:size")
-				sizeString := strconv.FormatInt(byteSize, 10)
-				size.SetText(sizeString)
-				if len(shares) != 0 {
-					shareTypes := prop.CreateElement("OC:share-types")
-					shareType := shareTypes.CreateElement("OC:share-type")
-					shareType.SetText("0")
-				}
-				if isFavorited {
-					favorite := prop.CreateElement("OC:favorite")
-					favorite.SetText("1")
-				}
-				continue
-			}
-			// Remove attributes we patchted from the not found section
-			permissions := prop.SelectElement("permissions")
-			removedChild := prop.RemoveChild(permissions)
-			if removedChild == nil {
-				log.Error("Failed to patch permissions")
-				w.WriteHeader(http.StatusInternalServerError)
-				return
-			}
-			fileId := prop.SelectElement("fileid")
-			removedChild = prop.RemoveChild(fileId)
-			if removedChild == nil {
-				log.Error("Failed to patch fileid")
-				w.WriteHeader(http.StatusInternalServerError)
-				return
-			}
-			size := prop.SelectElement("size")
-			removedChild = prop.RemoveChild(size)
-			if removedChild == nil {
-				log.Error("Failed to patch size")
-				w.WriteHeader(http.StatusInternalServerError)
-				return
-			}
-			shareTypes := prop.SelectElement("share-types")
-			removedChild = prop.RemoveChild(shareTypes)
-			if removedChild == nil {
-				log.Error("Failed to patch share-types")
-				w.WriteHeader(http.StatusInternalServerError)
-				return
-			}
-			if isFavorited {
-				favorite := prop.SelectElement("favorite")
-				removedChild := prop.RemoveChild(favorite)
-				if removedChild == nil {
-					log.Error("Failed to patch favorite")
-					w.WriteHeader(http.StatusInternalServerError)
-					return
-				}
-			}
-		}
+	foundProps = foundPstat.SelectElement("prop")
+	if foundProps == nil {
+		err = fmt.Errorf("No found props in the response")
+		return
 	}
-	log.Debug("Finished patching directory responses")
-
-	for key, valuemap := range rh.headers {
-		w.Header().Set(key, strings.Join(valuemap, " "))
-	}
-
-	w.WriteHeader(rh.status)
-	xmldoc.WriteTo(w)
+	return
 }
 
 // getDirSize gets the size of the directory (all of its descendants) at path.
