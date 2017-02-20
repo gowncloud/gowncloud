@@ -167,7 +167,6 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 			hrefString = strings.Replace(hrefString, "//", "/", 1)
 			nodePath = hrefString
 		}
-		href.SetText(hrefString)
 
 		foundProps, notFoundProps, err := getPropStats(response)
 		if err != nil {
@@ -193,6 +192,14 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 			log.Error("Failed to get node from database")
 			continue
 		}
+		// Directory references should end with a '/'
+		if node.Isdir {
+			// But make sure they don't end with a double '/'
+			if !strings.HasSuffix(hrefString, "/") {
+				hrefString += "/"
+			}
+		}
+		href.SetText(hrefString)
 		shares, err := db.GetSharesByNodeId(node.ID)
 		if err != nil {
 			log.Error("Error getting possible shares from database")
