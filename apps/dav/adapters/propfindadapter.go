@@ -133,9 +133,17 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	// Specify the OC namespace, else the parser and UI will whine
+	// Propfind responses have a multistatus root element
 	multistatus := xmldoc.SelectElement("multistatus")
-	multistatus.CreateAttr("xmlns:OC", "http://owncloud.org/ns")
+
+	// Use lowercase namespace
+	attr := multistatus.SelectAttr("D")
+	if attr != nil {
+		attr.Key = "d"
+	}
+
+	// Specify the oc namespace, else the parser and UI will whine
+	multistatus.CreateAttr("xmlns:oc", "http://owncloud.org/ns")
 
 	responses := xmldoc.FindElements("//response")
 
@@ -277,6 +285,9 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 		}
 	}
 
+	// Make sure all the namespaces are lowercase
+	modifyNamespaceToLower(multistatus)
+
 	for key, valuemap := range rh.headers {
 		w.Header().Set(key, strings.Join(valuemap, " "))
 	}
@@ -295,7 +306,7 @@ func patchFileId(foundProps *etree.Element, notFoundProps *etree.Element, node *
 	if fileIdNotFound == nil {
 		return fmt.Errorf("Failed to get the fileid prop from the not found section")
 	}
-	fileId := foundProps.CreateElement("OC:fileid")
+	fileId := foundProps.CreateElement("oc:fileid")
 	fileIdString := strconv.Itoa(node.ID)
 	fileId.SetText(fileIdString)
 
@@ -312,7 +323,7 @@ func patchId(foundProps *etree.Element, notFoundProps *etree.Element, node *db.N
 	if idNotFound == nil {
 		return fmt.Errorf("Failed to get the id prop from the not found section")
 	}
-	id := foundProps.CreateElement("OC:id")
+	id := foundProps.CreateElement("oc:id")
 	idString := strconv.Itoa(node.ID)
 	id.SetText(idString)
 
@@ -336,7 +347,7 @@ func patchPermissions(foundProps *etree.Element, notFoundProps *etree.Element, n
 	if permissionsNotFound == nil {
 		return fmt.Errorf("Failed to get the permissions prop from the not found section")
 	}
-	permissions := foundProps.CreateElement("OC:permissions")
+	permissions := foundProps.CreateElement("oc:permissions")
 	permissions.SetText(permissionString)
 
 	removedChild := notFoundProps.RemoveChild(permissionsNotFound)
@@ -355,8 +366,8 @@ func patchShareTypes(foundProps *etree.Element, notFoundProps *etree.Element, no
 	if notFoundShareTypes == nil {
 		return fmt.Errorf("Failed to get share-types prop from the not found section")
 	}
-	shareTypes := foundProps.CreateElement("OC:share-types")
-	shareType := shareTypes.CreateElement("OC:share-type")
+	shareTypes := foundProps.CreateElement("oc:share-types")
+	shareType := shareTypes.CreateElement("oc:share-type")
 	shareType.SetText("0")
 
 	removedChild := notFoundProps.RemoveChild(notFoundShareTypes)
@@ -381,7 +392,7 @@ func patchFavorite(foundProps *etree.Element, notFoundProps *etree.Element, node
 	if notFoundFavorite == nil {
 		return fmt.Errorf("Failed to get favorite prop from the not found section")
 	}
-	favorite := foundProps.CreateElement("OC:favorite")
+	favorite := foundProps.CreateElement("oc:favorite")
 	favorite.SetText(favoriteString)
 
 	removedChild := notFoundProps.RemoveChild(notFoundFavorite)
@@ -403,7 +414,7 @@ func patchSize(foundProps *etree.Element, notFoundProps *etree.Element, node *db
 		return fmt.Errorf("Failed to calculate directory size: %v", err)
 	}
 	sizeString := strconv.FormatInt(byteSize, 10)
-	size := foundProps.CreateElement("OC:size")
+	size := foundProps.CreateElement("oc:size")
 	size.SetText(sizeString)
 
 	removedChild := notFoundProps.RemoveChild(notFoundSize)
@@ -419,7 +430,7 @@ func patchOwnerDisplayName(foundProps *etree.Element, notFoundProps *etree.Eleme
 	if notFoundOwnerDisplayName == nil {
 		return fmt.Errorf("Failed to get owner display name prop from not found section")
 	}
-	ownerDisplayName := foundProps.CreateElement("OC:owner-display-name")
+	ownerDisplayName := foundProps.CreateElement("oc:owner-display-name")
 	ownerDisplayName.SetText(node.Owner)
 
 	removedChild := notFoundProps.RemoveChild(notFoundOwnerDisplayName)
@@ -459,6 +470,15 @@ func getPropStats(response *etree.Element) (foundProps, notFoundProps *etree.Ele
 		return
 	}
 	return
+}
+
+// modifyNamespaceToLower recursively parses the xml with root element and modifies
+// all element namespaces to be lowercase
+func modifyNamespaceToLower(element *etree.Element) {
+	element.Space = strings.ToLower(element.Space)
+	for _, child := range element.ChildElements() {
+		modifyNamespaceToLower(child)
+	}
 }
 
 // getDirSize gets the size of the directory (all of its descendants) at path.
