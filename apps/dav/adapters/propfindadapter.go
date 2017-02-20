@@ -34,6 +34,7 @@ type patchFunction func(foundProps *etree.Element, notFoundProps *etree.Element,
 // and only patch the requested properties.
 var patchMap map[string]patchFunction = map[string]patchFunction{
 	"fileid":             patchFileId,
+	"id":                 patchId,
 	"permissions":        patchPermissions,
 	"share-types":        patchShareTypes,
 	"favorite":           patchFavorite,
@@ -302,6 +303,23 @@ func patchFileId(foundProps *etree.Element, notFoundProps *etree.Element, node *
 	if removedChild == nil {
 		log.Warn("Failed to patch fileid")
 		return fmt.Errorf("Failed to patch fileid")
+	}
+	return nil
+}
+
+func patchId(foundProps *etree.Element, notFoundProps *etree.Element, node *db.Node, shared []*db.MemberShare, user string) error {
+	idNotFound := notFoundProps.SelectElement("id")
+	if idNotFound == nil {
+		return fmt.Errorf("Failed to get the id prop from the not found section")
+	}
+	id := foundProps.CreateElement("OC:id")
+	idString := strconv.Itoa(node.ID)
+	id.SetText(idString)
+
+	removedChild := notFoundProps.RemoveChild(idNotFound)
+	if removedChild == nil {
+		log.Warn("Failed to patch id")
+		return fmt.Errorf("Failed to patch id")
 	}
 	return nil
 }
