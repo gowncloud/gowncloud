@@ -69,7 +69,6 @@ func GetNodeShareToUser(nodeId int, sharee string) (*MemberShare, error) {
 
 // GetSharesByNodePath returns all shares for a node with the given path
 func GetSharesByNodePath(path string) ([]*MemberShare, error) {
-	shares := make([]*MemberShare, 0)
 	rows, err := db.Query("SELECT * FROM gowncloud.membershares WHERE nodeid IN ("+
 		"SELECT nodeid FROM gowncloud.nodes WHERE path = $1)", path)
 	if err != nil {
@@ -81,26 +80,11 @@ func GetSharesByNodePath(path string) ([]*MemberShare, error) {
 		return nil, ErrDB
 	}
 	defer rows.Close()
-	for rows.Next() {
-		share := &MemberShare{}
-		err = rows.Scan(&share.ShareID, &share.NodeID, &share.Sharee, &share.Time, &share.Permissions)
-		if err != nil {
-			log.Error("Error while reading shares")
-			return nil, ErrDB
-		}
-		shares = append(shares, share)
-	}
-	err = rows.Err()
-	if err != nil {
-		log.Error("Error while reading the shares rows")
-		return nil, err
-	}
-	return shares, nil
+	return readMemberSharesRows(rows)
 }
 
 // GetSharesByNodeId gets all the shares for the node id
 func GetSharesByNodeId(nodeId int) ([]*MemberShare, error) {
-	shares := make([]*MemberShare, 0)
 	rows, err := db.Query("SELECT * FROM gowncloud.membershares WHERE nodeid = $1", nodeId)
 	if err != nil {
 		log.Error("Failed to get Nodes from the database")
@@ -111,26 +95,11 @@ func GetSharesByNodeId(nodeId int) ([]*MemberShare, error) {
 		return nil, ErrDB
 	}
 	defer rows.Close()
-	for rows.Next() {
-		share := &MemberShare{}
-		err = rows.Scan(&share.ShareID, &share.NodeID, &share.Sharee, &share.Time, &share.Permissions)
-		if err != nil {
-			log.Error("Error while reading shares")
-			return nil, ErrDB
-		}
-		shares = append(shares, share)
-	}
-	err = rows.Err()
-	if err != nil {
-		log.Error("Error while reading the shares rows")
-		return nil, err
-	}
-	return shares, nil
+	return readMemberSharesRows(rows)
 }
 
 // GetSharesToUser gets all the shares where user is the sharee
 func GetSharesToUser(user string) ([]*MemberShare, error) {
-	shares := make([]*MemberShare, 0)
 	rows, err := db.Query("SELECT * FROM gowncloud.membershares WHERE sharee = $1", user)
 	if err != nil {
 		log.Error("Failed to get Nodes from the database")
@@ -141,21 +110,7 @@ func GetSharesToUser(user string) ([]*MemberShare, error) {
 		return nil, ErrDB
 	}
 	defer rows.Close()
-	for rows.Next() {
-		share := &MemberShare{}
-		err = rows.Scan(&share.ShareID, &share.NodeID, &share.Sharee, &share.Time, &share.Permissions)
-		if err != nil {
-			log.Error("Error while reading shares")
-			return nil, ErrDB
-		}
-		shares = append(shares, share)
-	}
-	err = rows.Err()
-	if err != nil {
-		log.Error("Error while reading the shares rows")
-		return nil, err
-	}
-	return shares, nil
+	return readMemberSharesRows(rows)
 }
 
 // CreateShare creates a new share on the node to the sharee with permissions.
@@ -192,4 +147,41 @@ func DeleteShare(shareId int) error {
 		return ErrDB
 	}
 	return nil
+}
+
+// GetSharedNodesForUser returns share info on all the nodes of a user that are
+// currently being shared
+func GetSharedNodesForUser(username string) ([]*MemberShare, error) {
+	rows, err := db.Query("SELECT * FROM gowncloud.membershares WHERE nodeid IN ("+
+		"SELECT nodeid FROM gowncloud.nodes WHERE owner = $1)", username)
+	if err != nil {
+		log.Error("Failed to get shared nodes from the database: ", err)
+		return nil, ErrDB
+	}
+	if rows == nil {
+		log.Error("Error loading shares")
+		return nil, ErrDB
+	}
+	defer rows.Close()
+	return readMemberSharesRows(rows)
+}
+
+// readMemberSharesRows reads from *sql.Rows and creates a share info for every rows
+func readMemberSharesRows(rows *sql.Rows) ([]*MemberShare, error) {
+	shares := make([]*MemberShare, 0)
+	for rows.Next() {
+		share := &MemberShare{}
+		err := rows.Scan(&share.ShareID, &share.NodeID, &share.Sharee, &share.Time, &share.Permissions)
+		if err != nil {
+			log.Error("Error while reading shares: ", err)
+			return nil, ErrDB
+		}
+		shares = append(shares, share)
+	}
+	err := rows.Err()
+	if err != nil {
+		log.Error("Error while reading the shares rows: ", err)
+		return nil, err
+	}
+	return shares, nil
 }

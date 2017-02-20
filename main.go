@@ -142,10 +142,19 @@ func main() {
 		r.HandleFunc("/ocs/v2.php/apps/files_sharing/api/v1/shares", files_sharing.ShareInfo).Methods("GET")
 		r.HandleFunc("/ocs/v2.php/apps/files_sharing/api/v1/shares", files_sharing.CreateShare).Methods("POST")
 		r.HandleFunc("/ocs/v2.php/apps/files_sharing/api/v1/shares/{shareid}", files_sharing.DeleteShare).Methods("DELETE")
+
+		r.HandleFunc("/ocs/v1.php/apps/files_sharing/api/v1/shares", files_sharing.SharedWithMe).Methods("GET").Queries("shared_with_me", "true")
+		r.HandleFunc("/ocs/v1.php/apps/files_sharing/api/v1/shares", files_sharing.SharedWithOthers).Methods("GET").Queries("shared_with_me", "false")
+
 		defaultMux.Handle("/ocs/v2.php/apps/files_sharing/api/v1/shares", r)
 		// FIXME: small hack for now to enale the shareid variable in the url for share deletes
 		defaultMux.Handle("/ocs/v2.php/apps/files_sharing/api/v1/shares/", r)
+		defaultMux.Handle("/ocs/v1.php/apps/files_sharing/api/v1/shares", r)
+
 		defaultMux.HandleFunc("/ocs/v1.php/apps/files_sharing/api/v1/sharees", files_sharing.Sharees)
+
+		defaultMux.HandleFunc("/ocs/v1.php/apps/files_sharing/api/v1/remote_shares", files_sharing.RemoteShares)
+
 		defaultMux.HandleFunc("/logout", func(w http.ResponseWriter, r *http.Request) {
 			identity.ClearSession(w)
 			//TODO: make a decent logged out page since now you will be redirected to itsyou.online for login again

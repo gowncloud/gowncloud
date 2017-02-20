@@ -262,7 +262,7 @@ func DeleteShare(w http.ResponseWriter, r *http.Request) {
 func makeShareData(shareNode *db.Node, share *db.MemberShare, sharee string) (*sharedata, error) {
 	item_type := "file"
 	if shareNode.Isdir {
-		item_type = "dir"
+		item_type = "folder"
 	}
 
 	parent, err := db.GetNode(shareNode.Path[:strings.LastIndex(shareNode.Path, "/")])
@@ -279,14 +279,14 @@ func makeShareData(shareNode *db.Node, share *db.MemberShare, sharee string) (*s
 		Expiration:             nil,
 		File_parent:            parent.ID,
 		File_source:            shareNode.ID,
-		File_target:            strings.TrimPrefix(shareNode.Path, shareNode.Owner),
+		File_target:            strings.TrimPrefix(shareNode.Path, shareNode.Owner+"/files"),
 		Id:                     strconv.Itoa(share.ShareID),
 		Item_source:            shareNode.ID,
 		Item_type:              item_type,
 		Mail_send:              0,
 		Mimetype:               shareNode.MimeType,
 		Parent:                 nil,
-		Path:                   strings.TrimPrefix(shareNode.Path, shareNode.Owner),
+		Path:                   strings.TrimPrefix(shareNode.Path, shareNode.Owner+"/files"),
 		Permissions:            share.Permissions,
 		Share_type:             0,
 		Share_with:             sharee,
