@@ -184,6 +184,8 @@ func main() {
 		defaultMux.HandleFunc("/index.php/apps/files/ajax/getstoragestats.php", files.GetStorageStats)
 		defaultMux.HandleFunc("/index.php/core/preview.png", files.GetPreview)
 
+		defaultMux.HandleFunc("/index.php/apps/files/api/v1/thumbnail/", files.GetThumbnail)
+
 		defaultMux.HandleFunc("/index.php/apps/files_trashbin/ajax/list.php", trash.GetTrash)
 		defaultMux.HandleFunc("/index.php/apps/files_trashbin/ajax/delete.php", trash.DeleteTrash)
 		defaultMux.HandleFunc("/index.php/apps/files_trashbin/ajax/undelete.php", trash.UndeleteTrash)

@@ -20,18 +20,6 @@ func GetPreview(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 
 	filePath := query.Get("file")
-	width, err := strconv.Atoi(query.Get("x"))
-	if err != nil {
-		log.Error("Failed to read width")
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	height, err := strconv.Atoi(query.Get("y"))
-	if err != nil {
-		log.Error("Failed to read height")
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
 	nodePath := username + "/files" + filePath
 	exists, err := db.NodeExists(nodePath)
@@ -70,6 +58,25 @@ func GetPreview(w http.ResponseWriter, r *http.Request) {
 		filePath = username + "/files" + filePath
 	}
 
+	generatePreview(query.Get("x"), query.Get("y"), filePath, w)
+}
+
+// generatePreview generates an image preview from a file
+func generatePreview(widthString, heightString, filePath string, w http.ResponseWriter) {
+
+	width, err := strconv.Atoi(widthString)
+	if err != nil {
+		log.Error("Failed to read width")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	height, err := strconv.Atoi(heightString)
+	if err != nil {
+		log.Error("Failed to read height")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	file := db.GetSetting(db.DAV_ROOT) + filePath
 
 	var preview *image.NRGBA
@@ -89,7 +96,6 @@ func GetPreview(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-type", "image/gif")
-	w.WriteHeader(http.StatusFound)
+	w.WriteHeader(http.StatusOK)
 	w.Write(buffer.Bytes())
-
 }

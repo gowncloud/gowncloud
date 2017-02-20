@@ -131,7 +131,6 @@ func GetSharedNode(shareId int) (*Node, error) {
 // GetSharedNamedNodesToUser finds all nodes where the path ends in nodeName that are
 // shared to the sharee
 func GetSharedNamedNodesToUser(nodeName, sharee string) ([]*Node, error) {
-	nodes := make([]*Node, 0)
 	rows, err := db.Query("SELECT * FROM gowncloud.nodes WHERE path LIKE '%' || $1 AND "+
 		"nodeid IN (SELECT nodeid FROM gowncloud.membershares WHERE sharee = $2)", nodeName, sharee)
 	if err != nil {
@@ -143,21 +142,23 @@ func GetSharedNamedNodesToUser(nodeName, sharee string) ([]*Node, error) {
 		return nil, ErrDB
 	}
 	defer rows.Close()
-	for rows.Next() {
-		node := &Node{}
-		err = rows.Scan(&node.ID, &node.Owner, &node.Path, &node.Isdir, &node.MimeType, &node.Deleted)
-		if err != nil {
-			log.Error("Error while reading shares")
-			return nil, ErrDB
-		}
-		nodes = append(nodes, node)
-	}
-	err = rows.Err()
+	return readNodeRows(rows)
+}
+
+// GetNodesForUserByName returns all the users nodes ending with the given name
+func GetNodesForUserByName(nodeName string, username string) ([]*Node, error) {
+	rows, err := db.Query("SELECT * FROM gowncloud.nodes WHERE path LIKE $1 || '%' "+
+		"|| $2", username, nodeName)
 	if err != nil {
-		log.Error("Error while reading the shares rows")
-		return nil, err
+		log.Error("Failed to get Nodes from the database: ", err)
+		return nil, ErrDB
 	}
-	return nodes, nil
+	if rows == nil {
+		log.Error("Error loading nodes")
+		return nil, ErrDB
+	}
+	defer rows.Close()
+	return readNodeRows(rows)
 }
 
 // MoveNode updates the nodes path in the database.
@@ -177,4 +178,24 @@ func MoveNode(originalPath string, targetPath string) error {
 	}
 
 	return nil
+}
+
+// readNodeRows reads from *sql.Rows and creates a node for every row
+func readNodeRows(rows *sql.Rows) ([]*Node, error) {
+	nodes := make([]*Node, 0)
+	for rows.Next() {
+		node := &Node{}
+		err := rows.Scan(&node.ID, &node.Owner, &node.Path, &node.Isdir, &node.MimeType, &node.Deleted)
+		if err != nil {
+			log.Error("Error while reading nodes")
+			return nil, ErrDB
+		}
+		nodes = append(nodes, node)
+	}
+	err := rows.Err()
+	if err != nil {
+		log.Error("Error while reading the nodes rows")
+		return nil, err
+	}
+	return nodes, nil
 }
