@@ -260,10 +260,19 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 
 			for _, response := range newresponses {
 				var hrefString string
-				for _, href := range response.SelectElements("href") {
-					hrefString = "/remote.php/webdav/" + href.Text()[strings.LastIndex(href.Text(), "/")+1:]
-					href.SetText(hrefString)
+				href := response.SelectElement("href")
+				if href == nil {
+					log.Error("Response doesn't have an href tag")
+					continue
 				}
+				hrefString = "/remote.php/webdav/" + href.Text()[strings.LastIndex(href.Text(), "/")+1:]
+				if sharedNode.Isdir {
+					// But make sure they don't end with a double '/'
+					if !strings.HasSuffix(hrefString, "/") {
+						hrefString += "/"
+					}
+				}
+				href.SetText(hrefString)
 
 				foundProps, notFoundProps, err := getPropStats(response)
 				if err != nil {
