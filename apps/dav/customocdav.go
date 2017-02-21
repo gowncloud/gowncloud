@@ -56,6 +56,9 @@ func (dav *CustomOCDav) DispatchRequest() http.Handler {
 		case "GET":
 			ocdavadapters.GetAdapter(dav.dav.ServeHTTP, w, r)
 			break
+		case "HEAD":
+			ocdavadapters.HeadAdapter(dav.dav.ServeHTTP, w, r)
+			break
 		case "MKCOL":
 			ocdavadapters.MkcolAdapter(dav.dav.ServeHTTP, w, r)
 			break

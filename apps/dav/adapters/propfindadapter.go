@@ -136,6 +136,17 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 	// Propfind responses have a multistatus root element
 	multistatus := xmldoc.SelectElement("multistatus")
 
+	// The call was not successfull so we cant patch anything
+	// Copy the response and return
+	if multistatus == nil {
+		for key, valuemap := range rh.headers {
+			w.Header().Set(key, strings.Join(valuemap, " "))
+		}
+		w.WriteHeader(rh.status)
+		w.Write(rh.body)
+		return
+	}
+
 	// Use lowercase namespace
 	attr := multistatus.SelectAttr("D")
 	if attr != nil {
