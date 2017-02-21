@@ -1,10 +1,9 @@
 package files
 
-import log "github.com/Sirupsen/logrus"
+import "fmt"
 
 // getFreeDiskSpace calculates the free space from the disk root. This is the windows
 // implementation
 func getFreeDiskSpace() int64 {
-	log.Error("getFreeDiskSpace is not yet implemented on windows!")
-	return -1
+	return 0, fmt.Errorf("getFreeDiskSpace is not yet implemented on windows!")
 }

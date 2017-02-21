@@ -33,10 +33,10 @@ func GetStorageStats(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 
-	var freeSpace int64
+	var size, freeSpace int64
 	usedSpacePercent := 0
 	if user.Allowedspace != 0 {
-		size, err := getDirSize(db.GetSetting(db.DAV_ROOT) + username)
+		size, err = getDirSize(db.GetSetting(db.DAV_ROOT) + username)
 		if err != nil {
 			log.Error("Failed to get directory size: ", err)
 			w.WriteHeader(http.StatusInternalServerError)
@@ -47,7 +47,13 @@ func GetStorageStats(w http.ResponseWriter, r *http.Request) {
 		usedSpacePercent = int(100 * (freeSpace / int64(user.Allowedspace) << 30))
 	}
 
-	diskSpace := getFreeDiskSpace()
+	diskSpace, err := getFreeDiskSpace()
+	if err != nil {
+		log.Error("Failed to calculate free disk space: ", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
 	if user.Allowedspace == 0 {
 		freeSpace = diskSpace
 	} else {
