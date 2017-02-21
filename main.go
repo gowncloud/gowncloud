@@ -132,7 +132,7 @@ func main() {
 
 		server := dav.NewCustomOCDav(davroot)
 
-		defaultMux.Handle("/remote.php/webdav/", server.DispatchRequest())
+		defaultMux.Handle("/remote.php/webdav/", dav.NormalizePath(server.DispatchRequest()))
 
 		defaultMux.HandleFunc("/index.php", func(w http.ResponseWriter, r *http.Request) {
 			s := identity.CurrentSession(r)

@@ -3,6 +3,7 @@ package dav
 import (
 	"net/http"
 	"os"
+	"strings"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/gowncloud/gowncloud/apps/dav/adapters"
@@ -112,4 +113,18 @@ func MakeUserHomeDirectory(username string) error {
 		return err
 	}
 	return nil
+}
+
+// NormalizePath removes trailing slashes from a path, it is a middleware that should
+// go in front of the webdav handler.
+func NormalizePath(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		path := r.URL.Path
+		// Remove trailing slash if we're not in the base path
+		if strings.HasSuffix(path, "/") && path != "/remote.php/webdav/" {
+			path = strings.TrimSuffix(path, "/")
+		}
+		r.URL.Path = path
+		next.ServeHTTP(w, r)
+	})
 }
