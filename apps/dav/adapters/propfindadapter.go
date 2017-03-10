@@ -25,7 +25,7 @@ const (
 // patchFunction is the signature of any function that patches an element from the propfind response.
 // A patchFunction should remove the element from the not found section, and add it
 // with the appropriate value to the found section
-type patchFunction func(foundProps *etree.Element, notFoundProps *etree.Element, node *db.Node, shared []*db.MemberShare, user string) error
+type patchFunction func(foundProps *etree.Element, notFoundProps *etree.Element, node *db.Node, shared []*db.Share, user string) error
 
 // patchMap maps the possible requested tags to their correct function to add
 // said tags. To add a new tag, a function should be written that matches the
@@ -48,6 +48,7 @@ var patchMap map[string]patchFunction = map[string]patchFunction{
 func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Request) {
 
 	username := identity.CurrentSession(r).Username
+	groups := identity.CurrentSession(r).Organizations
 
 	// Check the request path. If it points to the home direcotry we need to
 	// include the shares later on
@@ -69,7 +70,7 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 		if targetNode == nil {
 			log.Debug("Looking for shares")
 
-			sharedNodes, err := findShareRoot(r.URL.Path, username)
+			sharedNodes, err := findShareRoot(r.URL.Path, append(groups, username))
 			if err != nil {
 				log.Error("Error while searching for shared nodes")
 				w.WriteHeader(http.StatusInternalServerError)
@@ -161,6 +162,9 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 	// Collect all the errors for debug reasons
 	patchErrors := make([]error, 0)
 
+	// Keep track of the node id's
+	nodeIDs := make([]int, 0)
+
 	// Remove the user folder from the href nodes and patch the responses
 	for _, response := range responses {
 		href := response.SelectElement("href")
@@ -203,6 +207,7 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 			log.Error("Failed to get node from database")
 			continue
 		}
+		nodeIDs = append(nodeIDs, node.ID)
 		// Directory references should end with a '/'
 		if node.Isdir {
 			// But make sure they don't end with a double '/'
@@ -229,14 +234,26 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 	// We only care about shares if this is the users home directory
 	if isHomeDir {
 
+		orgs := identity.CurrentSession(r).Organizations
 		// Load the shares and make their responses.
-		shares, err := db.GetSharesToUser(username)
+		shares, err := db.GetAllSharesToUser(username, orgs)
 		if err != nil {
 			log.Error("Failed to get shares")
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 		for _, share := range shares {
+			alreadyFound := false
+			for _, nodeID := range nodeIDs {
+				if share.NodeID == nodeID {
+					alreadyFound = true
+					break
+				}
+			}
+			if alreadyFound {
+				continue
+			}
+			nodeIDs = append(nodeIDs, share.NodeID)
 			sharedNode, err := db.GetSharedNode(share.ShareID)
 			if err != nil {
 				log.Error("Failed to get node from share")
@@ -295,7 +312,7 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 					log.Debug("No not found props, nothing to do here")
 					continue
 				}
-				s := []*db.MemberShare{
+				s := []*db.Share{
 					0: share,
 				}
 				for _, requestedProp := range requestedProps {
@@ -328,7 +345,7 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 	xmldoc.WriteTo(w)
 }
 
-func patchFileId(foundProps *etree.Element, notFoundProps *etree.Element, node *db.Node, shared []*db.MemberShare, user string) error {
+func patchFileId(foundProps *etree.Element, notFoundProps *etree.Element, node *db.Node, shared []*db.Share, user string) error {
 	fileIdNotFound := notFoundProps.SelectElement("fileid")
 	if fileIdNotFound == nil {
 		return fmt.Errorf("Failed to get the fileid prop from the not found section")
@@ -345,7 +362,7 @@ func patchFileId(foundProps *etree.Element, notFoundProps *etree.Element, node *
 	return nil
 }
 
-func patchId(foundProps *etree.Element, notFoundProps *etree.Element, node *db.Node, shared []*db.MemberShare, user string) error {
+func patchId(foundProps *etree.Element, notFoundProps *etree.Element, node *db.Node, shared []*db.Share, user string) error {
 	idNotFound := notFoundProps.SelectElement("id")
 	if idNotFound == nil {
 		return fmt.Errorf("Failed to get the id prop from the not found section")
@@ -362,7 +379,7 @@ func patchId(foundProps *etree.Element, notFoundProps *etree.Element, node *db.N
 	return nil
 }
 
-func patchPermissions(foundProps *etree.Element, notFoundProps *etree.Element, node *db.Node, shared []*db.MemberShare, user string) error {
+func patchPermissions(foundProps *etree.Element, notFoundProps *etree.Element, node *db.Node, shared []*db.Share, user string) error {
 	permissionString := "RDNVW"
 	if node.Isdir {
 		permissionString = "RDNVCK"
@@ -385,7 +402,7 @@ func patchPermissions(foundProps *etree.Element, notFoundProps *etree.Element, n
 	return nil
 }
 
-func patchShareTypes(foundProps *etree.Element, notFoundProps *etree.Element, node *db.Node, shared []*db.MemberShare, user string) error {
+func patchShareTypes(foundProps *etree.Element, notFoundProps *etree.Element, node *db.Node, shared []*db.Share, user string) error {
 	if !(len(shared) > 0) {
 		return nil
 	}
@@ -405,7 +422,7 @@ func patchShareTypes(foundProps *etree.Element, notFoundProps *etree.Element, no
 	return nil
 }
 
-func patchFavorite(foundProps *etree.Element, notFoundProps *etree.Element, node *db.Node, shared []*db.MemberShare, user string) error {
+func patchFavorite(foundProps *etree.Element, notFoundProps *etree.Element, node *db.Node, shared []*db.Share, user string) error {
 	isFavorite, err := db.IsFavoriteByNodeid(node.ID, user)
 	if err != nil {
 		log.Error("Failed to check if node is favorite: ", err)
@@ -430,7 +447,7 @@ func patchFavorite(foundProps *etree.Element, notFoundProps *etree.Element, node
 	return nil
 }
 
-func patchSize(foundProps *etree.Element, notFoundProps *etree.Element, node *db.Node, shared []*db.MemberShare, user string) error {
+func patchSize(foundProps *etree.Element, notFoundProps *etree.Element, node *db.Node, shared []*db.Share, user string) error {
 	notFoundSize := notFoundProps.SelectElement("size")
 	if notFoundSize == nil {
 		return fmt.Errorf("Failed to get size prop from the not found section")
@@ -452,7 +469,7 @@ func patchSize(foundProps *etree.Element, notFoundProps *etree.Element, node *db
 	return nil
 }
 
-func patchOwnerDisplayName(foundProps *etree.Element, notFoundProps *etree.Element, node *db.Node, shared []*db.MemberShare, user string) error {
+func patchOwnerDisplayName(foundProps *etree.Element, notFoundProps *etree.Element, node *db.Node, shared []*db.Share, user string) error {
 	notFoundOwnerDisplayName := notFoundProps.SelectElement("owner-display-name")
 	if notFoundOwnerDisplayName == nil {
 		return fmt.Errorf("Failed to get owner display name prop from not found section")
@@ -559,9 +576,9 @@ func getSharedNodeFromHref(href string) (*db.Node, error) {
 }
 
 // findShareRoot parses a path and tries to find a share
-func findShareRoot(href string, username string) ([]*db.Node, error) {
+func findShareRoot(href string, targets []string) ([]*db.Node, error) {
 	path := strings.TrimLeft(href, "/remote.php/webdav/")
-	nodes, err := db.GetSharedNamedNodesToUser(path, username)
+	nodes, err := db.GetSharedNamedNodesToTargets(path, targets)
 	if err != nil {
 		return nil, err
 	}
@@ -572,7 +589,7 @@ func findShareRoot(href string, username string) ([]*db.Node, error) {
 	for len(nodes) == 0 && seperatorIndex >= 0 {
 		path = path[:seperatorIndex]
 		seperatorIndex = strings.Index(path, "/")
-		nodes, err = db.GetSharedNamedNodesToUser(path, username)
+		nodes, err = db.GetSharedNamedNodesToTargets(path, targets)
 		if err != nil {
 			return nil, err
 		}

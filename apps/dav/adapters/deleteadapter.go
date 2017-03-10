@@ -15,6 +15,7 @@ import (
 func DeleteAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Request) {
 
 	user := identity.CurrentSession(r).Username
+	groups := identity.CurrentSession(r).Organizations
 
 	nodePath := strings.Replace(r.URL.Path, "/remote.php/webdav", user+"/files", 1)
 	exists, err := db.NodeExists(nodePath)
@@ -30,7 +31,7 @@ func DeleteAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Requ
 			nodePath = user + "/files"
 		}
 		var sharedNodes []*db.Node
-		sharedNodes, err = findShareRoot(nodePath, user)
+		sharedNodes, err = findShareRoot(nodePath, append(groups, user))
 		if err != nil {
 			log.Error("Error while searching for shared nodes")
 			w.WriteHeader(http.StatusInternalServerError)

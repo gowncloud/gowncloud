@@ -68,7 +68,7 @@ func SaveNode(path, owner string, isdir bool, mimetype string) (*Node, error) {
 // is present in the database when this function returns.
 func DeleteNode(path string) error {
 	// Delete the shares on the node if there are any
-	_, err := db.Exec("DELETE FROM gowncloud.membershares WHERE nodeid in ("+
+	_, err := db.Exec("DELETE FROM gowncloud.shares WHERE nodeid in ("+
 		"SELECT nodeid FROM gowncloud.nodes WHERE path = $1)", path)
 	if err != nil {
 		log.Error("Failed to delete share on node: ", err)
@@ -114,7 +114,7 @@ func NodeExists(path string) (bool, error) {
 // GetSharedNode gets the node for the share object
 func GetSharedNode(shareId int) (*Node, error) {
 	row := db.QueryRow("SELECT * FROM gowncloud.nodes WHERE nodeid in ("+
-		"SELECT nodeid FROM gowncloud.membershares WHERE shareid = $1)", shareId)
+		"SELECT nodeid FROM gowncloud.shares WHERE shareid = $1)", shareId)
 	node := &Node{}
 	err := row.Scan(&node.ID, &node.Owner, &node.Path, &node.Isdir, &node.MimeType, &node.Deleted)
 	if err != nil {
@@ -128,11 +128,34 @@ func GetSharedNode(shareId int) (*Node, error) {
 	return node, nil
 }
 
-// GetSharedNamedNodesToUser finds all nodes where the path ends in nodeName that are
-// shared to the sharee
-func GetSharedNamedNodesToUser(nodeName, sharee string) ([]*Node, error) {
+// GetSharedNamedNodesToTargets returns all the nodes shared to the targets with the
+// given name
+func GetSharedNamedNodesToTargets(nodeName string, targets []string) ([]*Node, error) {
+	nodes := make([]*Node, 0)
+	for _, target := range targets {
+		nodesForTarget, err := getSharedNamedNodesToTarget(nodeName, target)
+		if err != nil {
+			return nil, err
+		}
+		for _, nft := range nodesForTarget {
+			alreadyFound := false
+			for _, node := range nodes {
+				if node.ID == nft.ID {
+					alreadyFound = true
+					break
+				}
+			}
+			if !alreadyFound {
+				nodes = append(nodes, nft)
+			}
+		}
+	}
+	return nodes, nil
+}
+
+func getSharedNamedNodesToTarget(nodeName string, target string) ([]*Node, error) {
 	rows, err := db.Query("SELECT * FROM gowncloud.nodes WHERE path LIKE '%' || $1 AND "+
-		"nodeid IN (SELECT nodeid FROM gowncloud.membershares WHERE sharee = $2)", nodeName, sharee)
+		"nodeid IN (SELECT nodeid FROM gowncloud.shares WHERE target = $2)", nodeName, target)
 	if err != nil {
 		log.Error("Failed to get Nodes from the database")
 		return nil, ErrDB

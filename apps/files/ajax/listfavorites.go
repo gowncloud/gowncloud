@@ -74,7 +74,7 @@ func ListFavorites(w http.ResponseWriter, r *http.Request) {
 			permissions = 31
 		}
 
-		share, err := db.GetNodeShareToUser(node.ID, username)
+		share, err := db.GetNodeShareToTarget(node.ID, username)
 		if err != nil {
 			log.Error("Failed to check for share on node: ", err)
 			err = nil

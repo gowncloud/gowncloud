@@ -23,6 +23,7 @@ func GetThumbnail(w http.ResponseWriter, r *http.Request) {
 	fileName = fileName[strings.Index(fileName, "/")+1:]
 
 	username := identity.CurrentSession(r).Username
+	groups := identity.CurrentSession(r).Organizations
 
 	nodePath := username + "/files/" + fileName
 	filePath := nodePath
@@ -41,7 +42,7 @@ func GetThumbnail(w http.ResponseWriter, r *http.Request) {
 			nodePath = username + "/files"
 		}
 		var sharedNodes []*db.Node
-		sharedNodes, err = findShareRoot(nodePath, username)
+		sharedNodes, err = findShareRoot(nodePath, append(groups, username))
 		if err != nil {
 			log.Error("Error while searching for shared nodes")
 			w.WriteHeader(http.StatusInternalServerError)

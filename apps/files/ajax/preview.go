@@ -16,6 +16,7 @@ import (
 // GetPreview generates a preview for an image file and serves it to the client
 func GetPreview(w http.ResponseWriter, r *http.Request) {
 	username := identity.CurrentSession(r).Username
+	groups := identity.CurrentSession(r).Organizations
 
 	query := r.URL.Query()
 
@@ -35,7 +36,7 @@ func GetPreview(w http.ResponseWriter, r *http.Request) {
 			nodePath = username + "/files"
 		}
 		var sharedNodes []*db.Node
-		sharedNodes, err = findShareRoot(nodePath, username)
+		sharedNodes, err = findShareRoot(nodePath, append(groups, username))
 		if err != nil {
 			log.Error("Error while searching for shared nodes")
 			w.WriteHeader(http.StatusInternalServerError)

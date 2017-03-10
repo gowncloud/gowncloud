@@ -22,7 +22,7 @@ type meta struct {
 
 type shareesdata struct {
 	Exact   exact    `json:"exact"`
-	Groups  []string `json:"groups"`
+	Groups  []ocuser `json:"groups"`
 	Remotes []string `json:"remotes"`
 	Users   []ocuser `json:"users"`
 }
@@ -42,7 +42,7 @@ type sharedata struct {
 	Parent                 *string    `json:"parent"` // leave at null for now
 	Path                   string     `json:"path"`   // same as file target? without leading username, start with slash
 	Permissions            int        `json:"permissions"`
-	Share_type             int        `json:"share_type"`             // leave at 0 for now
+	Share_type             int        `json:"share_type"`
 	Share_with             string     `json:"share_with"`             // sharee
 	Share_with_displayname string     `json:"share_with_displayname"` // sharee
 	Stime                  int64      `json:"stime"`                  // share time in seconds since epoch
@@ -122,7 +122,7 @@ func ShareInfo(w http.ResponseWriter, r *http.Request) {
 				w.WriteHeader(http.StatusInternalServerError)
 				return
 			}
-			sd, err := makeShareData(node, share, share.Sharee)
+			sd, err := makeShareData(node, share, share.Target)
 			if err != nil {
 				log.Error("Failed to make share data")
 				w.WriteHeader(http.StatusInternalServerError)
@@ -148,10 +148,26 @@ func CreateShare(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+	shareTypeString := r.FormValue("shareType")
+	shareType, err := strconv.Atoi(shareTypeString)
+	if err != nil {
+		log.Warnf("Could not convert %v to integer", shareTypeString)
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		return
+	}
+	if !(shareType == db.GROUPSHARE || shareType == db.USERSHARE) {
+		log.Warn("Invalid share type: ", shareType)
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		return
+	}
 	shareNode, err := db.GetNode(identity.CurrentSession(r).Username + "/files" + r.FormValue("path"))
 	if err != nil {
 		log.Error("Failed to get node from DB")
 		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	if shareNode == nil {
+		http.Error(w, "No node at path "+r.FormValue("path"), http.StatusNotFound)
 		return
 	}
 	permissionsString := r.FormValue("permissions")
@@ -161,8 +177,8 @@ func CreateShare(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	sharee := r.FormValue("shareWith")
-	share, err := db.CreateShare(shareNode.ID, permissions, sharee)
+	target := r.FormValue("shareWith")
+	share, err := db.CreateShare(shareNode.ID, permissions, target, shareType)
 	if err != nil {
 		log.Error("Failed to save share")
 		w.WriteHeader(http.StatusInternalServerError)
@@ -177,7 +193,7 @@ func CreateShare(w http.ResponseWriter, r *http.Request) {
 	response.Ocs.Meta.Status = "ok"
 	response.Ocs.Meta.Message = nil
 
-	data, err := makeShareData(shareNode, share, sharee)
+	data, err := makeShareData(shareNode, share, target)
 	if err != nil {
 		log.Error("Failed to make share data")
 		w.WriteHeader(http.StatusInternalServerError)
@@ -195,6 +211,10 @@ func CreateShare(w http.ResponseWriter, r *http.Request) {
 func Sharees(w http.ResponseWriter, r *http.Request) {
 	search := r.URL.Query().Get("search")
 
+	// searchMatch keeps track whether we found the search input. If it isn't found,
+	// add it to the groups so the UI doesn't throw a not found autmatically
+	searchMatch := false
+
 	usernames, err := db.SearchUserNames(search)
 	if err != nil {
 		log.Error("Error searching for usernames")
@@ -209,7 +229,7 @@ func Sharees(w http.ResponseWriter, r *http.Request) {
 	response.Ocs.Meta.StatusCode = 100
 	response.Ocs.Meta.Status = "ok"
 
-	response.Ocs.Data.Groups = make([]string, 0)
+	//response.Ocs.Data.Groups = make([]string, 0)
 	response.Ocs.Data.Remotes = make([]string, 0)
 
 	response.Ocs.Data.Exact.Groups = make([]string, 0)
@@ -226,9 +246,46 @@ func Sharees(w http.ResponseWriter, r *http.Request) {
 			ShareWith: username,
 		}
 		users = append(users, userstruct)
+		if username == search {
+			searchMatch = true
+		}
 	}
 
 	response.Ocs.Data.Users = users
+
+	// Organization preview from the request.
+	orgs := identity.CurrentSession(r).Organizations
+
+	groups := make([]ocuser, 0)
+	for _, org := range orgs {
+		if strings.HasPrefix(org, search) {
+			g := ocuser{
+				Label: org,
+				Value: value{
+					ShareType: 1,
+					ShareWith: org,
+				},
+			}
+			groups = append(groups, g)
+			if org == search {
+				searchMatch = true
+			}
+		}
+	}
+
+	// Always return 1 result so we can share to groups we are not part of
+	if !searchMatch {
+		s := ocuser{
+			Label: search,
+			Value: value{
+				ShareType: 1,
+				ShareWith: search,
+			},
+		}
+		groups = append(groups, s)
+	}
+
+	response.Ocs.Data.Groups = groups
 
 	w.Header().Add("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(&response)
@@ -259,7 +316,7 @@ func DeleteShare(w http.ResponseWriter, r *http.Request) {
 }
 
 // makeShareData generates the shareData struct for a share
-func makeShareData(shareNode *db.Node, share *db.MemberShare, sharee string) (*sharedata, error) {
+func makeShareData(shareNode *db.Node, share *db.Share, target string) (*sharedata, error) {
 	item_type := "file"
 	if shareNode.Isdir {
 		item_type = "folder"
@@ -288,9 +345,9 @@ func makeShareData(shareNode *db.Node, share *db.MemberShare, sharee string) (*s
 		Parent:                 nil,
 		Path:                   strings.TrimPrefix(shareNode.Path, shareNode.Owner+"/files"),
 		Permissions:            share.Permissions,
-		Share_type:             0,
-		Share_with:             sharee,
-		Share_with_displayname: sharee,
+		Share_type:             share.ShareType,
+		Share_with:             target,
+		Share_with_displayname: target,
 		Stime:          share.Time.Unix(),
 		Storage:        "1",
 		Storage_id:     storage_id, // FIXME

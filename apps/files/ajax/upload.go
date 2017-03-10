@@ -33,6 +33,7 @@ type UploadResponse struct {
 // Upload uploads files to the server and stores data in the database
 func Upload(w http.ResponseWriter, r *http.Request) {
 	username := identity.CurrentSession(r).Username
+	groups := identity.CurrentSession(r).Organizations
 	log.Println("Current logged in user:", username)
 
 	if r.Method != "POST" {
@@ -74,7 +75,7 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 			nodePath = username + "/files"
 		}
 		var sharedNodes []*db.Node
-		sharedNodes, err = findShareRoot(nodePath, username)
+		sharedNodes, err = findShareRoot(nodePath, append(groups, username))
 		if err != nil {
 			log.Error("Error while searching for shared nodes")
 			w.WriteHeader(http.StatusInternalServerError)
@@ -171,6 +172,7 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 func uploadDirectory(w http.ResponseWriter, r *http.Request) {
 	log.Debug("Uploading directory")
 	username := identity.CurrentSession(r).Username
+	groups := identity.CurrentSession(r).Organizations
 
 	fileDirectory := strings.TrimSuffix(r.PostForm.Get("file_directory"), "/")
 	dir := r.PostForm.Get("dir")
@@ -201,7 +203,7 @@ func uploadDirectory(w http.ResponseWriter, r *http.Request) {
 			nodePath = username + "/files"
 		}
 		var sharedNodes []*db.Node
-		sharedNodes, err = findShareRoot(nodePath, username)
+		sharedNodes, err = findShareRoot(nodePath, append(groups, username))
 		if err != nil {
 			log.Error("Error while searching for shared nodes")
 			w.WriteHeader(http.StatusInternalServerError)
@@ -332,9 +334,9 @@ func uploadDirectory(w http.ResponseWriter, r *http.Request) {
 }
 
 // findShareRoot parses a path and tries to find a share
-func findShareRoot(href string, username string) ([]*db.Node, error) {
+func findShareRoot(href string, targets []string) ([]*db.Node, error) {
 	path := strings.TrimLeft(href, "/remote.php/webdav/")
-	nodes, err := db.GetSharedNamedNodesToUser(path, username)
+	nodes, err := db.GetSharedNamedNodesToTargets(path, targets)
 	if err != nil {
 		return nil, err
 	}
@@ -345,7 +347,7 @@ func findShareRoot(href string, username string) ([]*db.Node, error) {
 	for len(nodes) == 0 && seperatorIndex >= 0 {
 		path = path[:seperatorIndex]
 		seperatorIndex = strings.Index(path, "/")
-		nodes, err = db.GetSharedNamedNodesToUser(path, username)
+		nodes, err = db.GetSharedNamedNodesToTargets(path, targets)
 		if err != nil {
 			return nil, err
 		}

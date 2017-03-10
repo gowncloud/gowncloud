@@ -56,10 +56,11 @@ func IsFavoriteByNodeid(nodeid int, user string) (bool, error) {
 	return count == 1, nil
 }
 
+// GetFavoritedNodes returns all the nodes favorited by the user
 func GetFavoritedNodes(user string) ([]*Node, error) {
 	rows, err := db.Query("SELECT * FROM gowncloud.nodes WHERE nodeid IN ("+
 		"SELECT nodeid FROM gowncloud.nodes WHERE owner = $1 UNION "+
-		"SELECT nodeid FROM gowncloud.membershares WHERE sharee = $1) AND "+
+		"SELECT nodeid FROM gowncloud.shares WHERE target = $1) AND "+
 		"nodeid IN (SELECT nodeid FROM gowncloud.favorites WHERE username = $1)", user)
 	if err != nil {
 		log.Errorf("Failed to get favorited nodes for user %v: %v", user, err)

@@ -14,6 +14,7 @@ import (
 // before it gets send to the internal webdav.
 func MoveAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Request) {
 	user := identity.CurrentSession(r).Username
+	groups := identity.CurrentSession(r).Organizations
 
 	destination := r.Header.Get("Destination")
 	destinationUrl, err := url.Parse(destination)
@@ -43,7 +44,7 @@ func MoveAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Reques
 			destinationNodePath = user + "/files"
 		}
 		var sharedNodes []*db.Node
-		sharedNodes, err = findShareRoot(nodePath, user)
+		sharedNodes, err = findShareRoot(nodePath, append(groups, user))
 		if err != nil {
 			log.Error("Error while searching for shared nodes")
 			w.WriteHeader(http.StatusInternalServerError)

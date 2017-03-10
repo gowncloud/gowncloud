@@ -64,7 +64,7 @@ func Initialize() {
 	initUsers()
 	initNodes()
 	// init tables with foreign keys to tables without foreign keys
-	initMemberShares()
+	initShares()
 	initTrashNodes()
 	initFavorites()
 

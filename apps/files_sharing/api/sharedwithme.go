@@ -13,6 +13,8 @@ import (
 func SharedWithMe(w http.ResponseWriter, r *http.Request) {
 
 	username := identity.CurrentSession(r).Username
+	groups := identity.CurrentSession(r).Organizations
+
 	ocsResponse := struct {
 		Ocs ocsinfo `json:"ocs"`
 	}{}
@@ -22,7 +24,7 @@ func SharedWithMe(w http.ResponseWriter, r *http.Request) {
 	ocsResponse.Ocs.Meta.Status = "ok"
 	ocsResponse.Ocs.Meta.Message = nil
 
-	shares, err := db.GetSharesToUser(username)
+	shares, err := db.GetAllSharesToUser(username, groups)
 	if err != nil {
 		log.Error("Could not get shares for user: ", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -36,7 +38,11 @@ func SharedWithMe(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
-		sd, err := makeShareData(node, share, share.Sharee)
+		// Exclude users own files when shared with group
+		if node.Owner == username {
+			continue
+		}
+		sd, err := makeShareData(node, share, share.Target)
 		if err != nil {
 			log.Error("Failed to make share data")
 			w.WriteHeader(http.StatusInternalServerError)

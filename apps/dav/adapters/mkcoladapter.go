@@ -13,6 +13,7 @@ import (
 func MkcolAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Request) {
 
 	user := identity.CurrentSession(r).Username
+	groups := identity.CurrentSession(r).Organizations
 	nodeOwner := user
 
 	parentNodePath := strings.Replace(r.URL.Path, "/remote.php/webdav", user+"/files", 1)
@@ -30,7 +31,7 @@ func MkcolAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Reque
 			parentNodePath = user + "/files"
 		}
 		var sharedNodes []*db.Node
-		sharedNodes, err = findShareRoot(parentNodePath, user)
+		sharedNodes, err = findShareRoot(parentNodePath, append(groups, user))
 		if err != nil {
 			log.Error("Error while searching for shared nodes")
 			w.WriteHeader(http.StatusInternalServerError)
