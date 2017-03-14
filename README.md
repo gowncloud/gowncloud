@@ -17,8 +17,7 @@ An example connection string is:
 
 `"postgres://root@localhost:26257?sslmode=disable"`
 
-Development is done with [cockroachdb](https://github.com/cockroachdb/cockroach).
-This database uses the postgres driver, making them freely interchangeable.
+The only supported database is [cockroachdb](https://github.com/cockroachdb/cockroach).
 
 navigate to `localhost:8080/index.php`
 
