@@ -10,12 +10,19 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/gowncloud/gowncloud/apps/dav"
+	"github.com/gowncloud/gowncloud/apps/federatedfilesharing"
+	files_assets "github.com/gowncloud/gowncloud/apps/files"
 	"github.com/gowncloud/gowncloud/apps/files/ajax"
+	files_sharing_assets "github.com/gowncloud/gowncloud/apps/files_sharing"
 	files_sharing "github.com/gowncloud/gowncloud/apps/files_sharing/api"
+	"github.com/gowncloud/gowncloud/apps/files_trashbin"
 	trash "github.com/gowncloud/gowncloud/apps/files_trashbin/ajax"
+	"github.com/gowncloud/gowncloud/apps/files_videoplayer"
 	"github.com/gowncloud/gowncloud/core"
 	"github.com/gowncloud/gowncloud/core/identity"
 	"github.com/gowncloud/gowncloud/core/logging"
+	"github.com/gowncloud/gowncloud/settings"
+	"github.com/gowncloud/gowncloud/tools/assetfs"
 
 	log "github.com/Sirupsen/logrus"
 
@@ -147,7 +154,6 @@ func main() {
 		r.HandleFunc("/ocs/v1.php/apps/files_sharing/api/v1/shares", files_sharing.SharedWithOthers).Methods("GET").Queries("shared_with_me", "false")
 
 		defaultMux.Handle("/ocs/v2.php/apps/files_sharing/api/v1/shares", r)
-		// FIXME: small hack for now to enale the shareid variable in the url for share deletes
 		defaultMux.Handle("/ocs/v2.php/apps/files_sharing/api/v1/shares/", r)
 		defaultMux.Handle("/ocs/v1.php/apps/files_sharing/api/v1/shares", r)
 
@@ -160,20 +166,24 @@ func main() {
 			//TODO: make a decent logged out page since now you will be redirected to itsyou.online for login again
 			http.Redirect(w, r, "/", http.StatusFound)
 		})
-		defaultMux.Handle("/core/", http.StripPrefix("/core/", http.FileServer(http.Dir("core"))))
+		defaultMux.Handle("/core/", http.FileServer(&assetfs.AssetFS{Asset: core.Asset, AssetDir: core.AssetDir, AssetInfo: core.AssetInfo}))
 		defaultMux.Handle("/apps/dav/", http.StripPrefix("/apps/dav/", http.FileServer(http.Dir("apps/dav"))))
-		defaultMux.Handle("/apps/federatedfilesharing/", http.StripPrefix("/apps/federatedfilesharing/", http.FileServer(http.Dir("apps/federatedfilesharing"))))
-		defaultMux.Handle("/apps/files/css/", http.StripPrefix("/apps/files/css/", http.FileServer(http.Dir("apps/files/css"))))
-		defaultMux.Handle("/apps/files/img/", http.StripPrefix("/apps/files/img/", http.FileServer(http.Dir("apps/files/img"))))
-		defaultMux.Handle("/apps/files/js/", http.StripPrefix("/apps/files/js/", http.FileServer(http.Dir("apps/files/js"))))
-		defaultMux.Handle("/apps/files_trashbin/css/", http.StripPrefix("/apps/files_trashbin/css/", http.FileServer(http.Dir("apps/files_trashbin/css"))))
-		defaultMux.Handle("/apps/files_trashbin/img/", http.StripPrefix("/apps/files_trashbin/img/", http.FileServer(http.Dir("apps/files_trashbin/img"))))
-		defaultMux.Handle("/apps/files_trashbin/js/", http.StripPrefix("/apps/files_trashbin/js/", http.FileServer(http.Dir("apps/files_trashbin/js"))))
-		defaultMux.Handle("/settings/", http.StripPrefix("/settings/", http.FileServer(http.Dir("settings"))))
-		defaultMux.Handle("/apps/files_sharing/", http.StripPrefix("/apps/files_sharing/", http.FileServer(http.Dir("apps/files_sharing"))))
-		defaultMux.Handle("/index.php/", http.StripPrefix("/index.php/", http.FileServer(http.Dir("."))))
+		defaultMux.Handle("/apps/federatedfilesharing/", http.FileServer(&assetfs.AssetFS{Asset: federatedfilesharing.Asset, AssetDir: federatedfilesharing.AssetDir, AssetInfo: federatedfilesharing.AssetInfo}))
+		defaultMux.Handle("/apps/files/css/", http.FileServer(&assetfs.AssetFS{Asset: files_assets.Asset, AssetDir: files_assets.AssetDir, AssetInfo: files_assets.AssetInfo}))
+		defaultMux.Handle("/apps/files/img/", http.FileServer(&assetfs.AssetFS{Asset: files_assets.Asset, AssetDir: files_assets.AssetDir, AssetInfo: files_assets.AssetInfo}))
+		defaultMux.Handle("/apps/files/js/", http.FileServer(&assetfs.AssetFS{Asset: files_assets.Asset, AssetDir: files_assets.AssetDir, AssetInfo: files_assets.AssetInfo}))
 
-		defaultMux.Handle("/apps/files_videoplayer/", http.StripPrefix("/apps/files_videoplayer/", http.FileServer(http.Dir("apps/files_videoplayer"))))
+		defaultMux.Handle("/apps/files_trashbin/css/", http.FileServer(&assetfs.AssetFS{Asset: files_trashbin.Asset, AssetDir: files_trashbin.AssetDir, AssetInfo: files_trashbin.AssetInfo}))
+		defaultMux.Handle("/apps/files_trashbin/img/", http.FileServer(&assetfs.AssetFS{Asset: files_trashbin.Asset, AssetDir: files_trashbin.AssetDir, AssetInfo: files_trashbin.AssetInfo}))
+		defaultMux.Handle("/apps/files_trashbin/js/", http.FileServer(&assetfs.AssetFS{Asset: files_trashbin.Asset, AssetDir: files_trashbin.AssetDir, AssetInfo: files_trashbin.AssetInfo}))
+
+		defaultMux.Handle("/settings/", http.FileServer(&assetfs.AssetFS{Asset: settings.Asset, AssetDir: settings.AssetDir, AssetInfo: settings.AssetInfo}))
+
+		defaultMux.Handle("/apps/files_sharing/", http.FileServer(&assetfs.AssetFS{Asset: files_sharing_assets.Asset, AssetDir: files_sharing_assets.AssetDir, AssetInfo: files_sharing_assets.AssetInfo}))
+
+		defaultMux.Handle("/index.php/core/", http.StripPrefix("/index.php/", http.FileServer(&assetfs.AssetFS{Asset: core.Asset, AssetDir: core.AssetDir, AssetInfo: core.AssetInfo})))
+
+		defaultMux.Handle("/apps/files_videoplayer/", http.FileServer(&assetfs.AssetFS{Asset: files_videoplayer.Asset, AssetDir: files_videoplayer.AssetDir, AssetInfo: files_videoplayer.AssetInfo}))
 
 		defaultMux.HandleFunc("/index.php/apps/files/ajax/upload.php", files.Upload)
 

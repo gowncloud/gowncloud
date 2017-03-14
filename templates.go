@@ -19,8 +19,15 @@ var (
 // Parse all of the bindata templates
 func init() {
 	var err error
-	if templates, err = templates.ParseFiles("index.html"); err != nil {
+	htmlData, err := Asset("index.html")
+	if err != nil {
+		log.Panicf("Unable to load templates , err=%s", err)
+		return
+	}
+	templates, err = template.New("index.html").Parse(string(htmlData))
+	if err != nil {
 		log.Panicf("Unable to parse templates , err=%s", err)
+		return
 	}
 }
 
