@@ -5,6 +5,8 @@ import (
 	"log"
 	"net/http"
 	"strings"
+
+	templates_assets "github.com/gowncloud/gowncloud/public/assets/templates"
 )
 
 var (
@@ -19,7 +21,7 @@ var (
 // Parse all of the bindata templates
 func init() {
 	var err error
-	htmlData, err := Asset("index.html")
+	htmlData, err := templates_assets.Asset("index.html")
 	if err != nil {
 		log.Panicf("Unable to load templates , err=%s", err)
 		return

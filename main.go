@@ -8,21 +8,15 @@ import (
 
 	"github.com/codegangsta/cli"
 
-	"github.com/gorilla/mux"
 	"github.com/gowncloud/gowncloud/apps/dav"
-	"github.com/gowncloud/gowncloud/apps/federatedfilesharing"
-	files_assets "github.com/gowncloud/gowncloud/apps/files"
-	"github.com/gowncloud/gowncloud/apps/files/ajax"
-	files_sharing_assets "github.com/gowncloud/gowncloud/apps/files_sharing"
-	files_sharing "github.com/gowncloud/gowncloud/apps/files_sharing/api"
-	"github.com/gowncloud/gowncloud/apps/files_trashbin"
-	trash "github.com/gowncloud/gowncloud/apps/files_trashbin/ajax"
-	"github.com/gowncloud/gowncloud/apps/files_videoplayer"
-	"github.com/gowncloud/gowncloud/core"
+	files_routes "github.com/gowncloud/gowncloud/apps/files/routes"
+	sharing_routes "github.com/gowncloud/gowncloud/apps/files_sharing/routes"
+	trash_routes "github.com/gowncloud/gowncloud/apps/files_trashbin/routes"
+	core_routes "github.com/gowncloud/gowncloud/core/routes"
+
 	"github.com/gowncloud/gowncloud/core/identity"
 	"github.com/gowncloud/gowncloud/core/logging"
-	"github.com/gowncloud/gowncloud/settings"
-	"github.com/gowncloud/gowncloud/tools/assetfs"
+	"github.com/gowncloud/gowncloud/public/routes"
 
 	log "github.com/Sirupsen/logrus"
 
@@ -136,6 +130,7 @@ func main() {
 		}
 
 		defaultMux := http.NewServeMux()
+		publicMux := http.NewServeMux()
 
 		server := dav.NewCustomOCDav(davroot)
 
@@ -145,64 +140,22 @@ func main() {
 			s := identity.CurrentSession(r)
 			renderTemplate(w, "index.html", &s)
 		})
-		r := mux.NewRouter()
-		r.HandleFunc("/ocs/v2.php/apps/files_sharing/api/v1/shares", files_sharing.ShareInfo).Methods("GET")
-		r.HandleFunc("/ocs/v2.php/apps/files_sharing/api/v1/shares", files_sharing.CreateShare).Methods("POST")
-		r.HandleFunc("/ocs/v2.php/apps/files_sharing/api/v1/shares/{shareid}", files_sharing.DeleteShare).Methods("DELETE")
-
-		r.HandleFunc("/ocs/v1.php/apps/files_sharing/api/v1/shares", files_sharing.SharedWithMe).Methods("GET").Queries("shared_with_me", "true")
-		r.HandleFunc("/ocs/v1.php/apps/files_sharing/api/v1/shares", files_sharing.SharedWithOthers).Methods("GET").Queries("shared_with_me", "false")
-
-		defaultMux.Handle("/ocs/v2.php/apps/files_sharing/api/v1/shares", r)
-		defaultMux.Handle("/ocs/v2.php/apps/files_sharing/api/v1/shares/", r)
-		defaultMux.Handle("/ocs/v1.php/apps/files_sharing/api/v1/shares", r)
-
-		defaultMux.HandleFunc("/ocs/v1.php/apps/files_sharing/api/v1/sharees", files_sharing.Sharees)
-
-		defaultMux.HandleFunc("/ocs/v1.php/apps/files_sharing/api/v1/remote_shares", files_sharing.RemoteShares)
 
 		defaultMux.HandleFunc("/logout", func(w http.ResponseWriter, r *http.Request) {
 			identity.ClearSession(w)
 			//TODO: make a decent logged out page since now you will be redirected to itsyou.online for login again
 			http.Redirect(w, r, "/", http.StatusFound)
 		})
-		defaultMux.Handle("/core/", http.FileServer(&assetfs.AssetFS{Asset: core.Asset, AssetDir: core.AssetDir, AssetInfo: core.AssetInfo}))
-		defaultMux.Handle("/apps/dav/", http.StripPrefix("/apps/dav/", http.FileServer(http.Dir("apps/dav"))))
-		defaultMux.Handle("/apps/federatedfilesharing/", http.FileServer(&assetfs.AssetFS{Asset: federatedfilesharing.Asset, AssetDir: federatedfilesharing.AssetDir, AssetInfo: federatedfilesharing.AssetInfo}))
-		defaultMux.Handle("/apps/files/css/", http.FileServer(&assetfs.AssetFS{Asset: files_assets.Asset, AssetDir: files_assets.AssetDir, AssetInfo: files_assets.AssetInfo}))
-		defaultMux.Handle("/apps/files/img/", http.FileServer(&assetfs.AssetFS{Asset: files_assets.Asset, AssetDir: files_assets.AssetDir, AssetInfo: files_assets.AssetInfo}))
-		defaultMux.Handle("/apps/files/js/", http.FileServer(&assetfs.AssetFS{Asset: files_assets.Asset, AssetDir: files_assets.AssetDir, AssetInfo: files_assets.AssetInfo}))
 
-		defaultMux.Handle("/apps/files_trashbin/css/", http.FileServer(&assetfs.AssetFS{Asset: files_trashbin.Asset, AssetDir: files_trashbin.AssetDir, AssetInfo: files_trashbin.AssetInfo}))
-		defaultMux.Handle("/apps/files_trashbin/img/", http.FileServer(&assetfs.AssetFS{Asset: files_trashbin.Asset, AssetDir: files_trashbin.AssetDir, AssetInfo: files_trashbin.AssetInfo}))
-		defaultMux.Handle("/apps/files_trashbin/js/", http.FileServer(&assetfs.AssetFS{Asset: files_trashbin.Asset, AssetDir: files_trashbin.AssetDir, AssetInfo: files_trashbin.AssetInfo}))
-
-		defaultMux.Handle("/settings/", http.FileServer(&assetfs.AssetFS{Asset: settings.Asset, AssetDir: settings.AssetDir, AssetInfo: settings.AssetInfo}))
-
-		defaultMux.Handle("/apps/files_sharing/", http.FileServer(&assetfs.AssetFS{Asset: files_sharing_assets.Asset, AssetDir: files_sharing_assets.AssetDir, AssetInfo: files_sharing_assets.AssetInfo}))
-
-		defaultMux.Handle("/index.php/core/", http.StripPrefix("/index.php/", http.FileServer(&assetfs.AssetFS{Asset: core.Asset, AssetDir: core.AssetDir, AssetInfo: core.AssetInfo})))
-
-		defaultMux.Handle("/apps/files_videoplayer/", http.FileServer(&assetfs.AssetFS{Asset: files_videoplayer.Asset, AssetDir: files_videoplayer.AssetDir, AssetInfo: files_videoplayer.AssetInfo}))
-
-		defaultMux.HandleFunc("/index.php/apps/files/ajax/upload.php", files.Upload)
-
-		defaultMux.HandleFunc("/index.php/apps/files/api/v1/files/", files.Favorite)
-
-		defaultMux.HandleFunc("/index.php/apps/files/api/v1/tags/_$!<Favorite>!$_/files", files.ListFavorites)
-
-		defaultMux.HandleFunc("/index.php/apps/files/ajax/getstoragestats.php", files.GetStorageStats)
-		defaultMux.HandleFunc("/index.php/core/preview.png", files.GetPreview)
-
-		defaultMux.HandleFunc("/index.php/apps/files/api/v1/thumbnail/", files.GetThumbnail)
-
-		defaultMux.HandleFunc("/index.php/apps/files_trashbin/ajax/list.php", trash.GetTrash)
-		defaultMux.HandleFunc("/index.php/apps/files_trashbin/ajax/delete.php", trash.DeleteTrash)
-		defaultMux.HandleFunc("/index.php/apps/files_trashbin/ajax/undelete.php", trash.UndeleteTrash)
+		routes.RegisterRoutes(defaultMux, publicMux)
+		files_routes.RegisterRoutes(defaultMux, publicMux)
+		trash_routes.RegisterRoutes(defaultMux, publicMux)
+		sharing_routes.RegisterRoutes(defaultMux, publicMux)
+		core_routes.RegisterRoutes(defaultMux, publicMux)
 
 		rootMux := http.NewServeMux()
 		rootMux.Handle("/", identity.AddIdentity(logging.Handler(os.Stdout, identity.Protect(clientID, clientSecret, defaultMux)), clientID))
-		rootMux.Handle("/status.php", logging.Handler(os.Stdout, http.HandlerFunc(core.Status)))
+		rootMux.Handle("/status.php", publicMux)
 
 		log.Infoln("Start listening on", bindAddress)
 		if err := http.ListenAndServe(bindAddress, rootMux); err != nil {

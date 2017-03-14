@@ -2,5 +2,4 @@ gowncloud
 *.php
 testdir
 gowncloud-data
-assets.go
-index.go
+public/assets
