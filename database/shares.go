@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+	"strconv"
 	"time"
 
 	log "github.com/Sirupsen/logrus"
@@ -193,11 +194,25 @@ func DeleteNodeShareToUserFromNodeId(nodeId int, target string) error {
 	return nil
 }
 
-// DeleteShare removes the share with shareId from the database. It does not removes
+// DeleteShare removes the share with shareId from the database. It does not remove
 // the acutal node.
 func DeleteShare(shareId int) error {
 	log.Debug("TRY TO DELETE SHARE WITH SHAREID: ", shareId)
 	_, err := db.Exec("DELETE FROM gowncloud.shares WHERE shareid = $1", shareId)
+	if err != nil {
+		log.Error("Error while deleting share: ", err)
+		return ErrDB
+	}
+	return nil
+}
+
+// DeleteShareWithPartialId removes the share with shareId ending in partialId,
+// if the targeted node is owned by username. It does not remove the actual node
+func DeleteShareWithPartialId(partialId int, username string) error {
+	strLen := len(strconv.Itoa(partialId))
+	log.Debugf("Try to delete share with partial shareId (%v), length of shareId is %v", partialId, strLen)
+	_, err := db.Exec("DELETE FROM gowncloud.shares WHERE shareid % POWER(10, $3) = $1 AND "+
+		"nodeid IN (SELECT nodeid FROM gowncloud.nodes WHERE owner = $2)", partialId, username, strLen)
 	if err != nil {
 		log.Error("Error while deleting share: ", err)
 		return ErrDB

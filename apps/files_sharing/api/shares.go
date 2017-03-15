@@ -295,6 +295,7 @@ func Sharees(w http.ResponseWriter, r *http.Request) {
 // It is the endpoint for DELETE /ocs/v2.php/apps/files_sharing/api/v1/shares/{shareid}
 func DeleteShare(w http.ResponseWriter, r *http.Request) {
 	shareIdString := mux.Vars(r)["shareid"]
+	username := identity.CurrentSession(r).Username
 
 	shareId, err := strconv.Atoi(shareIdString)
 	if err != nil {
@@ -305,7 +306,7 @@ func DeleteShare(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	err = db.DeleteShare(shareId)
+	err = db.DeleteShareWithPartialId(shareId, username)
 	if err != nil {
 		log.Error("Error deleting share")
 		w.WriteHeader(http.StatusInternalServerError)
@@ -330,6 +331,13 @@ func makeShareData(shareNode *db.Node, share *db.Share, target string) (*shareda
 
 	storage_id := "home::" + shareNode.Owner
 
+	// Reduce the share id to 55 bits max for the javascript (max 56 bits, 1 bit reserved for sign)
+	trimmedId, err := parseIntToSize(strconv.Itoa(share.ShareID), 55)
+	if err != nil {
+		log.Warn("Error while fitting share id to the requested 56 bits size: ", err)
+		return nil, err
+	}
+
 	data := sharedata{
 		Displayname_file_owner: shareNode.Owner,
 		Displayname_owner:      shareNode.Owner,
@@ -337,7 +345,7 @@ func makeShareData(shareNode *db.Node, share *db.Share, target string) (*shareda
 		File_parent:            parent.ID,
 		File_source:            shareNode.ID,
 		File_target:            strings.TrimPrefix(shareNode.Path, shareNode.Owner+"/files"),
-		Id:                     strconv.Itoa(share.ShareID),
+		Id:                     strconv.Itoa(trimmedId),
 		Item_source:            shareNode.ID,
 		Item_type:              item_type,
 		Mail_send:              0,
@@ -357,4 +365,25 @@ func makeShareData(shareNode *db.Node, share *db.Share, target string) (*shareda
 	}
 
 	return &data, nil
+}
+
+// parseIntToSize parses a string to an int and makes sure it fits in the specified
+// amount of bits
+func parseIntToSize(input string, bitsize int) (int, error) {
+	for {
+		i, err := strconv.ParseInt(input, 10, bitsize)
+		if err != nil {
+			nErr, ok := err.(*strconv.NumError)
+			if !ok {
+				return 0, err
+			}
+			if nErr.Err != strconv.ErrRange {
+				return 0, err
+			}
+			err = nil
+		} else {
+			return int(i), nil
+		}
+		input = input[1:]
+	}
 }
