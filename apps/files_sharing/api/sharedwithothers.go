@@ -37,9 +37,8 @@ func SharedWithOthers(w http.ResponseWriter, r *http.Request) {
 		}
 		sd, err := makeShareData(node, share, share.Target)
 		if err != nil {
-			log.Error("Failed to make share data")
-			w.WriteHeader(http.StatusInternalServerError)
-			return
+			log.Warn("Failed to make share data")
+			continue
 		}
 		data = append(data, *sd)
 	}
