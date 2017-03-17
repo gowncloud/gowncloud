@@ -585,7 +585,7 @@ func findShareRoot(href string, targets []string) ([]*db.Node, error) {
 	if len(nodes) > 0 {
 		return nodes, nil
 	}
-	seperatorIndex := strings.Index(path, "/")
+	seperatorIndex := strings.LastIndex(path, "/")
 	for len(nodes) == 0 && seperatorIndex >= 0 {
 		path = path[:seperatorIndex]
 		seperatorIndex = strings.Index(path, "/")
