@@ -203,6 +203,25 @@ func MoveNode(originalPath string, targetPath string) error {
 	return nil
 }
 
+// TransferNode moves a node to a new path and transfers ownership
+func TransferNode(originalPath string, targetPath string, newOwner string) error {
+	result, err := db.Exec("UPDATE gowncloud.nodes SET path = $1, owner = $2 WHERE path = $3", targetPath, newOwner, originalPath)
+	if err != nil {
+		log.Errorf("Error updating path %v and owner: %v", originalPath, err)
+		return ErrDB
+	}
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		log.Error("Error while updating path and owner")
+		return ErrDB
+	}
+	if rowsAffected != 1 {
+		log.Error("Failed to update path and owner")
+		return ErrDB
+	}
+	return nil
+}
+
 // readNodeRows reads from *sql.Rows and creates a node for every row
 func readNodeRows(rows *sql.Rows) ([]*Node, error) {
 	nodes := make([]*Node, 0)
