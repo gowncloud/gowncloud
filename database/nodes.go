@@ -194,6 +194,7 @@ func MoveNode(originalPath string, targetPath string) error {
 	rowsAffected, err := result.RowsAffected()
 	if err != nil {
 		log.Error("Error while updating path")
+		return ErrDB
 	}
 	if rowsAffected != 1 {
 		log.Error("Failed to update path")
