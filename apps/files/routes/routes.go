@@ -21,4 +21,6 @@ func RegisterRoutes(protectedMux *http.ServeMux, publicMux *http.ServeMux) {
 
 	protectedMux.HandleFunc("/index.php/apps/files/api/v1/thumbnail/", files.GetThumbnail)
 
+	protectedMux.HandleFunc("/index.php/apps/files/ajax/download.php", files.Download)
+
 }
