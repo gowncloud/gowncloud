@@ -21,6 +21,9 @@ func GetPreview(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 
 	filePath := query.Get("file")
+	if !strings.HasPrefix(filePath, "/") {
+		filePath = "/" + filePath
+	}
 
 	nodePath := username + "/files" + filePath
 	exists, err := db.NodeExists(nodePath)
