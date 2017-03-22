@@ -35,9 +35,9 @@ type file struct {
 
 // ListFavorits returns information about all favorites for a user
 func ListFavorites(w http.ResponseWriter, r *http.Request) {
-	username := identity.CurrentSession(r).Username
+	id := identity.CurrentSession(r)
 
-	nodes, err := db.GetFavoritedNodes(username)
+	nodes, err := db.GetFavoritedNodes(id.Username, append(id.Organizations, id.Username))
 	if err != nil {
 		log.Error("Failed to get favorited nodes: ", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -62,7 +62,7 @@ func ListFavorites(w http.ResponseWriter, r *http.Request) {
 			continue
 		}
 
-		homeNode, err := db.GetNode(username + "/files")
+		homeNode, err := db.GetNode(id.Username + "/files")
 		if err != nil {
 			log.Error("Failed to get home node: ", err)
 			err = nil
@@ -74,7 +74,7 @@ func ListFavorites(w http.ResponseWriter, r *http.Request) {
 			permissions = 31
 		}
 
-		share, err := db.GetNodeShareToTarget(node.ID, username)
+		share, err := db.GetNodeShareToTarget(node.ID, id.Username)
 		if err != nil {
 			log.Error("Failed to check for share on node: ", err)
 			err = nil
