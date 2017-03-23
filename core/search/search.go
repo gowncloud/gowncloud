@@ -82,11 +82,6 @@ func Search(w http.ResponseWriter, r *http.Request) {
 		nodePath := node.Path[strings.Index(node.Path, "/")+1:]
 		nodePath = nodePath[strings.Index(nodePath, "/")+1:]
 
-		// parsedId, err := parseIntToSize(strconv.Itoa(node.ID), 55)
-		// if err != nil {
-		// 	log.Error("Failed to parse int to size: ", err)
-		// 	continue
-		// }
 		var linkDir string
 		if strings.Contains(nodePath, "/") {
 			linkDir = nodePath[:strings.LastIndex(nodePath, "/")]
