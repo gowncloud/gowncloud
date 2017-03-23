@@ -13,6 +13,7 @@ import (
 	sharing_routes "github.com/gowncloud/gowncloud/apps/files_sharing/routes"
 	trash_routes "github.com/gowncloud/gowncloud/apps/files_trashbin/routes"
 	core_routes "github.com/gowncloud/gowncloud/core/routes"
+	"github.com/gowncloud/gowncloud/core/search"
 
 	"github.com/gowncloud/gowncloud/core/identity"
 	"github.com/gowncloud/gowncloud/core/logging"
@@ -141,6 +142,11 @@ func main() {
 			renderTemplate(w, "index.html", &s)
 		})
 
+		defaultMux.HandleFunc("/index.php/apps/files/", func(w http.ResponseWriter, r *http.Request) {
+			s := identity.CurrentSession(r)
+			renderTemplate(w, "index.html", &s)
+		})
+
 		defaultMux.HandleFunc("/logout", func(w http.ResponseWriter, r *http.Request) {
 			identity.ClearSession(w)
 			//TODO: make a decent logged out page since now you will be redirected to itsyou.online for login again
@@ -152,6 +158,7 @@ func main() {
 		trash_routes.RegisterRoutes(defaultMux, publicMux)
 		sharing_routes.RegisterRoutes(defaultMux, publicMux)
 		core_routes.RegisterRoutes(defaultMux, publicMux)
+		search.RegisterRoutes(defaultMux, publicMux)
 
 		rootMux := http.NewServeMux()
 		rootMux.Handle("/", identity.AddIdentity(logging.Handler(os.Stdout, identity.Protect(clientID, clientSecret, defaultMux)), clientID))

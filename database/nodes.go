@@ -223,6 +223,56 @@ func TransferNode(originalPath string, targetPath string, newOwner string) error
 	return nil
 }
 
+// SearchNodesByName looks for all nodes where the path contains the query, where
+// the user has access
+func SearchNodesByName(nodeName string, targets []string) ([]*Node, error) {
+	nodes := make([]*Node, 0)
+	for _, t := range targets {
+		foundNodes, err := getNodesByNameForTarget(nodeName, t)
+		if err != nil {
+			return nil, err
+		}
+		// Make sure we don't add duplicates
+		for _, foundNode := range foundNodes {
+			alreadyFound := false
+			for _, node := range nodes {
+				if foundNode.ID == node.ID {
+					alreadyFound = true
+					break
+				}
+			}
+			if !alreadyFound {
+				nodes = append(nodes, foundNode)
+			}
+		}
+	}
+	return nodes, nil
+}
+
+// getNodesByNameForTarget returns all nodes where the path contains the query and the
+// target has access
+func getNodesByNameForTarget(nodeName string, target string) ([]*Node, error) {
+	// '.*' || $1 || '[^/]*$' ==> match any characters before the placeholder, then match
+	// anything as long as its not a slash until the end of the path. This makes sure
+	// we only get nodes where the query is part of the name and not part of the path,
+	// else we would also pull in all the child nodes as well.
+	rows, err := db.Query("SELECT * FROM gowncloud.nodes WHERE path ~ ('.*' || $1 || '[^/]*$') AND "+
+		"nodeid IN (SELECT nodeid FROM gowncloud.nodes WHERE owner = $2 UNION "+
+		"SELECT nodeid FROM gowncloud.nodes WHERE path LIKE ("+
+		"SELECT path FROM gowncloud.nodes WHERE nodeid IN ("+
+		"SELECT nodeid FROM gowncloud.shares WHERE target = $2)) || '%')", nodeName, target)
+	if err != nil {
+		log.Error("Failed to get Nodes from the database: ", err)
+		return nil, ErrDB
+	}
+	if rows == nil {
+		log.Error("Error loading nodes")
+		return nil, ErrDB
+	}
+	defer rows.Close()
+	return readNodeRows(rows)
+}
+
 // readNodeRows reads from *sql.Rows and creates a node for every row
 func readNodeRows(rows *sql.Rows) ([]*Node, error) {
 	nodes := make([]*Node, 0)
