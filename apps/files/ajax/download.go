@@ -2,6 +2,7 @@ package files
 
 import (
 	"archive/zip"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -84,7 +85,7 @@ func serveSingle(file string, dir string, w http.ResponseWriter, r *http.Request
 		return
 	}
 	if node.Isdir {
-		w.Header().Set("Content-Disposition", "attachment; filename=\"download.zip\"")
+		w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=\"%v.zip\"", file))
 		w.Header().Set("Content-Type", "application/zip")
 		w.WriteHeader(http.StatusOK)
 		zipper := zip.NewWriter(w)
