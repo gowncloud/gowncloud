@@ -37,7 +37,7 @@ type file struct {
 func ListFavorites(w http.ResponseWriter, r *http.Request) {
 	id := identity.CurrentSession(r)
 
-	nodes, err := db.GetFavoritedNodes(id.Username, append(id.Organizations, id.Username))
+	nodes, err := db.GetFavoritedNodes(id.Username, id.Organizations)
 	if err != nil {
 		log.Error("Failed to get favorited nodes: ", err)
 		w.WriteHeader(http.StatusInternalServerError)

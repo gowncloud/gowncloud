@@ -49,7 +49,7 @@ func MoveAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Reques
 		}
 
 		var sharedNodes []*db.Node
-		sharedNodes, err = findShareRoot(nodePath, append(groups, user))
+		sharedNodes, err = findShareRoot(nodePath, user, groups)
 		if err != nil {
 			log.Error("Error while searching for shared nodes")
 			w.WriteHeader(http.StatusInternalServerError)
@@ -88,7 +88,7 @@ func MoveAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Reques
 		}
 
 		var sharedNodes []*db.Node
-		sharedNodes, err = findShareRoot(destinationNodePath, append(groups, user))
+		sharedNodes, err = findShareRoot(destinationNodePath, user, groups)
 		if err != nil {
 			log.Error("Error while searching for shared nodes")
 			w.WriteHeader(http.StatusInternalServerError)

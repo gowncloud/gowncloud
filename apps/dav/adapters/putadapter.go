@@ -29,7 +29,7 @@ func PutAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Request
 			parentNodePath = user + "/files"
 		}
 		var sharedNodes []*db.Node
-		sharedNodes, err = findShareRoot(parentNodePath, append(groups, user))
+		sharedNodes, err = findShareRoot(parentNodePath, user, groups)
 		if err != nil {
 			log.Error("Error while searching for shared nodes")
 			w.WriteHeader(http.StatusInternalServerError)

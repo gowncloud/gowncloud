@@ -41,7 +41,7 @@ func Search(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	nodes, err := db.SearchNodesByName(query, append(id.Organizations, id.Username))
+	nodes, err := db.SearchNodesByName(query, id.Username, id.Organizations)
 	if err != nil {
 		log.Error("Failed to search for nodes: ", err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)

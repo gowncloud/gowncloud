@@ -70,7 +70,7 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 		if targetNode == nil {
 			log.Debug("Looking for shares")
 
-			sharedNodes, err := findShareRoot(r.URL.Path, append(groups, username))
+			sharedNodes, err := findShareRoot(r.URL.Path, username, groups)
 			if err != nil {
 				log.Error("Error while searching for shared nodes")
 				w.WriteHeader(http.StatusInternalServerError)
@@ -576,9 +576,9 @@ func getSharedNodeFromHref(href string) (*db.Node, error) {
 }
 
 // findShareRoot parses a path and tries to find a share
-func findShareRoot(href string, targets []string) ([]*db.Node, error) {
+func findShareRoot(href string, user string, groups []string) ([]*db.Node, error) {
 	path := strings.TrimLeft(href, "/remote.php/webdav/")
-	nodes, err := db.GetSharedNamedNodesToTargets(path, targets)
+	nodes, err := db.GetSharedNamedNodesToTargets(path, user, groups)
 	if err != nil {
 		return nil, err
 	}
@@ -589,7 +589,7 @@ func findShareRoot(href string, targets []string) ([]*db.Node, error) {
 	for len(nodes) == 0 && seperatorIndex >= 0 {
 		path = path[:seperatorIndex]
 		seperatorIndex = strings.Index(path, "/")
-		nodes, err = db.GetSharedNamedNodesToTargets(path, targets)
+		nodes, err = db.GetSharedNamedNodesToTargets(path, user, groups)
 		if err != nil {
 			return nil, err
 		}

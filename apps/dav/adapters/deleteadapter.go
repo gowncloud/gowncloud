@@ -31,7 +31,7 @@ func DeleteAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Requ
 			nodePath = user + "/files"
 		}
 		var sharedNodes []*db.Node
-		sharedNodes, err = findShareRoot(nodePath, append(groups, user))
+		sharedNodes, err = findShareRoot(nodePath, user, groups)
 		if err != nil {
 			log.Error("Error while searching for shared nodes")
 			w.WriteHeader(http.StatusInternalServerError)

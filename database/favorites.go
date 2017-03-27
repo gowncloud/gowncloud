@@ -58,9 +58,12 @@ func IsFavoriteByNodeid(nodeid int, user string) (bool, error) {
 
 // GetFavoritedNodes returns all the nodes favorited by the user
 func GetFavoritedNodes(username string, targets []string) ([]*Node, error) {
-	nodes := make([]*Node, 0)
+	nodes, err := getFavoritedNodesForUser(username)
+	if err != nil {
+		return nil, err
+	}
 	for _, t := range targets {
-		favNodes, err := getFavoritedNodesForTarget(username, t)
+		favNodes, err := getFavoritedNodesForGroup(username, t)
 		if err != nil {
 			return nil, err
 		}
@@ -83,16 +86,51 @@ func GetFavoritedNodes(username string, targets []string) ([]*Node, error) {
 
 // getFavoritedNodesForTarget gets all the favorited nodes including shares and
 // subnodes of shares
-func getFavoritedNodesForTarget(username string, target string) ([]*Node, error) {
+func getFavoritedNodesForGroup(username string, target string) ([]*Node, error) {
+	rows, err := db.Query("SELECT * FROM gowncloud.nodes WHERE nodeid IN ( "+
+		"SELECT nodeid FROM gowncloud.shares WHERE target LIKE $1 || '.' || '%' UNION "+
+		"SELECT nodeid FROM gowncloud.nodes WHERE path LIKE ("+
+		"SELECT path FROM gowncloud.nodes WHERE nodeid IN ("+
+		"SELECT nodeid FROM gowncloud.shares WHERE target IN ($1 || '.' || '%'))) || '%' UNION "+
+		"SELECT nodeid FROM gowncloud.nodes WHERE owner = $1) AND "+
+		"nodeid IN (SELECT nodeid FROM gowncloud.favorites WHERE username = $2)", target, username)
+	if err != nil {
+		log.Errorf("Failed to get favorited nodes for user in group %v: %v", target, err)
+		return nil, ErrDB
+	}
+	if rows == nil {
+		log.Error("Error loading favorites")
+		return nil, ErrDB
+	}
+	defer rows.Close()
+	nodes := make([]*Node, 0)
+	for rows.Next() {
+		node := &Node{}
+		err = rows.Scan(&node.ID, &node.Owner, &node.Path, &node.Isdir, &node.MimeType, &node.Deleted)
+		if err != nil {
+			log.Error("Error while reading favorites")
+			return nil, ErrDB
+		}
+		nodes = append(nodes, node)
+	}
+	err = rows.Err()
+	if err != nil {
+		log.Error("Error while reading the favorite rows")
+		return nil, err
+	}
+	return nodes, nil
+}
+
+func getFavoritedNodesForUser(username string) ([]*Node, error) {
 	rows, err := db.Query("SELECT * FROM gowncloud.nodes WHERE nodeid IN ( "+
 		"SELECT nodeid FROM gowncloud.shares WHERE target = $1 UNION "+
 		"SELECT nodeid FROM gowncloud.nodes WHERE path LIKE ("+
 		"SELECT path FROM gowncloud.nodes WHERE nodeid IN ("+
 		"SELECT nodeid FROM gowncloud.shares WHERE target = $1)) || '%' UNION "+
 		"SELECT nodeid FROM gowncloud.nodes WHERE owner = $1) AND "+
-		"nodeid IN (SELECT nodeid FROM gowncloud.favorites WHERE username = $2)", target, username)
+		"nodeid IN (SELECT nodeid FROM gowncloud.favorites WHERE username = $1)", username)
 	if err != nil {
-		log.Errorf("Failed to get favorited nodes for user %v: %v", target, err)
+		log.Errorf("Failed to get favorited nodes for user %v: %v", username, err)
 		return nil, ErrDB
 	}
 	if rows == nil {

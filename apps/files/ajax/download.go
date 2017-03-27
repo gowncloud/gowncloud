@@ -251,7 +251,7 @@ func getNodePath(webPath string, dir string, id identity.Session) (string, error
 			nodePath = username + "/files"
 		}
 		var sharedNodes []*db.Node
-		sharedNodes, err = findShareRoot(nodePath, append(groups, username))
+		sharedNodes, err = findShareRoot(nodePath, username, groups)
 		if err != nil {
 			log.Error("Error while searching for shared nodes")
 			return "", err

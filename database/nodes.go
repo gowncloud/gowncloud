@@ -130,10 +130,14 @@ func GetSharedNode(shareId int) (*Node, error) {
 
 // GetSharedNamedNodesToTargets returns all the nodes shared to the targets with the
 // given name
-func GetSharedNamedNodesToTargets(nodeName string, targets []string) ([]*Node, error) {
-	nodes := make([]*Node, 0)
+func GetSharedNamedNodesToTargets(nodeName string, username string, targets []string) ([]*Node, error) {
+	nodes, err := getSharedNamedNodesToUser(nodeName, username)
+	if err != nil {
+		log.Error("Failed to get shared nodes to user: ", err)
+		return nil, ErrDB
+	}
 	for _, target := range targets {
-		nodesForTarget, err := getSharedNamedNodesToTarget(nodeName, target)
+		nodesForTarget, err := getSharedNamedNodesToGroup(nodeName, target)
 		if err != nil {
 			return nil, err
 		}
@@ -153,9 +157,24 @@ func GetSharedNamedNodesToTargets(nodeName string, targets []string) ([]*Node, e
 	return nodes, nil
 }
 
-func getSharedNamedNodesToTarget(nodeName string, target string) ([]*Node, error) {
+func getSharedNamedNodesToUser(nodeName string, user string) ([]*Node, error) {
 	rows, err := db.Query("SELECT * FROM gowncloud.nodes WHERE path LIKE '%' || $1 AND "+
-		"nodeid IN (SELECT nodeid FROM gowncloud.shares WHERE target = $2)", nodeName, target)
+		"nodeid IN (SELECT nodeid FROM gowncloud.shares WHERE target = $2)", nodeName, user)
+	if err != nil {
+		log.Error("Failed to get Nodes from the database")
+		return nil, ErrDB
+	}
+	if rows == nil {
+		log.Error("Error loading shares")
+		return nil, ErrDB
+	}
+	defer rows.Close()
+	return readNodeRows(rows)
+}
+
+func getSharedNamedNodesToGroup(nodeName string, target string) ([]*Node, error) {
+	rows, err := db.Query("SELECT * FROM gowncloud.nodes WHERE path LIKE '%' || $1 AND "+
+		"nodeid IN (SELECT nodeid FROM gowncloud.shares WHERE target LIKE $2 || '.' || '%')", nodeName, target)
 	if err != nil {
 		log.Error("Failed to get Nodes from the database")
 		return nil, ErrDB
@@ -225,10 +244,13 @@ func TransferNode(originalPath string, targetPath string, newOwner string) error
 
 // SearchNodesByName looks for all nodes where the path contains the query, where
 // the user has access
-func SearchNodesByName(nodeName string, targets []string) ([]*Node, error) {
-	nodes := make([]*Node, 0)
+func SearchNodesByName(nodeName string, user string, targets []string) ([]*Node, error) {
+	nodes, err := getNodesByNameForUser(nodeName, user) //= make([]*Node, 0)
+	if err != nil {
+		return nil, err
+	}
 	for _, t := range targets {
-		foundNodes, err := getNodesByNameForTarget(nodeName, t)
+		foundNodes, err := getNodesByNameForGroup(nodeName, t)
 		if err != nil {
 			return nil, err
 		}
@@ -249,18 +271,36 @@ func SearchNodesByName(nodeName string, targets []string) ([]*Node, error) {
 	return nodes, nil
 }
 
+func getNodesByNameForUser(nodeName string, user string) ([]*Node, error) {
+	rows, err := db.Query("SELECT * FROM gowncloud.nodes WHERE path ~ ('.*' || $1 || '[^/]*$') AND "+
+		"nodeid IN (SELECT nodeid FROM gowncloud.nodes WHERE owner = $2 UNION "+
+		"SELECT nodeid FROM gowncloud.nodes WHERE path LIKE ("+
+		"SELECT path FROM gowncloud.nodes WHERE nodeid IN ("+
+		"SELECT nodeid FROM gowncloud.shares WHERE target = $2)) || '%')", nodeName, user)
+	if err != nil {
+		log.Error("Failed to get Nodes from the database: ", err)
+		return nil, ErrDB
+	}
+	if rows == nil {
+		log.Error("Error loading nodes")
+		return nil, ErrDB
+	}
+	defer rows.Close()
+	return readNodeRows(rows)
+}
+
 // getNodesByNameForTarget returns all nodes where the path contains the query and the
 // target has access
-func getNodesByNameForTarget(nodeName string, target string) ([]*Node, error) {
+func getNodesByNameForGroup(nodeName string, target string) ([]*Node, error) {
 	// '.*' || $1 || '[^/]*$' ==> match any characters before the placeholder, then match
 	// anything as long as its not a slash until the end of the path. This makes sure
 	// we only get nodes where the query is part of the name and not part of the path,
 	// else we would also pull in all the child nodes as well.
 	rows, err := db.Query("SELECT * FROM gowncloud.nodes WHERE path ~ ('.*' || $1 || '[^/]*$') AND "+
-		"nodeid IN (SELECT nodeid FROM gowncloud.nodes WHERE owner = $2 UNION "+
+		"nodeid IN ("+
 		"SELECT nodeid FROM gowncloud.nodes WHERE path LIKE ("+
 		"SELECT path FROM gowncloud.nodes WHERE nodeid IN ("+
-		"SELECT nodeid FROM gowncloud.shares WHERE target = $2)) || '%')", nodeName, target)
+		"SELECT nodeid FROM gowncloud.shares WHERE target LIKE $2 || '.' || '%')) || '%')", nodeName, target)
 	if err != nil {
 		log.Error("Failed to get Nodes from the database: ", err)
 		return nil, ErrDB

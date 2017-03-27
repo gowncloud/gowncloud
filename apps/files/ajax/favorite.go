@@ -46,7 +46,7 @@ func Favorite(w http.ResponseWriter, r *http.Request) {
 			path = user + "/files"
 		}
 		var sharedNodes []*db.Node
-		sharedNodes, err = findShareRoot(path, append(groups, user))
+		sharedNodes, err = findShareRoot(path, user, groups)
 		if err != nil {
 			log.Error("Error while searching for shared nodes")
 			w.WriteHeader(http.StatusInternalServerError)
