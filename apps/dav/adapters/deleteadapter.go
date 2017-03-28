@@ -14,66 +14,52 @@ import (
 // DeleteAdapter is the adapter for the WebDav DELETE method
 func DeleteAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Request) {
 
-	user := identity.CurrentSession(r).Username
-	groups := identity.CurrentSession(r).Organizations
+	id := identity.CurrentSession(r)
+	user := id.Username
+	groups := id.Organizations
 
-	nodePath := strings.Replace(r.URL.Path, "/remote.php/webdav", user+"/files", 1)
-	exists, err := db.NodeExists(nodePath)
+	inputPath := strings.TrimPrefix(r.URL.Path, "/remote.php/webdav/")
+	path, err := getNodePath(inputPath, id)
 	if err != nil {
-		log.Error("Failed to check if node exists")
-		w.WriteHeader(http.StatusInternalServerError)
+		log.Errorf("Failed to get the node path (%v): %v", inputPath, err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
-	if !exists {
-		nodePath = strings.TrimPrefix(nodePath, user+"/files")
-		nodePath = nodePath[strings.Index(nodePath, "/")+1:]
-		if nodePath == "" {
-			nodePath = user + "/files"
-		}
-		var sharedNodes []*db.Node
-		sharedNodes, err = findShareRoot(nodePath, user, groups)
-		if err != nil {
-			log.Error("Error while searching for shared nodes")
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-		if len(sharedNodes) == 0 {
-			w.WriteHeader(http.StatusNotFound)
-			return
-		}
-		// Log collisions
-		if len(sharedNodes) > 1 {
-			log.Warn("Shared folder collision")
-		}
-
-		target := sharedNodes[0]
-
-		if strings.HasSuffix(target.Path, nodePath) {
-			// This is the shared node, it should just be unshared and not deleted
-			err = db.DeleteNodeShareToUserFromNodeId(target.ID, user)
-			if err != nil {
-				log.Error("Error deleting shared node")
-				w.WriteHeader(http.StatusInternalServerError)
-				return
-			}
-			w.WriteHeader(http.StatusNoContent)
-			return
-		}
-
-		originalPath := r.URL.Path
-		finalPath := target.Path[:strings.LastIndex(target.Path, "/")] + strings.TrimPrefix(originalPath, "/remote.php/webdav")
-		r.URL.Path = "/remote.php/webdav/" + finalPath
-
-	} else {
-
-		r.URL.Path = strings.Replace(r.URL.Path,
-			"/remote.php/webdav", "/remote.php/webdav/"+user+"/files",
-			1)
-
+	if path == "" {
+		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+		return
 	}
 
+	// identify possible share root
+	if path[:strings.Index(path, "/")] != user {
+		var target *db.Node
+		var targets []*db.Node
+		targets, err = findShareRoot(r.URL.Path, user, groups)
+		if err != nil {
+			log.Error("Failed to find share root")
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			return
+		}
+		if targets != nil && len(targets) > 0 {
+			target = targets[0]
+			if strings.HasSuffix(path, target.Path) {
+				// This is a root of a share, just unshare
+				err = db.DeleteNodeShareToUserFromNodeId(target.ID, user)
+				if err != nil {
+					log.Error("Error deleting shared node: ", err)
+					w.WriteHeader(http.StatusInternalServerError)
+					return
+				}
+				w.WriteHeader(http.StatusNoContent)
+				return
+			}
+		}
+	}
+
+	r.URL.Path = "/remote.php/webdav/" + path
+
 	rootPath := strings.TrimPrefix(r.URL.Path, "/remote.php/webdav/")
-	exists, err = db.NodeExists(rootPath)
+	exists, err := db.NodeExists(rootPath)
 	if err != nil {
 		log.Error("Couldn't verify if node exists: ", err)
 		w.WriteHeader(http.StatusInternalServerError)

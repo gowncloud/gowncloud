@@ -47,58 +47,35 @@ var patchMap map[string]patchFunction = map[string]patchFunction{
 // the datastore
 func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Request) {
 
-	username := identity.CurrentSession(r).Username
-	groups := identity.CurrentSession(r).Organizations
+	id := identity.CurrentSession(r)
+	username := id.Username
 
-	// Check the request path. If it points to the home direcotry we need to
+	// Check the request path. If it points to the home directory we need to
 	// include the shares later on
 	isHomeDir := r.URL.Path == "/remote.php/webdav/"
 
 	var inSharedNode bool
 	var targetRoot string
 
-	// Sinse home directories can't be shared, we don't need to check if we are going
-	// into a shared folder
-	if !isHomeDir {
-		targetNode, err := db.GetNode(strings.Replace(r.URL.Path, "/remote.php/webdav", username+"/files", 1))
-		if err != nil {
-			log.Error("Error while searching for target node")
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-		// If no node was found, look for shared nodes
-		if targetNode == nil {
-			log.Debug("Looking for shares")
-
-			sharedNodes, err := findShareRoot(r.URL.Path, username, groups)
-			if err != nil {
-				log.Error("Error while searching for shared nodes")
-				w.WriteHeader(http.StatusInternalServerError)
-				return
-			}
-			if len(sharedNodes) == 0 {
-				w.WriteHeader(http.StatusNotFound)
-				return
-			}
-			// Go into the first shared directory. Log collisions
-			if len(sharedNodes) > 1 {
-				log.Warn("Shared folder collision")
-			}
-
+	inputPath := strings.TrimPrefix(r.URL.Path, "/remote.php/webdav/")
+	path, err := getNodePath(inputPath, id)
+	if err != nil {
+		log.Error("Failed to get node path for url ", strings.TrimPrefix(r.URL.Path, "/remote.php/webdav/"))
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+	if path == "" {
+		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+		return
+	}
+	if strings.Index(path, "/") >= 0 {
+		if path[:strings.Index(path, "/")] != username {
+			targetRoot = strings.TrimSuffix(strings.TrimSuffix(path, inputPath), "/")
 			inSharedNode = true
-
-			target := sharedNodes[0]
-
-			targetRoot = "/" + target.Path[:strings.LastIndex(target.Path, "/")]
-			originalPath := r.URL.Path
-			finalPath := target.Path[:strings.LastIndex(target.Path, "/")] + strings.TrimPrefix(originalPath, "/remote.php/webdav")
-			r.URL.Path = "/remote.php/webdav/" + finalPath
 		}
 	}
 
-	if !inSharedNode {
-		r.URL.Path = strings.Replace(r.URL.Path, "/remote.php/webdav", "/remote.php/webdav/"+username+"/files", 1)
-	}
+	r.URL.Path = "/remote.php/webdav/" + path
 
 	inputDoc := etree.NewDocument()
 
@@ -107,7 +84,7 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 	newBody := ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
 
 	r.Body = newBody
-	err := inputDoc.ReadFromBytes(bodyBytes)
+	err = inputDoc.ReadFromBytes(bodyBytes)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		log.Error(err)
@@ -573,29 +550,4 @@ func getSharedNodeFromHref(href string) (*db.Node, error) {
 	path = strings.Join(pathPieces, "+")
 
 	return db.GetNode(path)
-}
-
-// findShareRoot parses a path and tries to find a share
-func findShareRoot(href string, user string, groups []string) ([]*db.Node, error) {
-	path := strings.TrimLeft(href, "/remote.php/webdav/")
-	nodes, err := db.GetSharedNamedNodesToTargets(path, user, groups)
-	if err != nil {
-		return nil, err
-	}
-	if len(nodes) > 0 {
-		return nodes, nil
-	}
-	seperatorIndex := strings.LastIndex(path, "/")
-	for len(nodes) == 0 && seperatorIndex >= 0 {
-		path = path[:seperatorIndex]
-		seperatorIndex = strings.Index(path, "/")
-		nodes, err = db.GetSharedNamedNodesToTargets(path, user, groups)
-		if err != nil {
-			return nil, err
-		}
-		if len(nodes) > 0 {
-			break
-		}
-	}
-	return nodes, nil
 }

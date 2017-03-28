@@ -15,8 +15,7 @@ import (
 // MoveAdapter is the adapter for the MOVE method. It patches the request url and payload
 // before it gets send to the internal webdav.
 func MoveAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Request) {
-	user := identity.CurrentSession(r).Username
-	groups := identity.CurrentSession(r).Organizations
+	id := identity.CurrentSession(r)
 
 	destination := r.Header.Get("Destination")
 	destinationUrl, err := url.Parse(destination)
@@ -33,86 +32,53 @@ func MoveAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	nodePath := strings.Replace(r.URL.Path, "/remote.php/webdav", user+"/files", 1)
-	destinationNodePath := strings.Replace(destinationUrl.Path, "/remote.php/webdav", user+"/files", 1)
-	originExists, err := db.NodeExists(nodePath)
+	inputPath := strings.TrimPrefix(r.URL.Path, "/remote.php/webdav/")
+	path, err := getNodePath(inputPath, id)
 	if err != nil {
-		log.Error("Failed to check if node exists")
-		w.WriteHeader(http.StatusInternalServerError)
+		log.Errorf("Failed to get the node path (%v): %v", inputPath, err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
-	if !originExists {
-		nodePath = strings.TrimPrefix(nodePath, user+"/files")
-		nodePath = nodePath[strings.Index(nodePath, "/")+1:]
-		if nodePath == "" {
-			nodePath = user + "/files"
-		}
-
-		var sharedNodes []*db.Node
-		sharedNodes, err = findShareRoot(nodePath, user, groups)
-		if err != nil {
-			log.Error("Error while searching for shared nodes")
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-		if len(sharedNodes) == 0 {
-			w.WriteHeader(http.StatusNotFound)
-			return
-		}
-		// Log collisions
-		if len(sharedNodes) > 1 {
-			log.Warn("Shared folder collision")
-		}
-
-		target := sharedNodes[0]
-		originalPath := r.URL.Path
-		finalPath := target.Path[:strings.LastIndex(target.Path, "/")] + strings.TrimPrefix(originalPath, "/remote.php/webdav")
-		r.URL.Path = "/remote.php/webdav/" + finalPath
-
-	} else {
-
-		r.URL.Path = strings.Replace(r.URL.Path,
-			"/remote.php/webdav", "/remote.php/webdav/"+user+"/files",
-			1)
-
+	if path == "" {
+		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+		return
 	}
 
-	log.Debugf("check if %v exists", destinationNodePath[:strings.LastIndex(destinationNodePath, "/")])
-	targetExists, err := db.NodeExists(destinationNodePath[:strings.LastIndex(destinationNodePath, "/")])
-	if !targetExists {
-		log.Debug("target node does not exist")
-		destinationNodePath = strings.TrimLeft(destinationNodePath, "/files")
-		destinationNodePath = destinationNodePath[strings.Index(destinationNodePath, "/")+1:]
-		if destinationNodePath == "" {
-			destinationNodePath = user + "/files"
-		}
+	r.URL.Path = "/remote.php/webdav/" + path
 
-		var sharedNodes []*db.Node
-		sharedNodes, err = findShareRoot(destinationNodePath, user, groups)
-		if err != nil {
-			log.Error("Error while searching for shared nodes")
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-		if len(sharedNodes) == 0 {
-			w.WriteHeader(http.StatusNotFound)
-			return
-		}
-		// Log collisions
-		if len(sharedNodes) > 1 {
-			log.Warn("Shared folder collision")
-		}
-		log.Debug("found shares")
-
-		target := sharedNodes[0]
-		destinationPath := destinationUrl.Path
-		destinationFinalPath := target.Path[:strings.LastIndex(target.Path, "/")] + strings.TrimPrefix(destinationPath, "/remote.php/webdav")
-		destinationUrl.Path = "/remote.php/webdav/" + destinationFinalPath
-		log.Debug("Destination path: ", destinationUrl.Path)
+	targetParentPath := strings.TrimPrefix(destinationUrl.Path, "/remote.php/webdav/")
+	if strings.Contains(targetParentPath, "/") {
+		targetParentPath = targetParentPath[:strings.LastIndex(targetParentPath, "/")]
 	} else {
-		destinationUrl.Path = strings.Replace(destinationUrl.Path,
-			"/remote.php/webdav", "/remote.php/webdav/"+user+"/files",
-			1)
+		targetParentPath = ""
+	}
+
+	log.Debugf("check if %v exists", targetParentPath)
+
+	parentPath, err := getNodePath(targetParentPath, id)
+	if err != nil {
+		log.Errorf("Failed to get the node path (%v): %v", targetParentPath, err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+	if parentPath == "" {
+		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+		return
+	}
+
+	targetPath := parentPath + path[strings.LastIndex(path, "/"):]
+	destinationUrl.Path = "/remote.php/webdav/" + targetPath
+
+	exists, err := db.NodeExists(targetPath)
+	if err != nil {
+		log.Errorf("Failed to verify if node exists at path %v: %v", targetPath, err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+
+	if exists {
+		http.Error(w, http.StatusText(http.StatusConflict), http.StatusConflict)
+		return
 	}
 
 	oldDbPath := strings.TrimPrefix(r.URL.Path, "/remote.php/webdav/")

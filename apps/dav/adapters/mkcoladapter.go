@@ -12,63 +12,73 @@ import (
 // MkcolAdapter is the adapter for the WebDav MKCOL method
 func MkcolAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Request) {
 
-	user := identity.CurrentSession(r).Username
-	groups := identity.CurrentSession(r).Organizations
-	nodeOwner := user
+	id := identity.CurrentSession(r)
 
-	parentNodePath := strings.Replace(r.URL.Path, "/remote.php/webdav", user+"/files", 1)
-	parentNodePath = parentNodePath[:strings.LastIndex(parentNodePath, "/")]
-	exists, err := db.NodeExists(parentNodePath)
+	inputPath := strings.TrimPrefix(r.URL.Path, "/remote.php/webdav/")
+	path, err := getNodePath(inputPath, id)
 	if err != nil {
-		log.Error("Failed to check if node exists")
-		w.WriteHeader(http.StatusInternalServerError)
+		log.Errorf("Failed to get the node path (%v): %v", inputPath, err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
-	if !exists {
-		parentNodePath = strings.TrimPrefix(parentNodePath, user+"/files")
-		parentNodePath = parentNodePath[strings.Index(parentNodePath, "/")+1:]
-		if parentNodePath == "" {
-			parentNodePath = user + "/files"
+	if path == "" {
+		// if path is empty we are sure we're not in a shared node, but the parent may still exist
+		var parentPath string
+		parentInputPath := ""
+		if strings.Contains(inputPath, "/") {
+			parentInputPath = inputPath[:strings.LastIndex(inputPath, "/")]
 		}
-		var sharedNodes []*db.Node
-		sharedNodes, err = findShareRoot(parentNodePath, user, groups)
+		parentPath, err = getNodePath(parentInputPath, id)
 		if err != nil {
-			log.Error("Error while searching for shared nodes")
-			w.WriteHeader(http.StatusInternalServerError)
+			log.Errorf("Failed to get the node path (%v): %v", parentInputPath, err)
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}
-		if len(sharedNodes) == 0 {
-			w.WriteHeader(http.StatusNotFound)
+		if parentPath == "" {
+			// Try to use MKCOL to create node who's parent does not yet exists
+			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 			return
 		}
-		// Log collisions
-		if len(sharedNodes) > 1 {
-			log.Warn("Shared folder collision")
-		}
-
-		target := sharedNodes[0]
-		originalPath := r.URL.Path
-		finalPath := target.Path[:strings.LastIndex(target.Path, "/")] + strings.TrimPrefix(originalPath, "/remote.php/webdav")
-		r.URL.Path = "/remote.php/webdav/" + finalPath
-
-		// The owner of the directory will be the original owner of the share
-		nodeOwner = target.Owner
-
+		// take the target node from the url - so we don't have to add an extra check
+		// when we make a node in the user root directory
+		path = parentPath + r.URL.Path[strings.LastIndex(r.URL.Path, "/"):]
 	} else {
+		// path wa found, either we are in a shared node or the target node already exists
+		var exists bool
+		exists, err = db.NodeExists(path)
+		if err != nil {
+			log.Error("Failed to check if node already exists: ", err)
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			return
+		}
+		if exists {
+			log.Debug("Trying to use MKCOL to create duplicate node")
+			http.Error(w, http.StatusText(http.StatusConflict), http.StatusConflict)
+			return
+		}
 
-		r.URL.Path = strings.Replace(r.URL.Path,
-			"/remote.php/webdav", "/remote.php/webdav/"+user+"/files",
-			1)
-
+		var parentExists bool
+		parentExists, err = db.NodeExists(path[:strings.LastIndex(path, "/")])
+		if err != nil {
+			log.Error("Failed to check if parent node already exists: ", err)
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			return
+		}
+		if !parentExists {
+			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+			return
+		}
 	}
 
-	_, err = db.SaveNode(strings.Replace(r.URL.Path, "/remote.php/webdav/", "", 1), nodeOwner, true, "httpd/unix-directory")
+	nodeOwner := path[:strings.Index(path, "/")]
+	r.URL.Path = "/remote.php/webdav/" + path
+
+	_, err = db.SaveNode(path, nodeOwner, true, "httpd/unix-directory")
 	if err != nil {
-		log.Error("Failed to save node")
+		log.Error("Failed to save node: ", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	// TODO: use responsehijacker to intercept response and delete the node if an error occurred
 	handler.ServeHTTP(w, r)
 }

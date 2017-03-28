@@ -11,68 +11,23 @@ import (
 
 // PutAdapter saves the uploaded node in the database, then pass it on to store it on disk
 func PutAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Request) {
-	user := identity.CurrentSession(r).Username
-	groups := identity.CurrentSession(r).Organizations
+	id := identity.CurrentSession(r)
 
-	nodePath := strings.Replace(r.URL.Path, "/remote.php/webdav", user+"/files", 1)
-	parentNodePath := nodePath[:strings.LastIndex(nodePath, "/")]
-	exists, err := db.NodeExists(parentNodePath)
+	inputPath := strings.TrimPrefix(r.URL.Path, "/remote.php/webdav/")
+	parentNodePath := inputPath[:strings.LastIndex(inputPath, "/")]
+	path, err := getNodePath(parentNodePath, id)
 	if err != nil {
-		log.Error("Failed to check if node exists")
-		w.WriteHeader(http.StatusInternalServerError)
+		log.Error("Failed to get node path for url ", strings.TrimPrefix(r.URL.Path, "/remote.php/webdav/"))
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
-	if !exists {
-		parentNodePath = strings.TrimPrefix(parentNodePath, user+"/files")
-		parentNodePath = parentNodePath[strings.Index(parentNodePath, "/")+1:]
-		if parentNodePath == "" {
-			parentNodePath = user + "/files"
-		}
-		var sharedNodes []*db.Node
-		sharedNodes, err = findShareRoot(parentNodePath, user, groups)
-		if err != nil {
-			log.Error("Error while searching for shared nodes")
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-		if len(sharedNodes) == 0 {
-			log.Debug("No parent node, and no shared parent nodes found")
-			w.WriteHeader(http.StatusNotFound)
-			return
-		}
-		// Log collisions
-		if len(sharedNodes) > 1 {
-			log.Warn("Shared folder collision")
-		}
-
-		target := sharedNodes[0]
-		originalPath := r.URL.Path
-		finalPath := target.Path[:strings.LastIndex(target.Path, "/")] + strings.TrimPrefix(originalPath, "/remote.php/webdav")
-		r.URL.Path = "/remote.php/webdav/" + finalPath
-
-	} else {
-
-		r.URL.Path = strings.Replace(r.URL.Path,
-			"/remote.php/webdav", "/remote.php/webdav/"+user+"/files",
-			1)
-
-	}
-
-	// fullname := r.URL.RequestURI()
-	path := strings.TrimPrefix(r.URL.Path, "/remote.php/webdav/")
-	parentPath := path[:strings.LastIndex(path, "/")]
-	exists, err = db.NodeExists(parentPath)
-	if err != nil {
-		log.Error("Failed to check if parent node exists")
-		w.WriteHeader(http.StatusInternalServerError)
+	if path == "" {
+		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
 	}
 
-	if !exists {
-		log.Debug("No node at ", parentPath)
-		w.WriteHeader(http.StatusNotFound)
-		return
-	}
+	path = path + "/" + inputPath[strings.LastIndex(inputPath, "/")+1:]
+	r.URL.Path = "/remote.php/webdav/" + path
 
 	// Since put replaces any existing file, just remove the node.
 	err = db.DeleteNode(path)
@@ -82,7 +37,6 @@ func PutAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	// TODO: check if this is the right header
 	contentType := r.Header.Get("Content-Type")
 
 	_, err = db.SaveNode(path, path[:strings.Index(path, "/")], false, contentType)

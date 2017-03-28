@@ -6,7 +6,6 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/gowncloud/gowncloud/core/identity"
-	db "github.com/gowncloud/gowncloud/database"
 )
 
 func HeadAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Request) {
@@ -20,53 +19,21 @@ func HeadAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	user := identity.CurrentSession(r).Username
-	groups := identity.CurrentSession(r).Organizations
+	id := identity.CurrentSession(r)
 
-	nodePath := strings.Replace(r.URL.Path, "/remote.php/webdav", user+"/files", 1)
-	nodePath = strings.TrimSuffix(nodePath, "/")
-	exists, err := db.NodeExists(nodePath)
+	inputPath := strings.TrimPrefix(r.URL.Path, "/remote.php/webdav/")
+	path, err := getNodePath(inputPath, id)
 	if err != nil {
-		log.Error("Failed to check if node exists")
-		w.WriteHeader(http.StatusInternalServerError)
+		log.Errorf("Failed to get the node path (%v): %v", inputPath, err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
-	if !exists {
-		log.Info("So the node does not exists")
-		nodePath = strings.TrimPrefix(nodePath, user+"/files")
-		nodePath = nodePath[strings.Index(nodePath, "/")+1:]
-		if nodePath == "" {
-			nodePath = user + "/files"
-		}
-		var sharedNodes []*db.Node
-		sharedNodes, err = findShareRoot(nodePath, user, groups)
-		if err != nil {
-			log.Error("Error while searching for shared nodes")
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-		log.Info("Shared nodes: ", len(sharedNodes))
-		if len(sharedNodes) == 0 {
-			w.WriteHeader(http.StatusNotFound)
-			return
-		}
-		// Log collisions
-		if len(sharedNodes) > 1 {
-			log.Warn("Shared folder collision")
-		}
-
-		target := sharedNodes[0]
-		originalPath := r.URL.Path
-		finalPath := target.Path[:strings.LastIndex(target.Path, "/")] + strings.TrimPrefix(originalPath, "/remote.php/webdav")
-		r.URL.Path = "/remote.php/webdav/" + finalPath
-
-	} else {
-
-		r.URL.Path = strings.Replace(r.URL.Path,
-			"/remote.php/webdav", "/remote.php/webdav/"+user+"/files",
-			1)
-
+	if path == "" {
+		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+		return
 	}
+
+	r.URL.Path = "/remote.php/webdav/" + path
 
 	handler.ServeHTTP(w, r)
 }
