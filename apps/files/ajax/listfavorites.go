@@ -20,11 +20,11 @@ type favoriteList struct {
 
 type file struct {
 	Etag        string   `json:"etag"`
-	Id          int      `json:"id"`
+	Id          float64  `json:"id"`
 	MimeType    string   `json:"mimetype"`
 	Mtime       int64    `json:"mtime"`
 	Name        string   `json:"name"`
-	ParentId    int      `json:"parentId"`
+	ParentId    float64  `json:"parentId"`
 	ParentPath  string   `json:"path"`
 	Permissions int      `json:"permissions"`
 	Sharetypes  []int    `json:"shareTypes,omitempty"`

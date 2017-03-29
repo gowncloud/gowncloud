@@ -44,9 +44,9 @@ func RemoveNodeAsFavorite(path, user string) error {
 }
 
 // IsFavoriteByNodeid checks if a user has favorited the node identified by nodeid
-func IsFavoriteByNodeid(nodeid int, user string) (bool, error) {
+func IsFavoriteByNodeid(nodeid float64, user string) (bool, error) {
 	row := db.QueryRow("SELECT COUNT(1) FROM gowncloud.favorites WHERE nodeid = $1 AND "+
-		"username = $2", nodeid, user)
+		"username = $2", intFromFloat(nodeid), user)
 	var count int
 	err := row.Scan(&count)
 	if err != nil {
@@ -106,11 +106,13 @@ func getFavoritedNodesForGroup(username string, target string) ([]*Node, error) 
 	nodes := make([]*Node, 0)
 	for rows.Next() {
 		node := &Node{}
-		err = rows.Scan(&node.ID, &node.Owner, &node.Path, &node.Isdir, &node.MimeType, &node.Deleted)
+		var nId int
+		err = rows.Scan(&nId, &node.Owner, &node.Path, &node.Isdir, &node.MimeType, &node.Deleted)
 		if err != nil {
 			log.Error("Error while reading favorites")
 			return nil, ErrDB
 		}
+		node.ID = floatFromInt(nId)
 		nodes = append(nodes, node)
 	}
 	err = rows.Err()
@@ -141,11 +143,13 @@ func getFavoritedNodesForUser(username string) ([]*Node, error) {
 	nodes := make([]*Node, 0)
 	for rows.Next() {
 		node := &Node{}
-		err = rows.Scan(&node.ID, &node.Owner, &node.Path, &node.Isdir, &node.MimeType, &node.Deleted)
+		var nId int
+		err = rows.Scan(&nId, &node.Owner, &node.Path, &node.Isdir, &node.MimeType, &node.Deleted)
 		if err != nil {
 			log.Error("Error while reading favorites")
 			return nil, ErrDB
 		}
+		node.ID = floatFromInt(nId)
 		nodes = append(nodes, node)
 	}
 	err = rows.Err()

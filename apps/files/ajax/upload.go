@@ -14,20 +14,20 @@ import (
 )
 
 type UploadResponse struct {
-	Directory         string `json:"directory"`
-	Etag              string `json:"etag"`
-	Id                int    `json:"id"`
-	MaxHumanFilesize  string `json:"maxHumanFilesize"`
-	Mimetype          string `json:"mimetype"`
-	Mtime             int64  `json:"mtime"`
-	Name              string `json:"name"`
-	Originalname      string `json:"originalname"`
-	ParentId          int    `json:"parentId"`
-	Permissions       int    `json:"permissions"`
-	Size              int    `json:"size"`
-	Status            string `json:"status"`
-	Sort              string `json:"type"`
-	UploadMaxFilesize int    `json:"uploadMaxFilesize"`
+	Directory         string  `json:"directory"`
+	Etag              string  `json:"etag"`
+	Id                float64 `json:"id"`
+	MaxHumanFilesize  string  `json:"maxHumanFilesize"`
+	Mimetype          string  `json:"mimetype"`
+	Mtime             int64   `json:"mtime"`
+	Name              string  `json:"name"`
+	Originalname      string  `json:"originalname"`
+	ParentId          float64 `json:"parentId"`
+	Permissions       int     `json:"permissions"`
+	Size              int     `json:"size"`
+	Status            string  `json:"status"`
+	Sort              string  `json:"type"`
+	UploadMaxFilesize int     `json:"uploadMaxFilesize"`
 }
 
 // Upload uploads files to the server and stores data in the database

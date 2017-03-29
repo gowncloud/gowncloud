@@ -720,7 +720,7 @@
 				for (i = 0; i < SHARE_RESPONSE_INT_PROPS.length; i++) {
 					var prop = SHARE_RESPONSE_INT_PROPS[i];
 					if (!_.isUndefined(share[prop])) {
-						share[prop] = parseInt(share[prop], 10);
+						share[prop] = Number(share[prop], 10);
 					}
 				}
 				return share;

@@ -2,13 +2,14 @@ package db
 
 import (
 	"database/sql"
+	"math"
 
 	log "github.com/Sirupsen/logrus"
 )
 
 // Node represents a file or directory, stored on disk by gowncloud.
 type Node struct {
-	ID       int
+	ID       float64
 	Owner    string
 	Path     string
 	Isdir    bool
@@ -37,8 +38,9 @@ func initNodes() {
 // a nil object is returned
 func GetNode(path string) (*Node, error) {
 	node := &Node{}
+	var nodeId int
 	row := db.QueryRow("SELECT * FROM gowncloud.nodes WHERE path = $1", path)
-	err := row.Scan(&node.ID, &node.Owner, &node.Path, &node.Isdir, &node.MimeType, &node.Deleted)
+	err := row.Scan(&nodeId, &node.Owner, &node.Path, &node.Isdir, &node.MimeType, &node.Deleted)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			log.Debug("Node not found in database for path: ", path)
@@ -47,6 +49,7 @@ func GetNode(path string) (*Node, error) {
 		log.Error("Error getting node from database: ", err)
 		return nil, ErrDB
 	}
+	node.ID = floatFromInt(nodeId)
 	return node, nil
 }
 
@@ -112,11 +115,12 @@ func NodeExists(path string) (bool, error) {
 }
 
 // GetSharedNode gets the node for the share object
-func GetSharedNode(shareId int) (*Node, error) {
+func GetSharedNode(shareId float64) (*Node, error) {
 	row := db.QueryRow("SELECT * FROM gowncloud.nodes WHERE nodeid in ("+
-		"SELECT nodeid FROM gowncloud.shares WHERE shareid = $1)", shareId)
+		"SELECT nodeid FROM gowncloud.shares WHERE shareid = $1)", intFromFloat(shareId))
 	node := &Node{}
-	err := row.Scan(&node.ID, &node.Owner, &node.Path, &node.Isdir, &node.MimeType, &node.Deleted)
+	var nodeId int
+	err := row.Scan(&nodeId, &node.Owner, &node.Path, &node.Isdir, &node.MimeType, &node.Deleted)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			log.Debug("Node not found in database for shareId ", shareId)
@@ -125,6 +129,7 @@ func GetSharedNode(shareId int) (*Node, error) {
 		log.Error("Error getting node from database: ", err)
 		return nil, ErrDB
 	}
+	node.ID = floatFromInt(nodeId)
 	return node, nil
 }
 
@@ -318,11 +323,13 @@ func readNodeRows(rows *sql.Rows) ([]*Node, error) {
 	nodes := make([]*Node, 0)
 	for rows.Next() {
 		node := &Node{}
-		err := rows.Scan(&node.ID, &node.Owner, &node.Path, &node.Isdir, &node.MimeType, &node.Deleted)
+		var nodeId int
+		err := rows.Scan(&nodeId, &node.Owner, &node.Path, &node.Isdir, &node.MimeType, &node.Deleted)
 		if err != nil {
 			log.Error("Error while reading nodes")
 			return nil, ErrDB
 		}
+		node.ID = floatFromInt(nodeId)
 		nodes = append(nodes, node)
 	}
 	err := rows.Err()
@@ -331,4 +338,18 @@ func readNodeRows(rows *sql.Rows) ([]*Node, error) {
 		return nil, err
 	}
 	return nodes, nil
+}
+
+// floatFromInt returns the float64 represented by the bit configuration of the input int
+// the input and output are exactly the same when written as a bit string
+func floatFromInt(i int) float64 {
+	log.Debug("Convertng int to float")
+	return math.Float64frombits(uint64(i))
+}
+
+// intFromFloat returns the int represented by the bit configuration of the input float64
+// the input and output are exactly the same when written as a bit string
+func intFromFloat(f float64) int {
+	log.Debug("converting float to int")
+	return int(math.Float64bits(f))
 }

@@ -31,11 +31,11 @@ type sharedata struct {
 	Displayname_file_owner string     `json:"displayname_file_owner"`
 	Displayname_owner      string     `json:"displayname_owner"`
 	Expiration             *time.Time `json:"expiration"` // null unless link?
-	File_parent            int        `json:"file_parent"`
-	File_source            int        `json:"file_source"` // nodeId?
+	File_parent            float64    `json:"file_parent"`
+	File_source            float64    `json:"file_source"` // nodeId?
 	File_target            string     `json:"file_target"` // without username leading, start with slash
 	Id                     string     `json:"id"`          // shareId?
-	Item_source            int        `json:"item_source"` // same as file source
+	Item_source            float64    `json:"item_source"` // same as file source
 	Item_type              string     `json:"item_type"`   // "file" or ...
 	Mail_send              int        `json:"mail_send"`   // leave at 0 for now, could be bool
 	Mimetype               string     `json:"mimetype"`
@@ -294,20 +294,17 @@ func Sharees(w http.ResponseWriter, r *http.Request) {
 // It is the endpoint for DELETE /ocs/v2.php/apps/files_sharing/api/v1/shares/{shareid}
 func DeleteShare(w http.ResponseWriter, r *http.Request) {
 	shareIdString := mux.Vars(r)["shareid"]
-	username := identity.CurrentSession(r).Username
 
-	shareId, err := strconv.Atoi(shareIdString)
+	shareId, err := strconv.ParseFloat(shareIdString, 64)
 	if err != nil {
-		if err != nil {
-			log.Error("Error parsing shareId")
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
+		log.Error("Error parsing shareId: ", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 
-	err = db.DeleteShareWithPartialId(shareId, username)
+	err = db.DeleteShare(shareId)
 	if err != nil {
-		log.Error("Error deleting share")
+		log.Error("Error deleting share: ", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -330,13 +327,6 @@ func makeShareData(shareNode *db.Node, share *db.Share, target string) (*shareda
 
 	storage_id := "home::" + shareNode.Owner
 
-	// Reduce the share id to 55 bits max for the javascript (max 56 bits, 1 bit reserved for sign)
-	trimmedId, err := parseIntToSize(strconv.Itoa(share.ShareID), 55)
-	if err != nil {
-		log.Warn("Error while fitting share id to the requested 56 bits size: ", err)
-		return nil, err
-	}
-
 	data := sharedata{
 		Displayname_file_owner: shareNode.Owner,
 		Displayname_owner:      shareNode.Owner,
@@ -344,7 +334,7 @@ func makeShareData(shareNode *db.Node, share *db.Share, target string) (*shareda
 		File_parent:            parent.ID,
 		File_source:            shareNode.ID,
 		File_target:            strings.TrimPrefix(shareNode.Path, shareNode.Owner+"/files"),
-		Id:                     strconv.Itoa(trimmedId),
+		Id:                     strconv.FormatFloat(share.ShareID, 'e', -1, 64),
 		Item_source:            shareNode.ID,
 		Item_type:              item_type,
 		Mail_send:              0,

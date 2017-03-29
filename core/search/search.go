@@ -89,7 +89,7 @@ func Search(w http.ResponseWriter, r *http.Request) {
 		link := fmt.Sprintf("/index.php/apps/files/?dir=/%v&scrollto=%v", linkDir, node.Path[strings.LastIndex(node.Path, "/")+1:])
 
 		sr := SearchResult{
-			Id:          strconv.Itoa(node.ID),
+			Id:          strconv.FormatFloat(node.ID, 'e', -1, 64),
 			Link:        link,
 			Mime:        node.MimeType,
 			Modified:    strconv.Itoa(int(nodeInfo.ModTime().Unix())),

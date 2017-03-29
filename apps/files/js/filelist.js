@@ -860,7 +860,7 @@
 		elementToFile: function($el){
 			$el = $($el);
 			var data = {
-				id: parseInt($el.attr('data-id'), 10),
+				id: parseFloat($el.attr('data-id')),
 				name: $el.attr('data-file'),
 				mimetype: $el.attr('data-mime'),
 				mtime: parseInt($el.attr('data-mtime'), 10),

@@ -7,7 +7,7 @@ import (
 )
 
 type TrashNode struct {
-	NodeId int
+	NodeId float64
 	Owner  string
 	Path   string
 	IsDir  bool
@@ -28,9 +28,9 @@ func initTrashNodes() {
 }
 
 // CreateTrashNode creates a new trash node that links to the original node
-func CreateTrashNode(nodeId int, owner string, path string, isDir bool) (*TrashNode, error) {
+func CreateTrashNode(nodeId float64, owner string, path string, isDir bool) (*TrashNode, error) {
 	_, err := db.Exec("INSERT INTO gowncloud.trashnodes (nodeid, owner, path, isdir) "+
-		"VALUES ($1, $2, $3, $4)", nodeId, owner, path, isDir)
+		"VALUES ($1, $2, $3, $4)", intFromFloat(nodeId), owner, path, isDir)
 
 	if err != nil {
 		log.Error("Error while saving trashnode: ", err)
@@ -44,9 +44,10 @@ func CreateTrashNode(nodeId int, owner string, path string, isDir bool) (*TrashN
 // nil is returned without error.
 func GetTrashNode(path string) (*TrashNode, error) {
 	tn := &TrashNode{}
+	var nId int
 	row := db.QueryRow("SELECT * FROM gowncloud.trashnodes WHERE nodeid in ("+
 		"SELECT nodeid FROM gowncloud.nodes WHERE path = $1)", path)
-	err := row.Scan(&tn.NodeId, &tn.Owner, &tn.Path, &tn.IsDir)
+	err := row.Scan(&nId, &tn.Owner, &tn.Path, &tn.IsDir)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			log.Debug("No trash node found for path: ", path)
@@ -55,6 +56,7 @@ func GetTrashNode(path string) (*TrashNode, error) {
 		log.Error("Error getting trash node: ", err)
 		return nil, ErrDB
 	}
+	tn.NodeId = floatFromInt(nId)
 	return tn, nil
 }
 

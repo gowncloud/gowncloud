@@ -140,7 +140,7 @@ func PropFindAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Re
 	patchErrors := make([]error, 0)
 
 	// Keep track of the node id's
-	nodeIDs := make([]int, 0)
+	nodeIDs := make([]float64, 0)
 
 	// Remove the user folder from the href nodes and patch the responses
 	for _, response := range responses {
@@ -328,7 +328,7 @@ func patchFileId(foundProps *etree.Element, notFoundProps *etree.Element, node *
 		return fmt.Errorf("Failed to get the fileid prop from the not found section")
 	}
 	fileId := foundProps.CreateElement("oc:fileid")
-	fileIdString := strconv.Itoa(node.ID)
+	fileIdString := strconv.FormatFloat(node.ID, 'e', -1, 64)
 	fileId.SetText(fileIdString)
 
 	removedChild := notFoundProps.RemoveChild(fileIdNotFound)
@@ -345,7 +345,7 @@ func patchId(foundProps *etree.Element, notFoundProps *etree.Element, node *db.N
 		return fmt.Errorf("Failed to get the id prop from the not found section")
 	}
 	id := foundProps.CreateElement("oc:id")
-	idString := strconv.Itoa(node.ID)
+	idString := strconv.FormatFloat(node.ID, 'e', -1, 64)
 	id.SetText(idString)
 
 	removedChild := notFoundProps.RemoveChild(idNotFound)

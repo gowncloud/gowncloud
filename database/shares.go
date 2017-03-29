@@ -13,8 +13,8 @@ import (
 // he/she should be found by getting the owner from the nodes table with the user
 // of the node id.
 type Share struct {
-	ShareID     int
-	NodeID      int
+	ShareID     float64
+	NodeID      float64
 	Target      string
 	Time        time.Time
 	Permissions int
@@ -46,10 +46,12 @@ func initShares() {
 }
 
 // GetShare gets share info from the database for the given share id.
-func GetShareById(shareId int) (*Share, error) {
+func GetShareById(shareId float64) (*Share, error) {
 	share := &Share{}
-	row := db.QueryRow("SELECT * FROM gowncloud.shares WHERE shareid = $1", shareId)
-	err := row.Scan(&share.ShareID, &share.NodeID, &share.Target, &share.Time, &share.Permissions, &share.ShareType)
+	var sId int
+	var nodeId int
+	row := db.QueryRow("SELECT * FROM gowncloud.shares WHERE shareid = $1", intFromFloat(shareId))
+	err := row.Scan(&sId, &nodeId, &share.Target, &share.Time, &share.Permissions, &share.ShareType)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			log.Debug("Share not found in database for share id: ", shareId)
@@ -58,15 +60,19 @@ func GetShareById(shareId int) (*Share, error) {
 		log.Error("Error getting share from database: ", err)
 		return nil, ErrDB
 	}
+	share.ShareID = floatFromInt(sId)
+	share.NodeID = floatFromInt(nodeId)
 	return share, nil
 }
 
 // GetNodeShareToTarget get the share for a node to a target. In case the target is a group,
 // shares to subgroups will not be included.
-func GetNodeShareToTarget(nodeId int, target string) (*Share, error) {
+func GetNodeShareToTarget(nodeId float64, target string) (*Share, error) {
 	share := &Share{}
-	row := db.QueryRow("SELECT * FROM gowncloud.shares WHERE nodeid = $1 AND target = $2", nodeId, target)
-	err := row.Scan(&share.ShareID, &share.NodeID, &share.Target, &share.Time, &share.Permissions, &share.ShareType)
+	var sId int
+	var nId int
+	row := db.QueryRow("SELECT * FROM gowncloud.shares WHERE nodeid = $1 AND target = $2", intFromFloat(nodeId), target)
+	err := row.Scan(&sId, &nId, &share.Target, &share.Time, &share.Permissions, &share.ShareType)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			log.Debugf("Share not found in database for nodeId %v to user %v", nodeId, target)
@@ -75,6 +81,8 @@ func GetNodeShareToTarget(nodeId int, target string) (*Share, error) {
 		log.Error("Error getting share from database: ", err)
 		return nil, ErrDB
 	}
+	share.ShareID = floatFromInt(sId)
+	share.NodeID = floatFromInt(nId)
 	return share, nil
 }
 
@@ -95,8 +103,8 @@ func GetSharesByNodePath(path string) ([]*Share, error) {
 }
 
 // GetSharesByNodeId gets all the shares for the node id
-func GetSharesByNodeId(nodeId int) ([]*Share, error) {
-	rows, err := db.Query("SELECT * FROM gowncloud.shares WHERE nodeid = $1", nodeId)
+func GetSharesByNodeId(nodeId float64) ([]*Share, error) {
+	rows, err := db.Query("SELECT * FROM gowncloud.shares WHERE nodeid = $1", intFromFloat(nodeId))
 	if err != nil {
 		log.Error("Failed to get Nodes from the database: ", err)
 		return nil, ErrDB
@@ -172,21 +180,32 @@ func GetAllSharesToUser(username string, groups []string) ([]*Share, error) {
 
 // CreateShareToUser creates a new share on the node to the target with permissions.
 // Share time is the current system time
-func CreateShareToUser(nodeId int, permissions int, target string) (*Share, error) {
+func CreateShareToUser(nodeId float64, permissions int, target string) (*Share, error) {
 	return CreateShare(nodeId, permissions, target, USERSHARE)
 }
 
 // CreateShareToGroup creates a new share on the node to the target with permissions.
 // Share time is the current system time
-func CreateShareToGroup(nodeId int, permissions int, target string) (*Share, error) {
+func CreateShareToGroup(nodeId float64, permissions int, target string) (*Share, error) {
 	return CreateShare(nodeId, permissions, target, GROUPSHARE)
+}
+
+// CreateShare creates a new share
+func CreateShare(nodeId float64, permissions int, target string, sharetype int) (*Share, error) {
+	_, err := db.Exec("INSERT INTO gowncloud.shares (nodeid, target, time, permissions, sharetype) "+
+		"VALUES ($1, $2, $3, $4, $5)", intFromFloat(nodeId), target, time.Now(), permissions, sharetype)
+	if err != nil {
+		log.Error("Error while creating share: ", err)
+		return nil, ErrDB
+	}
+	return GetNodeShareToTarget(nodeId, target)
 }
 
 // DeleteNodeShareToUserFromNodeId deletes the share of the node with nodeId to
 // the target.
-func DeleteNodeShareToUserFromNodeId(nodeId int, target string) error {
+func DeleteNodeShareToUserFromNodeId(nodeId float64, target string) error {
 	_, err := db.Exec("DELETE FROM gowncloud.shares WHERE target = $1 AND "+
-		"nodeid = $2", target, nodeId)
+		"nodeid = $2", target, intFromFloat(nodeId))
 	if err != nil {
 		log.Error("Error while deleting share: ", err)
 		return ErrDB
@@ -196,9 +215,9 @@ func DeleteNodeShareToUserFromNodeId(nodeId int, target string) error {
 
 // DeleteShare removes the share with shareId from the database. It does not remove
 // the acutal node.
-func DeleteShare(shareId int) error {
-	log.Debug("TRY TO DELETE SHARE WITH SHAREID: ", shareId)
-	_, err := db.Exec("DELETE FROM gowncloud.shares WHERE shareid = $1", shareId)
+func DeleteShare(shareId float64) error {
+	log.Debug("TRY TO DELETE SHARE WITH SHAREID: ", intFromFloat(shareId))
+	_, err := db.Exec("DELETE FROM gowncloud.shares WHERE shareid = $1", intFromFloat(shareId))
 	if err != nil {
 		log.Error("Error while deleting share: ", err)
 		return ErrDB
@@ -237,27 +256,20 @@ func GetSharedNodesForUser(username string) ([]*Share, error) {
 	return readSharesRows(rows)
 }
 
-// CreateShare creates a new share
-func CreateShare(nodeId int, permissions int, target string, sharetype int) (*Share, error) {
-	_, err := db.Exec("INSERT INTO gowncloud.shares (nodeid, target, time, permissions, sharetype) "+
-		"VALUES ($1, $2, $3, $4, $5)", nodeId, target, time.Now(), permissions, sharetype)
-	if err != nil {
-		log.Error("Error while creating share: ", err)
-		return nil, ErrDB
-	}
-	return GetNodeShareToTarget(nodeId, target)
-}
-
 // readSharesRows reads from *sql.Rows and creates a share info for every rows
 func readSharesRows(rows *sql.Rows) ([]*Share, error) {
 	shares := make([]*Share, 0)
 	for rows.Next() {
 		share := &Share{}
-		err := rows.Scan(&share.ShareID, &share.NodeID, &share.Target, &share.Time, &share.Permissions, &share.ShareType)
+		var sId int
+		var nId int
+		err := rows.Scan(&sId, &nId, &share.Target, &share.Time, &share.Permissions, &share.ShareType)
 		if err != nil {
 			log.Error("Error while reading shares: ", err)
 			return nil, ErrDB
 		}
+		share.ShareID = floatFromInt(sId)
+		share.NodeID = floatFromInt(nId)
 		shares = append(shares, share)
 	}
 	err := rows.Err()
