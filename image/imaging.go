@@ -71,7 +71,12 @@ func RenderImage(maxWidthString string, maxHeightString string, path string, w h
 	var preview *image.NRGBA
 	img, err := imaging.Open(path)
 	if err != nil {
-		log.Warn("Failed to open file as image: ", err)
+		if err != image.ErrFormat {
+			log.Error("Failed to open file as image: ", err)
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+		log.Debug("Could not render preview: file is not a supported image format")
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
