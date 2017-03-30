@@ -343,13 +343,11 @@ func readNodeRows(rows *sql.Rows) ([]*Node, error) {
 // floatFromInt returns the float64 represented by the bit configuration of the input int
 // the input and output are exactly the same when written as a bit string
 func floatFromInt(i int) float64 {
-	log.Debug("Convertng int to float")
 	return math.Float64frombits(uint64(i))
 }
 
 // intFromFloat returns the int represented by the bit configuration of the input float64
 // the input and output are exactly the same when written as a bit string
 func intFromFloat(f float64) int {
-	log.Debug("converting float to int")
 	return int(math.Float64bits(f))
 }
