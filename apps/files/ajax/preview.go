@@ -70,13 +70,13 @@ func generatePreview(widthString, heightString, filePath string, w http.Response
 
 	width, err := strconv.Atoi(widthString)
 	if err != nil {
-		log.Error("Failed to read width")
+		log.Error("Failed to read width: ", err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 	height, err := strconv.Atoi(heightString)
 	if err != nil {
-		log.Error("Failed to read height")
+		log.Error("Failed to read height: ", err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -86,7 +86,12 @@ func generatePreview(widthString, heightString, filePath string, w http.Response
 	var preview *image.NRGBA
 	img, err := imaging.Open(file)
 	if err != nil {
-		log.Warn("Failed to open file as image")
+		if err != imaging.ErrUnsupportedFormat {
+			log.Error("Failed to open file as image: ", err)
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+		log.Debug("Could not render preview: file is not an image")
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
