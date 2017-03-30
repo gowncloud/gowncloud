@@ -53,6 +53,23 @@ func GetNode(path string) (*Node, error) {
 	return node, nil
 }
 
+func GetNodeById(id float64) (*Node, error) {
+	node := &Node{}
+	var nodeId int
+	row := db.QueryRow("SELECT * FROM gowncloud.nodes WHERE nodeid = $1", intFromFloat(id))
+	err := row.Scan(&nodeId, &node.Owner, &node.Path, &node.Isdir, &node.MimeType, &node.Deleted)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			log.Debug("Node not found in database for id: ", intFromFloat(id))
+			return nil, nil
+		}
+		log.Error("Error getting node from database: ", err)
+		return nil, ErrDB
+	}
+	node.ID = floatFromInt(nodeId)
+	return node, nil
+}
+
 // SaveNode saves a new node in the database
 func SaveNode(path, owner string, isdir bool, mimetype string) (*Node, error) {
 	_, err := db.Exec("INSERT INTO gowncloud.nodes (owner, path, isdir, mimetype, deleted) "+

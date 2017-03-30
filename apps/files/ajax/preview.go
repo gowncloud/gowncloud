@@ -1,16 +1,13 @@
 package files
 
 import (
-	"bytes"
-	"image"
 	"net/http"
-	"strconv"
 	"strings"
 
 	log "github.com/Sirupsen/logrus"
-	"github.com/disintegration/imaging"
 	"github.com/gowncloud/gowncloud/core/identity"
 	db "github.com/gowncloud/gowncloud/database"
+	"github.com/gowncloud/gowncloud/image"
 )
 
 // GetPreview generates a preview for an image file and serves it to the client
@@ -67,44 +64,6 @@ func GetPreview(w http.ResponseWriter, r *http.Request) {
 
 // generatePreview generates an image preview from a file
 func generatePreview(widthString, heightString, filePath string, w http.ResponseWriter) {
-
-	width, err := strconv.Atoi(widthString)
-	if err != nil {
-		log.Error("Failed to read width: ", err)
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	height, err := strconv.Atoi(heightString)
-	if err != nil {
-		log.Error("Failed to read height: ", err)
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	file := db.GetSetting(db.DAV_ROOT) + filePath
-
-	var preview *image.NRGBA
-	img, err := imaging.Open(file)
-	if err != nil {
-		if err != imaging.ErrUnsupportedFormat {
-			log.Error("Failed to open file as image: ", err)
-			w.WriteHeader(http.StatusNotFound)
-			return
-		}
-		log.Debug("Could not render preview: file is not an image")
-		w.WriteHeader(http.StatusNotFound)
-		return
-	}
-	preview = imaging.Thumbnail(img, width, height, imaging.Lanczos)
-
-	var buffer bytes.Buffer
-	err = imaging.Encode(&buffer, preview, imaging.GIF)
-	if err != nil {
-		log.Warn("Failed to encode preview")
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	w.Header().Set("Content-type", "image/gif")
-	w.WriteHeader(http.StatusOK)
-	w.Write(buffer.Bytes())
+	path := db.GetSetting(db.DAV_ROOT) + filePath
+	image.GeneratePreview(widthString, heightString, path, w)
 }
