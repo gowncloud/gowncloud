@@ -14,7 +14,10 @@ func PutAdapter(handler http.HandlerFunc, w http.ResponseWriter, r *http.Request
 	id := identity.CurrentSession(r)
 
 	inputPath := strings.TrimPrefix(r.URL.Path, "/remote.php/webdav/")
-	parentNodePath := inputPath[:strings.LastIndex(inputPath, "/")]
+	parentNodePath := ""
+	if strings.Contains(inputPath, "/") {
+		parentNodePath = inputPath[:strings.LastIndex(inputPath, "/")]
+	}
 	path, err := getNodePath(parentNodePath, id)
 	if err != nil {
 		log.Error("Failed to get node path for url ", strings.TrimPrefix(r.URL.Path, "/remote.php/webdav/"))
