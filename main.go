@@ -11,6 +11,7 @@ import (
 	"github.com/gowncloud/gowncloud/apps/dav"
 	files_routes "github.com/gowncloud/gowncloud/apps/files/routes"
 	sharing_routes "github.com/gowncloud/gowncloud/apps/files_sharing/routes"
+	"github.com/gowncloud/gowncloud/apps/files_texteditor"
 	trash_routes "github.com/gowncloud/gowncloud/apps/files_trashbin/routes"
 	gallery_routes "github.com/gowncloud/gowncloud/apps/gallery/routes"
 	core_routes "github.com/gowncloud/gowncloud/core/routes"
@@ -161,6 +162,7 @@ func main() {
 		core_routes.RegisterRoutes(defaultMux, publicMux)
 		search.RegisterRoutes(defaultMux, publicMux)
 		gallery_routes.RegisterRoutes(defaultMux, publicMux)
+		files_texteditor.RegisterRoutes(defaultMux, publicMux)
 
 		rootMux := http.NewServeMux()
 		rootMux.Handle("/", identity.AddIdentity(logging.Handler(os.Stdout, identity.Protect(clientID, clientSecret, defaultMux)), clientID))

@@ -10,6 +10,7 @@ import (
 	federatedfilesharing_assets "github.com/gowncloud/gowncloud/public/assets/federatedfilesharing"
 	files_assets "github.com/gowncloud/gowncloud/public/assets/files"
 	files_sharing_assets "github.com/gowncloud/gowncloud/public/assets/files_sharing"
+	files_texteditor_assets "github.com/gowncloud/gowncloud/public/assets/files_texteditor"
 	files_trashbin_assets "github.com/gowncloud/gowncloud/public/assets/files_trashbin"
 	files_videoplayer_assets "github.com/gowncloud/gowncloud/public/assets/files_videoplayer"
 	gallery_assets "github.com/gowncloud/gowncloud/public/assets/gallery"
@@ -39,6 +40,8 @@ func RegisterRoutes(protectedMux *http.ServeMux, publicMux *http.ServeMux) {
 	protectedMux.Handle("/apps/files_sharing/", http.FileServer(&assetfs.AssetFS{Asset: files_sharing_assets.Asset, AssetDir: files_sharing_assets.AssetDir, AssetInfo: files_sharing_assets.AssetInfo}))
 
 	protectedMux.Handle("/apps/files_videoplayer/", http.FileServer(&assetfs.AssetFS{Asset: files_videoplayer_assets.Asset, AssetDir: files_videoplayer_assets.AssetDir, AssetInfo: files_videoplayer_assets.AssetInfo}))
+
+	protectedMux.Handle("/apps/files_texteditor/", http.FileServer(&assetfs.AssetFS{Asset: files_texteditor_assets.Asset, AssetDir: files_texteditor_assets.AssetDir, AssetInfo: files_texteditor_assets.AssetInfo}))
 
 	protectedMux.Handle("/apps/gallery/", http.FileServer(&assetfs.AssetFS{Asset: gallery_assets.Asset, AssetDir: gallery_assets.AssetDir, AssetInfo: gallery_assets.AssetInfo}))
 
