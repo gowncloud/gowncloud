@@ -14,6 +14,10 @@ import (
 
 const errFileTooLarge = "This file is too big to be opened. Please download the file instead."
 
+type errMsg struct {
+	Message string `json:"message"`
+}
+
 // LoadFile loads a text file and returns the contents. An error is returned if the file is
 // too large
 func LoadFile(w http.ResponseWriter, r *http.Request) {
@@ -49,13 +53,12 @@ func LoadFile(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if fi.Size() > 4<<20 { //if size is bigger than 4MB
-		errMsg := struct {
-			Message string `json:"message"`
-		}{
+		msg := errMsg{
 			Message: errFileTooLarge,
 		}
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(&errMsg)
+		json.NewEncoder(w).Encode(&msg)
 		return
 	}
 

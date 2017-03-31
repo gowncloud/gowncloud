@@ -11,6 +11,8 @@ import (
 	db "github.com/gowncloud/gowncloud/database"
 )
 
+const errFileModified = "Cannot save file as it has been modified since opening"
+
 func SaveFile(w http.ResponseWriter, r *http.Request) {
 	id := identity.CurrentSession(r)
 
@@ -48,6 +50,26 @@ func SaveFile(w http.ResponseWriter, r *http.Request) {
 	}
 
 	filePath := db.GetSetting(db.DAV_ROOT) + nodePath
+
+	oldFileInfo, err := os.Stat(filePath)
+	if err != nil {
+		log.Errorf("Failed to get old file info (%v): %v", filePath, err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+
+	// Check if the file hasn't been modified since it was opened
+	if oldFileInfo.ModTime().Unix() != fileIn.Mtime {
+		log.Debug("File was modified since opening")
+		msg := errMsg{
+			Message: errFileModified,
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(&msg)
+		return
+	}
+
 	file, err := os.OpenFile(filePath, os.O_WRONLY, os.ModeAppend)
 	if err != nil {
 		log.Errorf("Failed to open the file (%v): %v", filePath, err)
