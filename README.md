@@ -5,8 +5,10 @@ Goal: implement a working proof of concept with a backend written in golang.
 ## install:
 
 ```
-go get github.com/gowncloud/gowncloud
-cd $GOPATH/src/github.com/gowncloud/gowncloud
+mkdir -p $GOPATH/src/github.com/gowncloud
+cd $GOPATH/src/github.com/gowncloud
+git clone https://github.com/gowncloud/gowncloud.git
+cd gowncloud
 go generate
 go build
 ./gowncloud -c [client_id] -s [client_secret] --db "[database_driver]://[database_user]@[database_url]:[database_port]?sslmode=disable"
