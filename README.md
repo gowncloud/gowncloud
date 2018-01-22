@@ -32,3 +32,14 @@ navigate to `localhost:8080/index.php`
 All files uploaded to gowncloud will be stored here. The directory (tree) will be created
 by gowncloud as required. To avoid conflicts, the path should point to an unexisting
 or completely empty directory. Synonym: `--dir`
+
+## Authentication
+
+### Interactive session
+When accessing gowncloud through a browser, a normal OAuth2 flow is used to authenticate. Gowncloud gets a jwt from itsyou.online and stores this in a sessioncookie.
+
+### API access
+It is possible to access the webdav url's and other endpoints by providing a jwt yourself. The OAuth2 `client_id` must be in the audience ('aud' claim) list.
+There are 2 ways to supply the jwt:
+1. Via the `Authorization` header (example: `Authorization: bearer JWT`)
+2. By using basic authentication, the user is ignored but the jwt should be passed as a password.
